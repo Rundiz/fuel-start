@@ -3,12 +3,12 @@ Fuel Start is the FuelPHP framework backend for developers to start their projec
 This can help those developers build their project very fast.
 
 ##Features
-*Account management with ACL.
-*Account level/role management.
-*Administrator page permission.
-*Multilingual ready.
-*Admin configuration page.
-*Easy template layout system.
+* Account management with ACL.
+* Account level/role management.
+* Administrator page permission.
+* Multilingual ready.
+* Admin configuration page.
+* Easy template layout system.
 
 ---
 
