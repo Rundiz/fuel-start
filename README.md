@@ -20,5 +20,5 @@ Fuel Start is released under [MIT license][2]
 **Credits**
 [FuelPHP][1]
 
-[1]http://fuelphp.com/
-[2]http://opensource.org/licenses/MIT
+[1]: http://fuelphp.com/
+[2]: http://opensource.org/licenses/MIT
