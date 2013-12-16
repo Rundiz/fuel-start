@@ -1,6 +1,5 @@
 #Fuel Start
 Fuel Start is the FuelPHP framework backend for developers to start their project with this framework.
-
 This can help those developers build their project very fast.
 
 ##Features
