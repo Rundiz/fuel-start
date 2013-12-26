@@ -1,0 +1,48 @@
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+
+
+body {
+	padding: 20px 0 0;
+}
+
+
+
+.page-footer {
+	border-top: 1px solid #ccc;
+	font-size: 11px;
+	padding-top: 10px;
+}
+
+
+
+.row-with-vspace {
+	margin-bottom: 20px;
+}
+
+
+
+.sidebar h3 {
+	margin-top: 0;
+}
+
+
+
+.txt_require {
+	color: #f00;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+
+
+.webpage-header {
+	border-bottom: 3px solid #ddd;
+}
+.webpage-header h1 {
+	margin-top: 0;
+}
+
+

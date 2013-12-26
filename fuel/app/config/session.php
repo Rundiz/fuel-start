@@ -1,24 +1,14 @@
 <?php
 /**
- * Part of the Fuel framework.
- *
- * @package    Fuel
- * @version    1.7
- * @author     Fuel Development Team
- * @license    MIT License
- * @copyright  2010 - 2013 Fuel Development Team
- * @link       http://fuelphp.com
+ * Session configuration
+ * 
+ * @author Vee W.
+ * @license http://opensource.org/licenses/MIT
+ * 
  */
 
-/**
- * NOTICE:
- *
- * If you need to make modifications to the default configuration, copy
- * this file to your app/config folder, and make them in there.
- *
- * This will allow you to upgrade fuel without losing your custom config.
- */
-
+// set cookie prefix for all session cookie.
+$cookie_prefix = 'fuelstart_';
 
 return array(
 	/**
@@ -30,10 +20,10 @@ return array(
 	'auto_initialize'	=> true,
 
 	// if no session type is requested, use the default
-	'driver'			=> 'cookie',
+	'driver'			=> 'db',
 
 	// check for an IP address match after loading the cookie (optional, default = false)
-	'match_ip'			=> false,
+	'match_ip'			=> true,
 
 	// check for a user agent match after loading the cookie (optional, default = true)
 	'match_ua'			=> true,
@@ -83,19 +73,19 @@ return array(
 
 	// special configuration settings for cookie based sessions
 	'cookie'			=> array(
-		'cookie_name'		=> 'fuelcid',				// name of the session cookie for cookie based sessions
+		'cookie_name'		=> $cookie_prefix . 'fuelcid',				// name of the session cookie for cookie based sessions
 						),
 
 	// specific configuration settings for file based sessions
 	'file'				=> array(
-		'cookie_name'		=> 'fuelfid',				// name of the session cookie for file based sessions
+		'cookie_name'		=> $cookie_prefix . 'fuelfid',				// name of the session cookie for file based sessions
 		'path'				=>	'/tmp',					// path where the session files should be stored
 		'gc_probability'	=>	5						// probability % (between 0 and 100) for garbage collection
 						),
 
 	// specific configuration settings for memcached based sessions
 	'memcached'			=> array(
-		'cookie_name'		=> 'fuelmid',				// name of the session cookie for memcached based sessions
+		'cookie_name'		=> $cookie_prefix . 'fuelmid',				// name of the session cookie for memcached based sessions
 		'servers'			=> array(					// array of servers and portnumbers that run the memcached service
 								'default' => array('host' => '127.0.0.1', 'port' => 11211, 'weight' => 100)
 							),
@@ -103,7 +93,7 @@ return array(
 
 	// specific configuration settings for database based sessions
 	'db'			=> array(
-		'cookie_name'		=> 'fueldid',				// name of the session cookie for database based sessions
+		'cookie_name'		=> $cookie_prefix . 'fueldid',				// name of the session cookie for database based sessions
 		'database'			=> null,					// name of the database name (as configured in config/db.php)
 		'table'				=> 'sessions',				// name of the sessions table
 		'gc_probability'	=> 5						// probability % (between 0 and 100) for garbage collection
@@ -111,7 +101,7 @@ return array(
 
 	// specific configuration settings for redis based sessions
 	'redis'			=> array(
-		'cookie_name'		=> 'fuelrid',				// name of the session cookie for redis based sessions
+		'cookie_name'		=> $cookie_prefix . 'fuelrid',				// name of the session cookie for redis based sessions
 		'database'			=> 'default'				// name of the redis database to use (as configured in config/db.php)
 						)
 );

@@ -5,10 +5,14 @@
 
 return array(
 	'default' => array(
+		'type' => 'mysqli',
 		'connection'  => array(
-			'dsn'        => 'mysql:host=localhost;dbname=fuel_dev',
-			'username'   => 'root',
-			'password'   => 'root',
+			'hostname' => 'localhost',
+			'database' => 'v_fuelstart',
+			'username' => 'admin',
+			'password' => 'pass',
 		),
+		'table_prefix' => 'ws_',
+		'charset' => 'utf8',
 	),
 );

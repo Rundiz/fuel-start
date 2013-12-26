@@ -78,9 +78,13 @@ return array(
 	/**
 	 * Localization & internationalization settings
 	 */
-	// 'language'           => 'en', // Default language
-	// 'language_fallback'  => 'en', // Fallback language when file isn't available for default language
-	// 'locale'             => 'en_US', // PHP set_locale() setting, null to not set
+	'language'           => 'th', // Default language
+	'language_fallback'  => 'en', // Fallback language when file isn't available for default language
+	'locale'             => '',//en_US', // PHP set_locale() setting, null to not set
+	'locales'            => array(
+		'en' => 'en_US',
+		'th' => 'th_TH'
+	),
 
 	/**
 	 * Internal string encoding charset
@@ -114,9 +118,9 @@ return array(
 	 * Security settings
 	 */
 	'security' => array(
-		// 'csrf_autoload'    => false,
-		// 'csrf_token_key'   => 'fuel_csrf_token',
-		// 'csrf_expiration'  => 0,
+		//'csrf_autoload'    => false,
+		'csrf_token_key'   => 'fuel_csrf_token',
+		'csrf_expiration'  => 7200,
 
 		/**
 		 * A salt to make sure the generated security tokens are not predictable
@@ -168,7 +172,7 @@ return array(
 		/**
 		 * Whether to automatically filter view data
 		 */
-		// 'auto_filter_output'  => true,
+		'auto_filter_output'  => true,
 
 		/**
 		 * With output encoding switched on all objects passed will be converted to strings or
@@ -185,18 +189,20 @@ return array(
 	/**
 	 * Cookie settings
 	 */
-	// 'cookie' => array(
+	'cookie' => array(
 		// Number of seconds before the cookie expires
-		// 'expiration'  => 0,
+		'expiration'  => 0,
 		// Restrict the path that the cookie is available to
-		// 'path'        => '/',
+		'path'        => '/',
 		// Restrict the domain that the cookie is available to
-		// 'domain'      => null,
+		'domain'      => null,
 		// Only transmit cookies over secure connections
-		// 'secure'      => false,
+		'secure'      => false,
 		// Only transmit cookies over HTTP, disabling Javascript access
-		// 'http_only'   => false,
-	// ),
+		'http_only'   => false,
+		// cookie prefix (by Vee Winch)
+		'prefix' => 'fuelstart_',
+	),
 
 	/**
 	 * Validation settings
@@ -237,9 +243,9 @@ return array(
 	 *
 	 * Paths MUST end with a directory separator (the DS constant)!
 	 */
-	// 'module_paths' => array(
-	// 	//APPPATH.'modules'.DS
-	// ),
+	'module_paths' => array(
+		APPPATH.'modules'.DS
+	),
 
 	/**
 	 * To enable you to split up your additions to the framework, packages are
@@ -257,7 +263,7 @@ return array(
 	/**************************************************************************/
 	/* Always Load                                                            */
 	/**************************************************************************/
-	// 'always_load'  => array(
+	'always_load'  => array(
 
 		/**
 		 * These packages are loaded on Fuel's startup.
@@ -270,9 +276,9 @@ return array(
 		 *     array('auth'	=> PKGPATH.'auth/')
 		 * );
 		 */
-		// 'packages'  => array(
-		// 	//'orm',
-		// ),
+		'packages'  => array(
+			'orm',
+		),
 
 		/**
 		 * These modules are always loaded on Fuel's startup. You can specify them
@@ -307,7 +313,7 @@ return array(
 		 * add it like 'validation' => 'forms'.
 		 * If you don't want the lang in a group use null as groupname.
 		 */
-		// 'language'  => array(),
-	// ),
+		//'language'  => array('fslang' => 'fslang'),
+	),
 
 );
