@@ -16,20 +16,52 @@ class Model_Accounts extends \Orm\Model
 	
 	// relations
 	protected static $_has_many = array(
-		'account_level' => array(
-			'key_from' => 'account_id',
-			'model_to' => 'Model_AccountLevel',
-			'key_to' => 'account_id',
-			'cascade_save' => true,
-			'cascade_delete' => false,
-		),
 		'account_fields' => array(
 			'model_to' => 'Model_AccountFields',
 			'key_from' => 'account_id',
 			'key_to' => 'account_id',
 			'cascade_delete' => true,
 		),
+		'account_level' => array(
+			'key_from' => 'account_id',
+			'model_to' => 'Model_AccountLevel',
+			'key_to' => 'account_id',
+			'cascade_save' => true,
+			'cascade_delete' => true,
+		),
+		'account_logins' => array(
+			'key_from' => 'account_id',
+			'model_to' => 'Model_AccountLogins',
+			'key_to' => 'account_id',
+			'cascade_delete' => true,
+		),
+		'account_sites' => array(
+			'key_from' => 'account_id',
+			'model_to' => 'Model_AccountSites',
+			'key_to' => 'account_id',
+			'cascade_delete' => true,
+		),
 	);
+	
+	
+	protected static $password_hash_level = 12;
+	
+	
+	/**
+	 * check password
+	 * 
+	 * @param string $entered_password
+	 * @param string $hashed_password
+	 * @return boolean
+	 */
+	public function checkPassword($entered_password = '', $hashed_password = '') 
+	{
+		// @todo any hash api for check password should be here.
+		
+		include_once APPPATH . DS . 'vendor' . DS . 'phpass' . DS . 'PasswordHash.php';
+		$PasswordHash = new PasswordHash(static::$password_hash_level, false);
+		return $PasswordHash->CheckPassword($entered_password, $hashed_password);
+	}// checkPassword
 	
 	
 	/**
@@ -69,6 +101,142 @@ class Model_Accounts extends \Orm\Model
 	
 	
 	/**
+	 * count continueous login fail
+	 * 
+	 * @param array $data
+	 * @return int|boolean return false on failed to get data, number for countable data
+	 */
+	public static function countContinuousLoginFail($data = array()) 
+	{
+		if (!isset($data['account_username']) && !isset($data['account_email'])) {
+			// nothing set, return false.
+			return false;
+		} else {
+			if (!isset($data['account_username'])) {
+				$data['account_username'] = null;
+			}
+			if (!isset($data['account_email'])) {
+				$data['account_email'] = null;
+			}
+		}
+		
+		// get account_id from username or email
+		$query = self::query()
+				->where('account_username', $data['account_username'])
+				->or_where('account_email', $data['account_email']);
+		
+		if ($query->count() <= 0) {
+			unset($query);
+			// not found account, return false.
+			return false;
+		} else {
+			$row = $query->get_one();
+			$account_id = $row->account_id;
+			unset($query, $row);
+		}
+		
+		// get account logins data
+		$query = \Model_AccountLogins::find('all', 
+			array(
+				'where' => array(array('account_id', $account_id)),
+				'order_by' => array('account_login_id' => 'DESC')
+			)
+		);
+		
+		if (is_object($query) || is_array($query)) {
+			$i = 0;
+			foreach ($query as $row) {
+				if ($row->login_attempt == '1') {
+					unset($query, $row);
+					return $i;
+				}
+				$i++;
+			}
+			
+			unset($query, $row);
+			return $i;
+		}
+		
+		unset($query);
+		return (int) 0;
+	}// countContinuousLoginFail
+	
+	
+	/**
+	 * get account cookie
+	 * 
+	 * @param string $level
+	 * @return array|null
+	 */
+	public function getAccountCookie($level = 'member') 
+	{
+		if ($level != 'admin' && $level != 'member') {
+			$level = 'member';
+		}
+		
+		$cookie_account = \Security::xss_clean(\Extension\Cookie::get($level . '_account'));
+		
+		if ($cookie_account != null) {
+			$cookie_account = \Crypt::decode($cookie_account);
+			$cookie_account = unserialize($cookie_account);
+		}
+		
+		return $cookie_account;
+	}// getAccountCookie
+	
+	
+	/**
+	 * get login fail last time
+	 * 
+	 * @param array $data
+	 * @return mixed return false on failed, true on success (not found last login, found but success), timestamp on found last failed login.
+	 */
+	public static function getLoginFailLastTime($data = array()) 
+	{
+		if (!isset($data['account_username']) && !isset($data['account_email'])) {
+			// nothing set, return false.
+			return false;
+		} else {
+			if (!isset($data['account_username'])) {
+				$data['account_username'] = null;
+			}
+			if (!isset($data['account_email'])) {
+				$data['account_email'] = null;
+			}
+		}
+		
+		// get account_id from username or email
+		$query = self::query()
+				->where('account_username', $data['account_username'])
+				->or_where('account_email', $data['account_email']);
+		
+		if ($query->count() <= 0) {
+			unset($query);
+			// not found account, return false.
+			return false;
+		} else {
+			$row = $query->get_one();
+			$account_id = $row->account_id;
+			unset($query, $row);
+		}
+		
+		// get account login failed last time
+		$account = \Model_AccountLogins::query()->where('account_id', $account_id)->order_by('account_login_id', 'DESC')->get_one();
+		
+		if (is_object($account)) {
+			if ($account->login_attempt == '0') {
+				// found last login and it was failed. return date/time in timestamp (data in db is timestamp)
+				return $account->login_time;
+			}
+		}
+		
+		// not found last login (maybe never login before), found but succeed.
+		unset($account);
+		return true;
+	}// getLoginFailLastTime
+	
+	
+	/**
 	 * hash password
 	 * @param string $password
 	 * @return string
@@ -78,7 +246,7 @@ class Model_Accounts extends \Orm\Model
 		// @todo any hash password api should be here with if condition.
 		
 		include_once APPPATH . DS . 'vendor' . DS . 'phpass' . DS . 'PasswordHash.php';
-		$PasswordHash = new PasswordHash(12, false);
+		$PasswordHash = new PasswordHash(static::$password_hash_level, false);
 		return $PasswordHash->HashPassword($password);
 	}// hashPassword
 	
@@ -91,6 +259,151 @@ class Model_Accounts extends \Orm\Model
 	{
 		return new Model_Accounts();
 	}// instance
+	
+	
+	/**
+	 * logout
+	 * 
+	 * @param integer $account_id
+	 * @param integer $site_id
+	 * @return boolean
+	 */
+	public static function logout($account_id = '', $site_id = '') 
+	{
+		if ($site_id == null) {
+			// @todo add code to get current site id for multisite code.
+			$site_id = 1;
+		}
+		
+		// get account id if not set
+		if (!is_numeric($account_id)) {
+			$cookie = self::instance()->getAccountCookie();
+			
+			if (isset($cookie['account_id'])) {
+				$account_id = $cookie['account_id'];
+			} else {
+				$account_id = 0;
+			}
+		}
+		
+		\Extension\Cookie::delete('member_account');
+		\Extension\Cookie::delete('admin_account');
+		
+		// delete online code for certain site, so when program check for logged in or simultanous it will return false.
+		$account_sites = \Model_AccountSites::query()->where('account_id', $account_id)->where('site_id', $site_id);
+		$row = $account_sites->get_one();
+		$row->account_online_code = null;
+		$row->save();
+		
+		unset($account_sites, $row);
+		
+		return true;
+	}// logout
+	
+	
+	/**
+	 * member login.
+	 * 
+	 * @param array $data
+	 * @return mixed return true on success, return error message on failed.
+	 */
+	public static function memberLogin($data = array()) 
+	{
+		if (!isset($data['account_password']) || (!isset($data['account_username']) && !isset($data['account_email']))) {
+			return false;
+		} else {
+			if (!isset($data['account_username'])) {
+				$data['account_username'] = null;
+			}
+			if (!isset($data['account_email'])) {
+				$data['account_email'] = null;
+			}
+		}
+		
+		$query = self::query()
+				->where('account_username', $data['account_username'])
+				->or_where('account_email', $data['account_email']);
+		
+		if ($query->count() > 0) {
+			// found
+			$row = $query->get_one();
+			
+			// check enabled account.
+			if ($row->account_status == '1') {
+				// enabled
+				// check password
+				if (self::instance()->checkPassword($data['account_password'], $row->account_password) === true) {
+					// check password passed
+					// generate session id for check simultanous login
+					$session_id = \Session::key('session_id');
+					
+					// if login set to remember, set expires.
+					if (\Input::post('remember') == 'yes') {
+						$expires = (\Model_Config::getval('member_login_remember_length')*24*60*60);
+					} else {
+						$expires = 0;
+					}
+					
+					// set cookie
+					$cookie_account['account_id'] = $row->account_id;
+					$cookie_account['account_username'] = $row->account_username;
+					$cookie_account['account_email'] = $row->account_email;
+					$cookie_account['account_display_name'] = $row->account_display_name;
+					$cookie_account['account_online_code'] = $session_id;
+					$cookie_account = \Crypt::encode(serialize($cookie_account));
+					Extension\Cookie::set('member_account', $cookie_account, $expires);
+					unset($cookie_account, $expires);
+					
+					// update last login in accounts table
+					$accounts = self::find($row->account_id);
+					$accounts->account_last_login = time();
+					$accounts->account_last_login_gmt = \Extension\Date::localToGmt();
+					$accounts->save();
+					unset($accounts);
+					
+					// add/update last login session.
+					$account_session['account_id'] = $row->account_id;
+					$account_session['session_id'] = $session_id;
+					
+					$account_site = new \Model_AccountSites();
+					$account_site->addLoginSession($account_session);
+					unset($account_session);
+					
+					// record login
+					$account_logins = new Model_AccountLogins();
+					$account_logins->recordLogin($row->account_id, 1, 'account_login_success');
+					
+					// @todo any login api should be here.
+					
+					unset($query, $row, $session_id);
+					
+					// login success
+					return true;
+				} else {
+					// check password failed, wrong password
+					$account_logins = new Model_AccountLogins();
+					$account_logins->recordLogin($row->account_id, 0, 'account_wrong_username_or_password');
+					
+					unset($query, $row);
+					
+					return \Lang::get('account.account_wrong_username_or_password');
+				}
+			} else {
+				// account disabled
+				$account_logins = new Model_AccountLogins();
+				$account_logins->recordLogin($row->account_id, 0, 'account_was_disabled');
+				
+				unset($query);
+				
+				return \Lang::get('account.account_was_disabled') . ' : ' . $row->account_status_text;
+			}
+		}
+		
+		// not found account. login failed
+		unset($query);
+		
+		return \Lang::get('account.account_wrong_username_or_password');
+	}// memberLogin
 	
 	
 	/**

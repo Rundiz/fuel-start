@@ -17,7 +17,7 @@ class Controller_Account_Register extends \Controller_BaseController
 		\Lang::load('account', 'account');
 		
 		// load config from db.
-		$cfg_values = array('site_name', 'member_allow_register', 'member_verification', 'page_title_separator');
+		$cfg_values = array('member_allow_register', 'member_verification');
 		$config = Model_Config::getvalues($cfg_values);
 		$output['config'] = $config;
 		unset($cfg_values);

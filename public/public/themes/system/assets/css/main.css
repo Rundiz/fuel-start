@@ -10,6 +10,12 @@ body {
 
 
 
+.hide_captcha {
+	display: none;
+}
+
+
+
 .page-footer {
 	border-top: 1px solid #ccc;
 	font-size: 11px;

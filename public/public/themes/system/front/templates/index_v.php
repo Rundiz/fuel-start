@@ -10,14 +10,39 @@ $theme = \Theme::instance();
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title><?php echo $page_title; ?></title>
-		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width">
+		<?php 
+		// render meta
+		if (isset($page_meta) && is_array($page_meta)) {
+			foreach ($page_meta as $a_page_meta) {
+				echo $a_page_meta . "\n";
+			}
+			unset($a_page_meta);
+		}
+		?> 
 
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap.min.css')); ?>">
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap-theme.min.css')); ?>">
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/main.css')); ?>">
+		<?php 
+		// render <link>
+		if (isset($page_link) && is_array($page_link)) {
+			foreach ($page_link as $a_page_link) {
+				echo $a_page_link . "\n";
+			}
+			unset($a_page_link);
+		}
+		?> 
 
 		<script src="<?php echo Uri::createNL($theme->asset_path('js/modernizr-2.6.2-respond-1.1.0.min.js')); ?>"></script>
+		<script src="<?php echo Uri::createNL($theme->asset_path('js/jquery-1.10.2.min.js')); ?>"></script>
+		
+		<?php 
+		// render assets
+		echo \Asset::render('fuelstart');
+		// render *theme* assets. (required for render theme's assets)
+		echo $theme->asset->render('fuelstart');
+		?> 
 	</head>
 	<body>
 		<div class="container">
@@ -67,7 +92,6 @@ $theme = \Theme::instance();
 			</div>
 		</div>     
 		
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/jquery-1.10.2.min.js')); ?>"></script>
 		<script src="<?php echo Uri::createNL($theme->asset_path('js/bootstrap.min.js')); ?>"></script>
 		<script src="<?php echo Uri::createNL($theme->asset_path('js/main.js')); ?>"></script>
 	</body>

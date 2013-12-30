@@ -18,11 +18,18 @@ class Controller_Index extends \Controller
 	{
 		// <head> output ----------------------------------------------------------------------------------------------
 		$output['page_title'] = 'Fuel Start';
+		
+		// example for asset and theme asset
+		//\Asset::css('bootstrap.min.css', array(), 'fuelstart');
+		//\Theme::instance()->asset->css('main.css', array(), 'fuelstart');
+		//$output['page_meta'][] = \Html::meta('description', 'test-fuel-start-description');
+		//$output['page_link'][] = html_tag('link', array('rel' => 'stylesheet', 'href' => Uri::createNL(\Theme::instance()->asset_path('css/main.css'))));
+		// end example
 		// <head> output ----------------------------------------------------------------------------------------------
 		
 		$theme = \Theme::instance();
 		
-		return $theme->view('front/templates/index_v', $output);
+		return $theme->view('front/templates/index_v', $output, false);
 	}// action_index
 	
 	

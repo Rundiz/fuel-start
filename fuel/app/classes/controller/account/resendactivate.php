@@ -33,7 +33,7 @@ class Controller_Account_ResendActivate extends \Controller_BaseController
 				$output['form_status_message'] = $validate->show_errors();
 			} else {
 				// check registered emails with not confirm
-				$query = \Model_accounts::query()
+				$query = \Model_Accounts::query()
 						->select('account_id', 'account_username', 'account_email')
 						->where('account_email', $data['account_email'])
 						->where('account_last_login', null)

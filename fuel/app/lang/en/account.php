@@ -12,8 +12,11 @@ $lang['account_didnot_recieve_confirm_registration_email'] = 'Did not recieve co
 $lang['account_email'] = 'Email';
 $lang['account_email_already_exists'] = 'This email is already exists.';
 $lang['account_email_could_not_send'] = 'The email could not send.';
+$lang['account_forgot_username_or_password'] = 'Forgot username or password';
 $lang['account_invalid_space_between_text'] = 'Do not allow space between text in :label.';
 $lang['account_login'] = 'Login';
+$lang['account_login_failed_too_many'] = 'You had failed to login too many time, please wait :wait_minute minutes or until :wait_til_time and then try again.';
+$lang['account_login_success'] = 'Login success.';
 $lang['account_notify_admin_new_register_account'] = 'Notify new register account username: :username';
 $lang['account_password'] = 'Password';
 $lang['account_please_confirm_registration_from_your_email'] = 'Please confirm registration from your email.';
@@ -32,8 +35,11 @@ $lang['account_unable_to_load_email_template'] = 'Unable to load email template.
 $lang['account_username'] = 'Username';
 $lang['account_username_already_exists'] = 'This username is already exists.';
 $lang['account_username_disallowed'] = 'Your username was disallowed. Please enter new username.';
+$lang['account_username_or_email'] = 'Username or email';
 $lang['account_waiting_for_admin_verification'] = 'Waiting for administrator to verify your account.';
+$lang['account_was_disabled'] = 'Account was disabled.';
 $lang['account_wrong_captcha_code'] = 'Wrong captcha code!';
+$lang['account_wrong_username_or_password'] = 'You have enter wrong username or password.';
 $lang['account_your_confirm_register_code_is_invalid'] = 'Your confirm register code or username is invalid.';
 
 return $lang;
