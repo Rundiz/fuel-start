@@ -17,8 +17,8 @@ class Model_AccountLogins extends \Orm\Model
 	// relations
 	protected static $_belongs_to = array(
 		'accounts' => array(
-			'key_from' => 'account_id',
 			'model_to' => 'Model_Accounts',
+			'key_from' => 'account_id',
 			'key_to' => 'account_id',
 		)
 	);

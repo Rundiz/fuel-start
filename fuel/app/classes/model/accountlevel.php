@@ -21,8 +21,8 @@ class Model_AccountLevel extends \Orm\Model
 			'key_to' => 'level_group_id',
 		),
 		'accounts' => array(
-			'key_from' => 'account_id',
 			'model_to' => 'Model_Accounts',
+			'key_from' => 'account_id',
 			'key_to' => 'account_id',
 		)
 	);

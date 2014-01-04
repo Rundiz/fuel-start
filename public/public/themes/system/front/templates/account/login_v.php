@@ -63,15 +63,15 @@
 		<?php echo \Extension\NoCsrf::generate(); ?> 
 	
 		<div class="form-group">
-			<label for="account_username" class="col-sm-2 control-label"><?php echo __('account.account_username_or_email'); ?>: <span class="txt_require">*</span></label>
+			<label for="account_username2" class="col-sm-2 control-label"><?php echo __('account.account_username_or_email'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-4">
-				<?php echo \Form::input('account_identity', (isset($account_identity) ? $account_identity : ''), array('id' => 'account_username', 'maxlength' => '255', 'class' => 'form-control', 'autocomplete' => 'off')); ?> 
+				<?php echo \Form::input('account_identity', (isset($account_identity) ? $account_identity : ''), array('id' => 'account_username2', 'maxlength' => '255', 'class' => 'form-control', 'autocomplete' => 'off')); ?> 
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="account_password" class="col-sm-2 control-label"><?php echo __('account.account_password'); ?>: <span class="txt_require">*</span></label>
+			<label for="account_password2" class="col-sm-2 control-label"><?php echo __('account.account_password'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-4">
-				<?php echo \Form::password('account_password', (isset($account_password) ? $account_password : ''), array('id' => 'account_password', 'maxlength' => '70', 'class' => 'form-control')); ?> 
+				<?php echo \Form::password('account_password', (isset($account_password) ? $account_password : ''), array('id' => 'account_password2', 'maxlength' => '70', 'class' => 'form-control')); ?> 
 			</div>
 		</div>
 		<div class="form-group">
@@ -84,12 +84,12 @@
 		</div>
 	
 		<div class="form-group show_captcha hide_captcha">
-			<label for="account_captcha" class="col-sm-2 control-label"><?php echo __('account.account_captcha'); ?>: <span class="txt_require">*</span></label>
+			<label for="account_captcha2" class="col-sm-2 control-label"><?php echo __('account.account_captcha'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-5">
 				<img src="<?php echo Uri::createNL(\Theme::instance()->asset_path('img/securimage_show.php')); ?>" alt="securimage" class="captcha" />
 				<a href="#" onclick="$('.captcha').attr('src', '<?php echo Uri::createNL(\Theme::instance()->asset_path('img/securimage_show.php')); ?>?' + Math.random()); this.blur(); return false;" tabindex="-1"><img src="<?php echo Uri::createNL(\Theme::instance()->asset_path('img/reload.gif')); ?>" alt="" /></a>
 				<div>
-					<?php echo \Form::input('captcha', (isset($captcha) ? $captcha : null), array('id' => 'account_captcha', 'class' => 'form-control input-captcha', 'placeholder' => __('account.account_captcha_enter_text_you_see_in_image'))); ?> 
+					<?php echo \Form::input('captcha', (isset($captcha) ? $captcha : null), array('id' => 'account_captcha2', 'class' => 'form-control input-captcha', 'placeholder' => __('account.account_captcha_enter_text_you_see_in_image'))); ?> 
 				</div>
 			</div>
 		</div>

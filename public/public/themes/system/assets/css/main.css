@@ -10,6 +10,14 @@ body {
 
 
 
+fieldset legend small {
+	color: #777;
+	font-size: 13px;
+	font-weight: lighter;
+}
+
+
+
 .hide_captcha {
 	display: none;
 }

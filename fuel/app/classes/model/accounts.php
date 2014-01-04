@@ -44,7 +44,74 @@ class Model_Accounts extends \Orm\Model
 	);
 	
 	
-	protected static $password_hash_level = 12;
+	protected $password_hash_level = 12;
+	
+	
+	/**
+	 * check account is logged in correctly and status is enabled. also call to check simultaneous login.
+	 * 
+	 * @param intger $account_id
+	 * @param string $account_username
+	 * @param string $account_email
+	 * @param string $account_online_code
+	 * @return boolean
+	 */
+	public function checkAccount($account_id = '', $account_username = '', $account_email = '', $account_online_code = '') 
+	{
+		// check all required data
+		if ($account_id == null || $account_username == null || $account_email == null || $account_online_code == null) {
+			return false;
+		}
+		
+		// @todo write code to get site id for multisite coding
+		$site_id = 1;
+		
+		// check for matches id username and email. ---------------------------------------------------------------
+		$query = self::query()
+				->where('account_id', $account_id)
+				->where('account_username', $account_username)
+				->where('account_email', $account_email)
+				->where('account_status', 1);
+		
+		if ($query->count() > 0) {
+			$row = $query->get_one();
+			unset($query);
+			
+			// if not allow simultaneous login. (if not allow login from many places)
+			if (\Model_Config::getval('simultaneous_login') == '0') {
+				if ($this->isSimultaneousLogin($account_id, $account_online_code) == true) {
+					unset($row);
+					
+					// log out
+					static::logout(array('remove_online_code' => false));
+					
+					// set error message.
+					\Session::set_flash(
+						'form_status',
+						array(
+							'form_status' => 'error',
+							'form_status_message' => \Lang::get('account.account_simultaneous_login_detected')
+						)
+					);
+					
+					return false;
+				}
+			}
+			
+			// check pass with or without simultaneous login check.
+			unset($row);
+			
+			return true;
+		}
+		
+		// not found account in db. or found but disabled
+		unset($query);
+		
+		// log out
+		static::logout();
+		
+		return false;
+	}// checkAccount
 	
 	
 	/**
@@ -59,7 +126,7 @@ class Model_Accounts extends \Orm\Model
 		// @todo any hash api for check password should be here.
 		
 		include_once APPPATH . DS . 'vendor' . DS . 'phpass' . DS . 'PasswordHash.php';
-		$PasswordHash = new PasswordHash(static::$password_hash_level, false);
+		$PasswordHash = new PasswordHash($this->password_hash_level, false);
 		return $PasswordHash->CheckPassword($entered_password, $hashed_password);
 	}// checkPassword
 	
@@ -103,10 +170,11 @@ class Model_Accounts extends \Orm\Model
 	/**
 	 * count continueous login fail
 	 * 
+	 * @deprecated not use anymore
 	 * @param array $data
 	 * @return int|boolean return false on failed to get data, number for countable data
 	 */
-	public static function countContinuousLoginFail($data = array()) 
+	/*public static function countContinuousLoginFail($data = array()) 
 	{
 		if (!isset($data['account_username']) && !isset($data['account_email'])) {
 			// nothing set, return false.
@@ -159,7 +227,7 @@ class Model_Accounts extends \Orm\Model
 		
 		unset($query);
 		return (int) 0;
-	}// countContinuousLoginFail
+	}// countContinuousLoginFail*/ // not use anymore
 	
 	
 	/**
@@ -188,10 +256,11 @@ class Model_Accounts extends \Orm\Model
 	/**
 	 * get login fail last time
 	 * 
+	 * @deprecated not use anymore
 	 * @param array $data
 	 * @return mixed return false on failed, true on success (not found last login, found but success), timestamp on found last failed login.
 	 */
-	public static function getLoginFailLastTime($data = array()) 
+	/*public static function getLoginFailLastTime($data = array()) 
 	{
 		if (!isset($data['account_username']) && !isset($data['account_email'])) {
 			// nothing set, return false.
@@ -233,7 +302,7 @@ class Model_Accounts extends \Orm\Model
 		// not found last login (maybe never login before), found but succeed.
 		unset($account);
 		return true;
-	}// getLoginFailLastTime
+	}// getLoginFailLastTime*/ // not use anymore
 	
 	
 	/**
@@ -246,7 +315,7 @@ class Model_Accounts extends \Orm\Model
 		// @todo any hash password api should be here with if condition.
 		
 		include_once APPPATH . DS . 'vendor' . DS . 'phpass' . DS . 'PasswordHash.php';
-		$PasswordHash = new PasswordHash(static::$password_hash_level, false);
+		$PasswordHash = new PasswordHash($this->password_hash_level, false);
 		return $PasswordHash->HashPassword($password);
 	}// hashPassword
 	
@@ -262,43 +331,224 @@ class Model_Accounts extends \Orm\Model
 	
 	
 	/**
-	 * logout
+	 * is member logged in?
+	 * 
+	 * @return boolean return true for logged in. return false for not logged in.
+	 */
+	public static function isMemberLogin() 
+	{
+		$cookie_account = self::instance()->getAccountCookie();
+		
+		if (!isset($cookie_account['account_id']) || !isset($cookie_account['account_username']) || !isset($cookie_account['account_email']) || !isset($cookie_account['account_display_name']) || !isset($cookie_account['account_online_code'])) {
+			return false;
+		}
+		
+		return self::instance()->checkAccount($cookie_account['account_id'], $cookie_account['account_username'], $cookie_account['account_email'], $cookie_account['account_online_code']);
+	}// isMemberLogin
+	
+	
+	/**
+	 * is simultaneous login (login from multiple places)
 	 * 
 	 * @param integer $account_id
-	 * @param integer $site_id
-	 * @return boolean
+	 * @param string $account_online_code
+	 * @param integer $site_id site id for multisite code.
+	 * @return boolean return true if detected simultaneous login, false if logged in only one place.
 	 */
-	public static function logout($account_id = '', $site_id = '') 
+	private function isSimultaneousLogin($account_id = '', $account_online_code = '', $site_id = '') 
 	{
+		// check required data
+		if (!is_numeric($account_id) || $account_online_code == null) {
+			return true;
+		}
+		
 		if ($site_id == null) {
-			// @todo add code to get current site id for multisite code.
+			// @todo write code to get current site id for multisite coding.
 			$site_id = 1;
 		}
 		
+		// find this account id and their online code on selected site.
+		$query = \Model_AccountSites::query()
+				->where('account_id', $account_id)
+				->where('site_id', $site_id)
+				->where('account_online_code', $account_online_code);
+		
+		if ($query->count() > 0) {
+			unset($query);
+			
+			// not found logged in from other place (online code in db matched with this user's cookie online code).
+			return false;
+		}
+		
+		// not found account on this site. or found but online code does not match (null online code in db means logged out, so it is not match this user that still logged in).
+		unset($query);
+		
+		return true;
+	}// isSimultaneousLogin
+	
+	
+	/**
+	 * logout
+	 * 
+	 * @param array $data
+	 * @return boolean
+	 */
+	public static function logout($data = array()) 
+	{
+		if (!isset($data['site_id']) || (isset($data['site_id']) && $data['site_id'] == null)) {
+			// @todo add code to get current site id for multisite code.
+			$data['site_id'] = 1;
+		}
+		
 		// get account id if not set
-		if (!is_numeric($account_id)) {
+		if (!isset($data['account_id']) || (isset($data['account_id']) && !is_numeric($data['account_id']))) {
 			$cookie = self::instance()->getAccountCookie();
 			
 			if (isset($cookie['account_id'])) {
-				$account_id = $cookie['account_id'];
+				$data['account_id'] = $cookie['account_id'];
 			} else {
-				$account_id = 0;
+				$data['account_id'] = 0;
 			}
 		}
 		
 		\Extension\Cookie::delete('member_account');
 		\Extension\Cookie::delete('admin_account');
 		
-		// delete online code for certain site, so when program check for logged in or simultanous it will return false.
-		$account_sites = \Model_AccountSites::query()->where('account_id', $account_id)->where('site_id', $site_id);
-		$row = $account_sites->get_one();
-		$row->account_online_code = null;
-		$row->save();
-		
-		unset($account_sites, $row);
+		if (!isset($data['remove_online_code']) || (isset($data['remove_online_code']) && $data['remove_online_code'] == true)) {
+			// delete online code for certain site, so when program check for logged in or simultaneous it will return false.
+			$account_sites = \Model_AccountSites::query()->where('account_id', $data['account_id'])->where('site_id', $data['site_id']);
+			$row = $account_sites->get_one();
+			$row->account_online_code = null;
+			$row->save();
+
+			unset($account_sites, $row);
+		}
 		
 		return true;
 	}// logout
+	
+	
+	public static function memberEditProfile(array $data = array(), array $data_field = array()) 
+	{
+		if (empty($data)) {
+			return false;
+		}
+		
+		// check email change?
+		if ($data['account_old_email'] == $data['account_email']) {
+			$email_change = false;
+		} else {
+			$email_change = true;
+			
+			//check for already in use email
+			$query = self::query()->where('account_id', '!=', $data['account_id'])->where('account_email', $data['account_email']);
+			if ($query->count() > 0) {
+				// found email already in use.
+				unset($email_change, $query);
+				
+				return \Lang::get('account.account_email_already_exists');
+			} else {
+				$data['account_new_email'] = $data['account_email'];
+			}
+			unset($query);
+		}
+		
+		// if email change, send confirm link to old email
+		if ($email_change === true) {
+			$data['confirm_code'] = Extension\Str::random('alnum', 5);
+			$data['confirm_code_since'] = time();
+			$send_email_change_confirmation = self::instance()->sendEmailChangeConfirmation($data);
+			
+			if ($send_email_change_confirmation === true) {
+				$data['account_confirm_code'] = $data['confirm_code'];
+				$data['account_confirm_code_since'] = $data['confirm_code_since'];
+			} else {
+				return $send_email_change_confirmation;
+			}
+			
+			unset($data['confirm_code'], $data['confirm_code_since'], $send_email_change_confirmation);
+		}
+		unset($email_change);
+		
+		// check avatar upload
+		if (\Model_Config::getval('allow_avatar') == '1' && (isset($_FILES['account_avatar']['name']) && $_FILES['account_avatar']['name'] != null)) {
+			// @todo need to upload avatar code here.
+			echo 'do upload coding <br>';
+			echo __FILE__ . ' line: ' . __LINE__;
+			exit;
+		}
+		
+		// check password change and set new password data for update in db.
+		if (!empty($data['account_password'])) {
+			// there is current password input.
+			if ($data['account_new_password'] != null) {
+				// check current password match in db.
+				$query = self::query()->where('account_id', $data['account_id'])->where('account_username', $data['account_username']);
+				if ($query->count() > 0) {
+					$row = $query->get_one();
+					
+					if (self::instance()->checkPassword($data['account_password'], $row->account_password)) {
+						$data['account_password'] = self::instance()->hashPassword($data['account_new_password']);
+						
+						unset($query, $row);
+						
+						// @todo api for changed password here.
+						
+						// flash message for changed password please login again.
+						\Session::set_flash(
+							'form_status',
+							array(
+								'form_status' => 'success',
+								'form_status_message' => \Lang::get('account.account_your_password_changed_please_login_again')
+							)
+						);
+						
+						$password_changed = true;
+					} else {
+						unset($query, $row);
+						
+						return \Lang::get('account.account_wrong_password');
+					}
+				} else {
+					unset($query);
+					
+					return \Lang::get('account.account_not_found_account_in_db');
+				}
+			} else {
+				return \Lang::get('account.account_please_enter_your_new_password');
+			}
+		} else {
+			// no password change
+			// remove password data to prevent db update password field to null
+			unset($data['account_password']);
+		}
+		
+		// remove un-necessary variables to prevent error when update db.
+		unset($data['account_old_email'], $data['account_email'], $data['account_new_password']);
+		
+		// update to db.
+		$datasave = $data;
+		unset($datasave['account_id']);
+		
+		$accounts = self::find($data['account_id']);
+		$accounts->set($datasave);
+		$accounts->save();
+		unset($datasave);
+		
+		// update account fields
+		$af = new \Model_AccountFields();
+		$af->updateAccountFields($data['account_id'], $data_field);
+		unset($af);
+		
+		// @todo api edit account should be here.
+		
+		// done
+		if (isset($password_changed) && $password_changed === true) {
+			self::logout();
+		}
+		
+		return true;
+	}// memberEditProfile
 	
 	
 	/**
@@ -334,7 +584,7 @@ class Model_Accounts extends \Orm\Model
 				// check password
 				if (self::instance()->checkPassword($data['account_password'], $row->account_password) === true) {
 					// check password passed
-					// generate session id for check simultanous login
+					// generate session id for check simultaneous login
 					$session_id = \Session::key('session_id');
 					
 					// if login set to remember, set expires.
@@ -456,7 +706,7 @@ class Model_Accounts extends \Orm\Model
 		}
 		
 		// send register email
-		$send_result = self::sendRegisterEmail($data);
+		$send_result = self::instance()->sendRegisterEmail($data);
 		if ($send_result !== true) {
 			return $send_result;
 		}
@@ -526,11 +776,52 @@ class Model_Accounts extends \Orm\Model
 	
 	
 	/**
+	 * send email change confirmation for require user to confirm changed action.
+	 * 
+	 * @param array $data
+	 * @return mixed
+	 */
+	public function sendEmailChangeConfirmation(array $data = array()) 
+	{
+		if (!isset($data['confirm_code']) || !isset($data['confirm_code_since']) || !isset($data['account_username']) || !isset($data['account_email'])) {
+			return false;
+		}
+		
+		$cfg_member_confirm_wait_time = \Model_Config::getval('member_confirm_wait_time')*60;
+		
+		// email content
+		$email_content = \Extension\EmailTemplate::readTemplate('email_change1.html');
+		$email_content = str_replace("%username%", \Security::htmlentities($data['account_username']), $email_content);
+		$email_content = str_replace("%newemail%", \Security::htmlentities($data['account_email']), $email_content);
+		$email_content = str_replace("%link_confirm%", \Uri::create('account/confirm-change-email/' . $data['account_id'] . '/' . $data['confirm_code'] . '/confirm'), $email_content);
+		$email_content = str_replace("%link_cancel%", \Uri::create('account/confirm-change-email/' . $data['account_id'] . '/' . $data['confirm_code'] . '/cancel'), $email_content);
+		$email_content = str_replace("%confirm_until%", date('d F Y H:i:s', (time()+$cfg_member_confirm_wait_time)), $email_content);
+		
+		\Package::load('email');
+		$config = \Extension\Email::getConfig();
+		$email = \Email::forge($config);
+		$email->from(\Model_Config::getval('mail_sender_email'));
+		$email->to($data['account_old_email']);
+		$email->subject(\Lang::get('account.account_please_confirm_change_email'));
+		$email->html_body($email_content);
+		$email->alt_body(str_replace("\t", '', strip_tags($email_content)));
+		if ($email->send() == false) {
+			unset($cfg_member_confirm_wait_time, $config, $email, $email_content);
+			return \Lang::get('account.account_email_could_not_send');
+		}
+
+		unset($cfg_member_confirm_wait_time, $config, $email, $email_content);
+		
+		return true;
+	}// sendEmailChangeConfirmation
+	
+	
+	/**
 	 * send register email
 	 * @param array $data
 	 * @return boolean|string return true when send register email was done and return error text when error occured.
 	 */
-	public static function sendRegisterEmail($data = array(), $options = array()) 
+	public function sendRegisterEmail($data = array(), $options = array()) 
 	{
 		if (!isset($data['account_username']) || !isset($data['account_email']) || !isset($data['account_confirm_code'])) {return false;}
 		
@@ -605,6 +896,70 @@ class Model_Accounts extends \Orm\Model
 		
 		return true;
 	}// sendRegisterEmail
+	
+	
+	public static function sendResetPasswordEmail(array $data = array()) 
+	{
+		if (!isset($data['account_email'])) {
+			return false;
+		}
+		
+		$query = self::query()->where('account_email', $data['account_email']);
+		
+		if ($query->count() > 0) {
+			$row = $query->get_one();
+			unset($query);
+			
+			if ($row->account_status == '0') {
+				return \Lang::get('account.account_was_disabled') . ' : ' . $row->account_status_text;
+			}
+			
+			$cfg_member_confirm_wait_time = \Model_Config::getval('member_confirm_wait_time')*60;
+			
+			// check confirm wait time. you need to wait until 'wait time' passed to send reset password request again.
+			if ($row->account_confirm_code != null && time()-$row->account_confirm_code_since <= $cfg_member_confirm_wait_time) {
+				return \Lang::get('account.account_reset_password_please_wait_until', array('wait_til_time' => date('d F Y H:i:s', ($row->account_confirm_code_since+(\Model_Config::getval('member_confirm_wait_time')*60)))));
+			}
+			
+			$account_new_password = \Str::random('alnum', 10);
+			$account_confirm_code = \Str::random('alnum', 5);
+			$account_confirm_code_since = time();
+			
+			$email_content = \Extension\EmailTemplate::readTemplate('reset_password1.html');
+			$email_content = str_replace("%username%", \Security::htmlentities($row->account_username), $email_content);
+			$email_content = str_replace("%link_confirm%", \Uri::create('account/resetpw/' . $row->account_id . '/' . $account_confirm_code . '/reset'), $email_content);
+			$email_content = str_replace("%link_cancel%", \Uri::create('account/resetpw/' . $row->account_id . '/' . $account_confirm_code . '/cancel'), $email_content);
+			$email_content = str_replace("%confirm_until%", date('d F Y H:i:s', (time()+$cfg_member_confirm_wait_time)), $email_content);
+			
+			\Package::load('email');
+			$config = \Extension\Email::getConfig();
+			$email = \Email::forge($config);
+			$email->from(\Model_Config::getval('mail_sender_email'));
+			$email->to($data['account_email']);
+			$email->subject(\Lang::get('account.account_email_reset_password_request'));
+			$email->html_body($email_content);
+			$email->alt_body(str_replace("\t", '', strip_tags($email_content)));
+			if ($email->send() == false) {
+				unset($account_confirm_code, $account_confirm_code_since, $account_new_password, $cfg_member_confirm_wait_time, $config, $email, $email_content, $query, $row);
+				return \Lang::get('account.account_email_could_not_send');
+			}
+			
+			unset($cfg_member_confirm_wait_time, $config, $email, $email_content);
+			
+			// update to db.
+			//$row->account_new_password = self::instance()->hashPassword($account_new_password);
+			$row->account_confirm_code = $account_confirm_code;
+			$row->account_confirm_code_since = $account_confirm_code_since;
+			$row->save();
+			
+			unset($account_confirm_code, $account_confirm_code_since, $account_new_password, $row);
+			
+			return true;
+		}
+		
+		// account not found.
+		return \Lang::get('account.account_didnot_found_entered_email');
+	}// sendResetPasswordEmail
 
 
 }

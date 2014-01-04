@@ -10,7 +10,7 @@
 		<?php echo \Extension\NoCsrf::generate(); ?> 
 	
 		<div class="form-group">
-			<label class="col-sm-2 control-label" for="input-email"><?php echo __('account.account_email'); ?>: <span class="txt_require">*</span></label>
+			<label class="col-sm-2 control-label" for="account_email"><?php echo __('account.account_email'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-4">
 				<?php echo \Extension\Form::email('account_email', (isset($account_email) ? $account_email : ''), array('id' => 'account_email', 'maxlength' => '255', 'class' => 'form-control')); ?> 
 			</div>
