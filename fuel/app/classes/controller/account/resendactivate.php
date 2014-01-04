@@ -53,7 +53,7 @@ class Controller_Account_ResendActivate extends \Controller_BaseController
 					$options['not_notify_admin'] = true;
 					
 					// send email to let user confirm registration
-					$result = \Model_Accounts::sendRegisterEmail($data, $options);
+					$result = \Model_Accounts::forge()->sendRegisterEmail($data, $options);
 					
 					if ($result === true) {
 						$account = \Model_Accounts::find($row->account_id);
