@@ -19,7 +19,7 @@ class Controller_Account_Logout extends \Controller_BaseController
 		if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
 			\Response::redirect(\Input::referrer());
 		} else {
-			\Response::redirect(\Uri::main());
+			\Response::redirect(\Uri::base());
 		}
 	}// action_index
 	
