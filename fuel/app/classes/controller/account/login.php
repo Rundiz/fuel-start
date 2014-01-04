@@ -32,7 +32,8 @@ class Controller_Account_Login extends \Controller_BaseController
 			$output['go_to'] = urlencode(\Input::get('rdr'));
 		}
 		
-		// read flash message for display errors.
+		// read flash message for display errors. this is REQUIRED if you coding the check login with simultaneous login detection on.
+		// this is REQUIRED in login page. because failed 'is login' check will redirect to here.
 		$form_status = \Session::get_flash('form_status');
 		if (isset($form_status['form_status']) && isset($form_status['form_status_message'])) {
 			$output['form_status'] = $form_status['form_status'];
@@ -95,7 +96,7 @@ class Controller_Account_Login extends \Controller_BaseController
 					(time()-\Session::get('login_all_fail_time', time()))/60 <= $config['member_login_fail_wait_time']['value']
 				) {
 					// continuous login failed over max fail limit.
-					$result = Lang::get('account.account_login_failed_too_many', array('wait_minute' => $config['member_login_fail_wait_time']['value'], 'wait_til_time' => date('Y-F-d H:i:s', time()+($config['member_login_fail_wait_time']['value']*60))));
+					$result = Lang::get('account.account_login_failed_too_many', array('wait_minute' => $config['member_login_fail_wait_time']['value'], 'wait_til_time' => date('d F Y H:i:s', time()+($config['member_login_fail_wait_time']['value']*60))));
 				} else {
 					// not reach maximum limit
 					// check if show captcha
@@ -140,7 +141,7 @@ class Controller_Account_Login extends \Controller_BaseController
 						if (isset($output['go_to'])) {
 							\Response::redirect(urldecode($output['go_to']));
 						} else {
-							\Response::redirect(\Uri::main());
+							\Response::redirect(\Uri::base());
 						}
 					}
 				} else {
