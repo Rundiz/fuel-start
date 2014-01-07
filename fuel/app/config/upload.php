@@ -25,7 +25,7 @@ return array(
 	*/
 
 	// if true, the $_FILES array will be processed when the class is loaded
-	'auto_process'		=> true,
+	'auto_process'		=> false,
 
 	/**
 	 * file validation settings

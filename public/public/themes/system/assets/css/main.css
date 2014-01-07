@@ -24,6 +24,15 @@ fieldset legend small {
 
 
 
+.page-edit-account img {
+	margin-top: 5px;
+}
+.page-edit-account .current-avatar {
+	margin-bottom: 10px;
+}
+
+
+
 .page-footer {
 	border-top: 1px solid #ccc;
 	font-size: 11px;

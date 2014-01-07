@@ -78,6 +78,7 @@ $theme = \Theme::instance();
 								<li><a href="<?php echo Uri::create('account/login'); ?>">Login</a></li>
 								<li><a href="<?php echo Uri::create('account/forgotpw'); ?>">Forgot username or password</a></li>
 								<li><a href="<?php echo Uri::create('account/edit'); ?>">Edit account</a></li>
+								<li><a href="<?php echo Uri::create('account/view-logins'); ?>">View logins</a></li>
 								<li><a href="<?php echo Uri::create('account/logout'); ?>">Logout</a></li>
 								<li><a href="<?php echo Uri::create('site-admin'); ?>">Go to Admin dashboard</a></li>
 							</ul>

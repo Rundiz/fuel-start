@@ -231,6 +231,41 @@ class Model_Accounts extends \Orm\Model
 	
 	
 	/**
+	 * delete account avatar
+	 * 
+	 * @param integer $account_id
+	 * @param boolean $update_db
+	 * @return boolean
+	 */
+	public function deleteAccountAvatar($account_id = '', $update_db = true) 
+	{
+		if (!is_numeric($account_id)) {
+			return false;
+		}
+		
+		$query = self::query()->where('account_id', $account_id);
+		
+		if ($query->count() > 0) {
+			$row = $query->get_one();
+			
+			if ($row->account_avatar != null && file_exists($row->account_avatar) && is_file($row->account_avatar)) {
+				\File::delete($row->account_avatar);
+			}
+			
+			// update db
+			if ($update_db === true) {
+				$row->account_avatar = null;
+				$row->save();
+			}
+		}
+		
+		unset($query, $row);
+		
+		return true;
+	}// deleteAccountAvatar
+	
+	
+	/**
 	 * get account cookie
 	 * 
 	 * @param string $level
@@ -428,11 +463,21 @@ class Model_Accounts extends \Orm\Model
 	}// logout
 	
 	
+	/**
+	 * member edit profile.
+	 * 
+	 * @param array $data
+	 * @param array $data_field
+	 * @return mixed
+	 */
 	public static function memberEditProfile(array $data = array(), array $data_field = array()) 
 	{
 		if (empty($data)) {
 			return false;
 		}
+		
+		// get config
+		$config = \Model_Config::getvalues(array('allow_avatar', 'member_email_change_need_confirm'));
 		
 		// check email change?
 		if ($data['account_old_email'] == $data['account_email']) {
@@ -444,7 +489,7 @@ class Model_Accounts extends \Orm\Model
 			$query = self::query()->where('account_id', '!=', $data['account_id'])->where('account_email', $data['account_email']);
 			if ($query->count() > 0) {
 				// found email already in use.
-				unset($email_change, $query);
+				unset($config, $email_change, $query);
 				
 				return \Lang::get('account.account_email_already_exists');
 			} else {
@@ -455,27 +500,42 @@ class Model_Accounts extends \Orm\Model
 		
 		// if email change, send confirm link to old email
 		if ($email_change === true) {
-			$data['confirm_code'] = Extension\Str::random('alnum', 5);
-			$data['confirm_code_since'] = time();
-			$send_email_change_confirmation = self::instance()->sendEmailChangeConfirmation($data);
-			
-			if ($send_email_change_confirmation === true) {
-				$data['account_confirm_code'] = $data['confirm_code'];
-				$data['account_confirm_code_since'] = $data['confirm_code_since'];
+			if ($config['member_email_change_need_confirm']['value'] == '1') {
+				// need to send email change confirmation.
+				$data['confirm_code'] = Extension\Str::random('alnum', 5);
+				$data['confirm_code_since'] = time();
+				$send_email_change_confirmation = self::instance()->sendEmailChangeConfirmation($data);
+
+				if ($send_email_change_confirmation === true) {
+					$data['account_confirm_code'] = $data['confirm_code'];
+					$data['account_confirm_code_since'] = $data['confirm_code_since'];
+				} else {
+					unset($config);
+
+					return $send_email_change_confirmation;
+				}
+
+				unset($data['confirm_code'], $data['confirm_code_since'], $data['account_email'], $send_email_change_confirmation);
 			} else {
-				return $send_email_change_confirmation;
+				// no need to send email change confirmation. just change email.
+				$data['account_email'] = $data['account_new_email'];
+				
+				unset($data['account_new_email']);
 			}
-			
-			unset($data['confirm_code'], $data['confirm_code_since'], $send_email_change_confirmation);
 		}
 		unset($email_change);
 		
 		// check avatar upload
-		if (\Model_Config::getval('allow_avatar') == '1' && (isset($_FILES['account_avatar']['name']) && $_FILES['account_avatar']['name'] != null)) {
-			// @todo need to upload avatar code here.
-			echo 'do upload coding <br>';
-			echo __FILE__ . ' line: ' . __LINE__;
-			exit;
+		if ($config['allow_avatar']['value'] == '1' && (isset($_FILES['account_avatar']['name']) && $_FILES['account_avatar']['name'] != null)) {
+			$result = self::instance()->uploadAvatar(array('account_id' => $data['account_id'], 'input_field' => 'account_avatar'));
+			
+			if (isset($result['result']) && $result['result'] === true) {
+				$data['account_avatar'] = $result['account_avatar'];
+			} else {
+				unset($config);
+				
+				return $result;
+			}
 		}
 		
 		// check password change and set new password data for update in db.
@@ -505,16 +565,18 @@ class Model_Accounts extends \Orm\Model
 						
 						$password_changed = true;
 					} else {
-						unset($query, $row);
+						unset($config, $query, $row);
 						
 						return \Lang::get('account.account_wrong_password');
 					}
 				} else {
-					unset($query);
+					unset($config, $query);
 					
 					return \Lang::get('account.account_not_found_account_in_db');
 				}
 			} else {
+				unset($config);
+				
 				return \Lang::get('account.account_please_enter_your_new_password');
 			}
 		} else {
@@ -524,7 +586,7 @@ class Model_Accounts extends \Orm\Model
 		}
 		
 		// remove un-necessary variables to prevent error when update db.
-		unset($data['account_old_email'], $data['account_email'], $data['account_new_password']);
+		unset($data['account_old_email'], $data['account_new_password']);
 		
 		// update to db.
 		$datasave = $data;
@@ -536,9 +598,12 @@ class Model_Accounts extends \Orm\Model
 		unset($datasave);
 		
 		// update account fields
-		$af = new \Model_AccountFields();
-		$af->updateAccountFields($data['account_id'], $data_field);
-		unset($af);
+		// if set data_field to null means not update account fields
+		if (is_array($data_field)) {
+			$af = new \Model_AccountFields();
+			$af->updateAccountFields($data['account_id'], $data_field);
+			unset($af);
+		}
 		
 		// @todo api edit account should be here.
 		
@@ -546,6 +611,8 @@ class Model_Accounts extends \Orm\Model
 		if (isset($password_changed) && $password_changed === true) {
 			self::logout();
 		}
+		
+		unset($config);
 		
 		return true;
 	}// memberEditProfile
@@ -960,6 +1027,81 @@ class Model_Accounts extends \Orm\Model
 		// account not found.
 		return \Lang::get('account.account_didnot_found_entered_email');
 	}// sendResetPasswordEmail
+	
+	
+	/**
+	 * upload avatar
+	 * 
+	 * @param array $data
+	 * @return mixed.
+	 */
+	public function uploadAvatar(array $data = array()) 
+	{
+		if (!isset($data['account_id']) || (isset($data['account_id']) && !is_numeric($data['account_id']))) {
+			return 'Account ID is required.';
+		}
+		
+		if (!isset($data['input_field'])) {
+			$data['input_field'] = 'account_avatar';
+		}
+		
+		$cfg_values = array('allow_avatar', 'avatar_size', 'avatar_allowed_types', 'avatar_path');
+		$config = \Model_Config::getvalues($cfg_values);
+		unset($cfg_values);
+		
+		if ($config['allow_avatar']['value'] != '1') {
+			return \Lang::get('account.account_didnot_allow_avatar');
+		}
+		
+		$upload = new \Extension\Upload();
+		$upload->allowed_ext = explode('|', $config['avatar_allowed_types']['value']);
+		$upload->auto_validate_mime = true;
+		$upload->allowed_max_size = $config['avatar_size']['value'] . 'K';
+		$upload->directory = $config['avatar_path']['value'];
+		$upload->new_name = md5(\Str::random('alnum', 5) . time());
+		$upload->overwrite = false;
+		
+		if ($upload->upload($data['input_field']) == false) {
+			unset($config);
+			
+			return '<ul>' . $upload->displayErrors('<li>', '</li>') . '</ul>';
+		} else {
+			// upload success. delete old avatar but not delete path in db.
+			$this->deleteAccountAvatar($data['account_id'], false);
+			
+			// get uploaded data
+			$upload_data = $upload->getData();
+			
+			// check required memory to resize image to prevent error.
+			if (\Extension\Image::checkMemAvailbleForResize($config['avatar_path']['value'] . $upload_data['name'], 400, 1000, false, 3.9) == true) {
+				// resize to prevent very large image.
+				include_once APPPATH . 'vendor' . DS . 'okvee' . DS . 'vimage' . DS . 'Okvee' . DS . 'Vimage' . DS . 'Vimage.php';
+				$vimage = new \Okvee\Vimage\Vimage($config['avatar_path']['value'] . $upload_data['name']);
+				$vimage->resize(400, 1000);
+				$vimage->save($config['avatar_path']['value'] . $upload_data['name']);
+				$vimage->clear();
+				
+				unset($vimage);
+			} else {
+				// delete uploaded file
+				\File::delete($config['avatar_path']['value'] . $upload_data['name']);
+				
+				// delete old avatar path in db
+				$this->deleteAccountAvatar($data['account_id']);
+				
+				// not enough memory to resize image.
+				unset($config, $upload, $upload_data);
+				
+				return \Lang::get('account.account_not_enough_memory_to_resize_image');
+			}
+			
+			// done.
+			return array(
+				'result' => true,
+				'account_avatar' => $config['avatar_path']['value'] . $upload_data['name'],
+			);
+		}
+	}// uploadAvatar
 
 
 }
