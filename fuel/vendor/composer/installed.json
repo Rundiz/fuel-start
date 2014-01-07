@@ -1,45 +1,5 @@
 [
     {
-        "name": "psr/log",
-        "version": "1.0.0",
-        "version_normalized": "1.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/php-fig/log",
-            "reference": "1.0.0"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://github.com/php-fig/log/archive/1.0.0.zip",
-            "reference": "1.0.0",
-            "shasum": ""
-        },
-        "time": "2012-12-21 11:40:51",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Psr\\Log\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "PHP-FIG",
-                "homepage": "http://www.php-fig.org/"
-            }
-        ],
-        "description": "Common interface for logging libraries",
-        "keywords": [
-            "log",
-            "psr",
-            "psr-3"
-        ]
-    },
-    {
         "name": "monolog/monolog",
         "version": "1.5.0",
         "version_normalized": "1.5.0.0",
@@ -105,17 +65,17 @@
     },
     {
         "name": "fuelphp/upload",
-        "version": "2.0",
-        "version_normalized": "2.0.0.0",
+        "version": "2.0.1",
+        "version_normalized": "2.0.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/fuelphp/upload.git",
-            "reference": "68bfab6f732af326ff0b364b996b15c250014a8b"
+            "reference": "6310108de98ffdbf1083612db5b15411fc140c90"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/fuelphp/upload/zipball/68bfab6f732af326ff0b364b996b15c250014a8b",
-            "reference": "68bfab6f732af326ff0b364b996b15c250014a8b",
+            "url": "https://api.github.com/repos/fuelphp/upload/zipball/6310108de98ffdbf1083612db5b15411fc140c90",
+            "reference": "6310108de98ffdbf1083612db5b15411fc140c90",
             "shasum": ""
         },
         "require": {
@@ -124,7 +84,7 @@
         "require-dev": {
             "mockery/mockery": "0.7.*"
         },
-        "time": "2013-08-15 21:55:11",
+        "time": "2013-10-11 21:42:58",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -147,6 +107,98 @@
         "keywords": [
             "file uploads",
             "upload"
+        ]
+    },
+    {
+        "name": "psr/log",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/php-fig/log.git",
+            "reference": "65f363ac44058796a8e1428cf41e6d92d8a75ddc"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/php-fig/log/zipball/65f363ac44058796a8e1428cf41e6d92d8a75ddc",
+            "reference": "65f363ac44058796a8e1428cf41e6d92d8a75ddc",
+            "shasum": ""
+        },
+        "time": "2013-12-25 11:17:50",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Psr\\Log\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "PHP-FIG",
+                "homepage": "http://www.php-fig.org/"
+            }
+        ],
+        "description": "Common interface for logging libraries",
+        "keywords": [
+            "log",
+            "psr",
+            "psr-3"
+        ]
+    },
+    {
+        "name": "okvee/vimage",
+        "version": "2.0",
+        "version_normalized": "2.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ve3/Vimage.git",
+            "reference": "af85e3b1a67059d3ae1f05d2c73cdad2c1fc4711"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/ve3/Vimage/zipball/af85e3b1a67059d3ae1f05d2c73cdad2c1fc4711",
+            "reference": "af85e3b1a67059d3ae1f05d2c73cdad2c1fc4711",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2013-09-19 12:06:22",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Okvee\\Vimage": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Vee W.",
+                "email": "kawewong@gmail.com",
+                "homepage": "http://okvee.net",
+                "role": "Developer"
+            }
+        ],
+        "description": "PHP Image manipulation",
+        "homepage": "http://okvee.net/th/web-resources/download/V-image-class-2",
+        "keywords": [
+            "image",
+            "resize image",
+            "rotate image",
+            "watermark image"
         ]
     }
 ]
