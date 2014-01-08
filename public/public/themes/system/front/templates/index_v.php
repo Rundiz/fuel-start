@@ -23,7 +23,7 @@ $theme = \Theme::instance();
 
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap.min.css')); ?>">
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap-theme.min.css')); ?>">
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/main.css')); ?>">
+		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/front.css')); ?>">
 		<?php 
 		// render <link>
 		if (isset($page_link) && is_array($page_link)) {
@@ -71,7 +71,7 @@ $theme = \Theme::instance();
 							</ul>
 						</div>
 						<aside class="col-sm-3 sidebar">
-							<h3>Navigation</h3>
+							<h3><?php echo \Lang::get('fslang.fslang_navigation'); ?></h3>
 							<ul>
 								<li><a href="<?php echo Uri::create('account/register'); ?>">Register account</a></li>
 								<li><a href="<?php echo Uri::create('account/resend-activate'); ?>">Re-send confirm register code</a></li>
@@ -80,7 +80,7 @@ $theme = \Theme::instance();
 								<li><a href="<?php echo Uri::create('account/edit'); ?>">Edit account</a></li>
 								<li><a href="<?php echo Uri::create('account/view-logins'); ?>">View logins</a></li>
 								<li><a href="<?php echo Uri::create('account/logout'); ?>">Logout</a></li>
-								<li><a href="<?php echo Uri::create('site-admin'); ?>">Go to Admin dashboard</a></li>
+								<li><a href="<?php echo Uri::create('admin'); ?>">Go to Admin dashboard</a></li>
 							</ul>
 						</aside>
 					</div>

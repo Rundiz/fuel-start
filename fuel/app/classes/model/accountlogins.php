@@ -25,6 +25,57 @@ class Model_AccountLogins extends \Orm\Model
 	
 	
 	/**
+	 * list login history.
+	 * 
+	 * @param array $data
+	 * @param array $option
+	 * @return mixed
+	 */
+	public static function listLogins(array $data = array(), array $option = array()) 
+	{
+		if (!isset($data['account_id']) || (isset($data['account_id']) && !is_numeric($data['account_id']))) {
+			return null;
+		}
+		
+		// get total logins of current user
+		$query = self::query()->where('account_id', $data['account_id']);
+		
+		$output['total'] = $query->count();
+		
+		// sort and order
+		$orders = \Security::strip_tags(trim(\Input::get('orders')));
+		$allowed_orders = array('account_login_id', 'login_ua', 'login_os', 'login_browser', 'login_ip', 'login_time', 'login_time_gmt', 'login_attempt', 'login_attempt_text');
+		if ($orders == null || !in_array($orders, $allowed_orders)) {
+			$orders = 'account_login_id';
+		}
+		unset($allowed_orders);
+		$sort = \Security::strip_tags(trim(\Input::get('sort')));
+		if ($sort == null) {
+			$sort = 'DESC';
+		}
+		
+		// offset and limit
+		if (!isset($option['offset'])) {
+			$option['offset'] = 0;
+		}
+		if (!isset($option['limit'])) {
+			if (isset($option['list_for']) && $option['list_for'] == 'admin') {
+				$option['limit'] = \Model_Config::getval('content_admin_items_perpage');
+			} else {
+				$option['limit'] = \Model_Config::getval('content_items_perpage');
+			}
+		}
+		
+		// get the results from sort, order, offset, limit.
+		$output['items'] = $query->order_by($orders, $sort)->offset($option['offset'])->limit($option['limit'])->get();
+		
+		unset($orders, $query, $sort);
+		
+		return $output;
+	}// listLogins
+	
+	
+	/**
 	 * record login
 	 * @param integer $account_id
 	 * @param integer $attempt 0 for failed, 1 for success

@@ -16,6 +16,8 @@ class Controller_Index extends \Controller
 	 */
 	public function action_index() 
 	{
+		\Lang::load('fslang', 'fslang');
+		
 		// <head> output ----------------------------------------------------------------------------------------------
 		$output['page_title'] = 'Fuel Start';
 		

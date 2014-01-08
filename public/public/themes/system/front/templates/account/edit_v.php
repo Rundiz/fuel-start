@@ -87,6 +87,7 @@
 						unset($key, $timezone_list, $val);
 						?> 
 					</select>
+					<div class="help-block"><?php echo \Lang::get('account.account_current_date_time_example', array('time' => \Extension\Date::gmtDate('%Y-%m-%d %H:%M:%S', (string)time(), $row->account_timezone))); ?></div>
 				</div>
 			</div>
 		</fieldset>

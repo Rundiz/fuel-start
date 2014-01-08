@@ -35,6 +35,7 @@ abstract class Controller_BaseController extends \Controller
 		
 		// start theme class
 		$theme = \Theme::instance();
+		$theme->active('system');
 		
 		// load requested controller theme into page_content variable.
 		$output['page_content'] = $theme->view($view, $output, $auto_filter);
@@ -78,6 +79,8 @@ abstract class Controller_BaseController extends \Controller
 			$output .= $config['page_title_separator']['value'];
 			$output .= $config['site_name']['value'];
 		}
+		
+		unset($a_title, $config);
 		
 		return $output;
 	}// generateTitle

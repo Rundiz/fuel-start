@@ -470,7 +470,7 @@ class Model_Accounts extends \Orm\Model
 	 * @param array $data_field
 	 * @return mixed
 	 */
-	public static function memberEditProfile(array $data = array(), array $data_field = array()) 
+	public static function memberEditProfile(array $data = array(), $data_field = array()) 
 	{
 		if (empty($data)) {
 			return false;

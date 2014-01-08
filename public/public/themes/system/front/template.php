@@ -32,7 +32,7 @@ $theme = \Theme::instance();
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap.min.css')); ?>">
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/font-awesome.min.css')); ?>">
 		<?php /*<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap-theme.min.css')); ?>">*/ ?> 
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/main.css')); ?>">
+		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/front.css')); ?>">
 		<?php 
 		// render <link>
 		if (isset($page_link) && is_array($page_link)) {
@@ -45,6 +45,15 @@ $theme = \Theme::instance();
 
 		<script src="<?php echo Uri::createNL($theme->asset_path('js/modernizr-2.6.2-respond-1.1.0.min.js')); ?>"></script>
 		<script src="<?php echo Uri::createNL($theme->asset_path('js/jquery-1.10.2.min.js')); ?>"></script>
+		<?php 
+		// render <script>
+		if (isset($page_script) && is_array($page_script)) {
+			foreach ($page_script as $a_page_script) {
+				echo $a_page_script . "\n";
+			}
+			unset($a_page_script);
+		}
+		?> 
 		
 		<?php 
 		// render assets
@@ -79,7 +88,7 @@ $theme = \Theme::instance();
 						<li><a href="<?php echo Uri::create('account/edit'); ?>">Edit account</a></li>
 								<li><a href="<?php echo Uri::create('account/view-logins'); ?>">View logins</a></li>
 						<li><a href="<?php echo Uri::create('account/logout'); ?>">Logout</a></li>
-						<li><a href="<?php echo Uri::create('site-admin'); ?>">Go to Admin dashboard</a></li>
+						<li><a href="<?php echo Uri::create('admin'); ?>">Go to Admin dashboard</a></li>
 					</ul>
 				</aside>
 			</div>

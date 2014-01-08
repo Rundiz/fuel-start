@@ -101,6 +101,42 @@ class Uri extends \Fuel\Core\Uri
 	
 	
 	/**
+	 * generate current querystrings 
+	 * 
+	 * @param boolean $question_param
+	 * @param boolean $valid_html
+	 * @param boolean $valid_url
+	 * @return string
+	 */
+	public static function getCurrentQuerystrings($question_param = true, $valid_html = true, $valid_url = true) 
+	{
+		$querystring = '';
+		
+		foreach ($_GET as $key => $value) {
+			if ($valid_html === true) {
+				$querystring .= urlencode($key) . '=' . urlencode($value);
+			} else {
+				$querystring .= $key . '=' . $value;
+			}
+			
+			if (end($_GET) != $value) {
+				if ($valid_url === true) {
+					$querystring .= '&amp;';
+				} else {
+					$querystring .= '&';
+				}
+			}
+		}
+		
+		if ($querystring != null && $question_param === true) {
+			$querystring = '?' . $querystring;
+		}
+		
+		return $querystring;
+	}// getCurrentQuerystrings
+	
+	
+	/**
 	 * redirect to url that contain language
 	 * example: 
 	 * http://localhost/ -> http://localhost/en
