@@ -8,4 +8,7 @@ return array(
 	'account/edit/delete-avatar' => 'account/Edit/deleteAvatar',
 	'account/confirm-change-email(.*)' => 'account/ConfirmChangeEmail$1',
 	'account/view-logins' => 'account/ViewLogins',
+	
+	'site-admin(.*)' => 'admin$1',
+	'admin' => 'admin/index',
 );
