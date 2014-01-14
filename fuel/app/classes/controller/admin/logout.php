@@ -6,7 +6,7 @@
  * 
  */
 
-class Controller_Account_Logout extends \Controller_BaseController 
+class Controller_Admin_Logout extends \Controller_AdminController 
 {
 	
 	
