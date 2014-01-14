@@ -95,7 +95,7 @@ class Uri extends \Fuel\Core\Uri
 			$this->uri = implode('/', $this->segments);
 
 			Config::set('language', $first);
-			Config::set('locale', $locales[$first]);
+			Config::set('locale', $locales[$first]['locale']);
 		}
 	}// detectLanguage
 	

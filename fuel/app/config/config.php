@@ -82,8 +82,8 @@ return array(
 	'language_fallback'  => 'en', // Fallback language when file isn't available for default language
 	'locale'             => '',//en_US', // PHP set_locale() setting, null to not set
 	'locales'            => array(
-		'en' => 'en_US',
-		'th' => 'th_TH'
+		'en' => array('locale' => 'en_US', 'name' => 'English'),
+		'th' => array('locale' => 'th_TH', 'name' => 'Thai'),
 	),
 
 	/**
