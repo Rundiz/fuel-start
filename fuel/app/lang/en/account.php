@@ -1,5 +1,6 @@
 <?php
 
+$lang['account_admin_login'] = 'Administrator login';
 $lang['account_administrator_does_not_allow_to_register'] = 'Administrator does not allow to register.';
 $lang['account_are_you_sure_delete_avatar'] = 'Are you sure to delete avatar?';
 $lang['account_avatar'] = 'Avatar';
@@ -42,6 +43,7 @@ $lang['account_login_failed_too_many'] = 'You had failed to login too many time,
 $lang['account_login_history'] = 'Login history';
 $lang['account_login_success'] = 'Login success.';
 $lang['account_new_password'] = 'New password';
+$lang['account_not_allow_to_login_to_admin_page'] = 'You did not allowed to login to administrator page.';
 $lang['account_not_enough_memory_to_resize_image'] = 'Not enough memory to resize image, please resize your avatar to smaller and try again.';
 $lang['account_not_found_account_in_db'] = 'Not found this account in database.';
 $lang['account_notify_admin_new_register_account'] = 'Notify new register account username: :username';

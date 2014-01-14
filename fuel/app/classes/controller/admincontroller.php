@@ -14,7 +14,13 @@ class Controller_AdminController extends \Controller_BaseController
 	{
 		parent::__construct();
 		
-		// @todo validate logged in admin.
+		// validate admin logged in
+		if (\Model_Accounts::isAdminLogin() == false) {
+			\Response::redirect(\Uri::create('admin/login') . '?rdr=' . urlencode(\Uri::main()));
+		}
+		
+		// load global admin language
+		\Lang::load('admin', 'admin');
 	}// __construct
 	
 	

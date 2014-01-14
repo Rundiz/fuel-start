@@ -1,5 +1,34 @@
 <?php
 
 $lang['admin_administrator_dashbord'] = 'หน้าแรกผู้ดูแล';
+$lang['admin_cancel'] = 'ยกเลิก';
+$lang['admin_get_modern_browser'] = 'โปรดอัพเดทไปใช้เบราเซอร์รุ่นใหม่ๆ หรือดาวน์โหลดเบราเซอร์ยี่ห้ออื่นๆได้ฟรี. <a href="http://browsehappy.com" target="browsehappy">ที่นี่</a>';
+$lang['admin_javascript'] = 'จาวาสคริปต์';
+$lang['admin_please_enable_javascript'] = 'กรุณาเปิดใช้งานจาวาสคริปต์.';
+$lang['admin_save'] = 'บันทึก';
+$lang['admin_using_unknow_browser'] = 'คุณกำลังใช้เบราเซอร์ที่เราไม่สามารถยืนยันได้ว่าจะทำงานกับระบบอย่างได้ผล. คุณอาจสามารถใช้งานได้อย่างไม่มีปัญหา แต่ถ้าหากไม่, แนะนำให้ใช้เบราเซอร์หลักจาก<a href="http://browsehappy.com" target="browsehappy">ที่นี่</a>.';
+$lang['admin_web_browser'] = 'เว็บเบราเซอร์';
+$lang['admin_you_have_no_permission_to_access_this_page'] = 'คุณไม่ได้รับอนุญาตให้เข้าถึงหน้านี้.';
+
+
+// on navigation
+$lang['admin_add_user'] = 'เพิ่มผู้ใช้';
+$lang['admin_admin_home'] = 'หน้าแรกผู้ดูแล';
+$lang['admin_components'] = 'ส่วนประกอบ';
+$lang['admin_edit_my_account'] = 'แก้ไขบัญชีผู้ใช้ของฉัน';
+$lang['admin_global_configuration'] = 'ตั้งค่าทั่วไป';
+$lang['admin_permissions'] = 'สิทธิ';
+$lang['admin_roles'] = 'หน้าที่';
+$lang['admin_roles_permissions'] = 'หน้าที่และสิทธิ';
+$lang['admin_users'] = 'ผู้ใช้';
+$lang['admin_users_roles_permissions'] = 'ผู้ใช้ หน้าที่ และสิทธิ';
+$lang['admin_visit_site'] = 'เข้าชมหน้าแรก';
+$lang['admin_website'] = 'เว็บไซต์';
+
+
+// on right navigation
+$lang['admin_hello_admin'] = 'สวัสดี :displayname';
+$lang['admin_logout'] = 'ออกจากระบบ';
+
 
 return $lang;
