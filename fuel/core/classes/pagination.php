@@ -339,7 +339,7 @@ class Pagination
                         {
                                 $html .= str_replace(
                                  '{link}',
-                                 str_replace(array('{uri}', '{page}'), array(\Security::htmlentities($this->_make_link($i)), $i), $this->template['regular-link']),
+                                 str_replace(array('{uri}', '{page}'), array($this->_make_link($i), $i), $this->template['regular-link']),
                                  $this->template['regular']
                                 );
                                 $this->raw_results[] = array('uri' => $this->_make_link($i), 'title' => $i, 'type' => 'regular');
@@ -368,7 +368,7 @@ class Pagination
                         {
                                 $html = str_replace(
                                         '{link}',
-                                        str_replace(array('{uri}', '{page}'), array(\Security::htmlentities($this->_make_link(1)), $marker), $this->template['first-link']),
+                                        str_replace(array('{uri}', '{page}'), array($this->_make_link(1), $marker), $this->template['first-link']),
                                         $this->template['first']
                                 );
                                 $this->raw_results['first'] = array('uri' => $this->_make_link(1), 'title' => $marker, 'type' => 'first');
@@ -418,7 +418,7 @@ class Pagination
 
                                 $html = str_replace(
                                  '{link}',
-                                 str_replace(array('{uri}', '{page}'), array(\Security::htmlentities($this->_make_link($previous_page)), $marker), $this->template['previous-link']),
+                                 str_replace(array('{uri}', '{page}'), array($this->_make_link($previous_page), $marker), $this->template['previous-link']),
                                  $this->template['previous']
                                 );
                                 $this->raw_results['previous'] = array('uri' => $this->_make_link($previous_page), 'title' => $marker, 'type' => 'previous');
@@ -458,7 +458,7 @@ class Pagination
 
                                 $html = str_replace(
                                  '{link}',
-                                 str_replace(array('{uri}', '{page}'), array(\Security::htmlentities($this->_make_link($next_page)), $marker), $this->template['next-link']),
+                                 str_replace(array('{uri}', '{page}'), array($this->_make_link($next_page), $marker), $this->template['next-link']),
                                  $this->template['next']
                                 );
                                 $this->raw_results['next'] = array('uri' => $this->_make_link($next_page), 'title' => $marker, 'type' => 'next');
@@ -487,7 +487,7 @@ class Pagination
                         {
                                 $html = str_replace(
                                         '{link}',
-                                        str_replace(array('{uri}', '{page}'), array(\Security::htmlentities($this->_make_link($this->config['total_pages'])), $marker), $this->template['last-link']),
+                                        str_replace(array('{uri}', '{page}'), array($this->_make_link($this->config['total_pages']), $marker), $this->template['last-link']),
                                         $this->template['last']
                                 );
                                 $this->raw_results['last'] = array('uri' => $this->_make_link($this->config['total_pages']), 'title' => $marker, 'type' => 'last');
@@ -604,7 +604,7 @@ class Pagination
                         }
 
                         // re-assemble the url
-                        $query = empty($url['query']) ? '' : '?'.preg_replace('/%7Bpage%7D/', '{page}', http_build_query($url['query']));
+                        $query = empty($url['query']) ? '' : '?'.preg_replace('/%7Bpage%7D/', '{page}', http_build_query($url['query'], '', '&amp;'));
                         unset($url['query']);
                         empty($url['scheme']) or $url['scheme'] .= '://';
                         empty($url['port']) or $url['host'] .= ':';
@@ -687,4 +687,3 @@ class Pagination
                 return $value;
         }
 }
-
