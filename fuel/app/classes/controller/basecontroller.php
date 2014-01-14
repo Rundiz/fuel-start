@@ -14,7 +14,6 @@ abstract class Controller_BaseController extends \Controller
 	public function __construct()
 	{
 		// fix changed current language but autoload not reload
-		// @todo change back to autoload in config.php if this problem solved by fuelphp. https://github.com/fuel/core/issues/1604
 		\Lang::load('fslang', 'fslang');
 	}// __construct
 	
@@ -51,7 +50,7 @@ abstract class Controller_BaseController extends \Controller
 		$config = Model_Config::getvalues($cfg_values);
 		unset($cfg_values);
 		
-		// @todo add generate title api if condition here.
+		// @todo [api] generate title if condition here.
 		
 		if ($name_position == 'first') {
 			$output = $config['site_name']['value'];

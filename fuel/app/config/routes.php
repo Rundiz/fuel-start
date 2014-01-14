@@ -9,6 +9,5 @@ return array(
 	'account/confirm-change-email(.*)' => 'account/ConfirmChangeEmail$1',
 	'account/view-logins' => 'account/ViewLogins',
 	
-	'site-admin(.*)' => 'admin$1',
 	'admin' => 'admin/index',
 );

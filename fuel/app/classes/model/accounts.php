@@ -47,6 +47,135 @@ class Model_Accounts extends \Orm\Model
 	protected $password_hash_level = 12;
 	
 	
+	public static function adminLogin(array $data = array()) 
+	{
+		if (!isset($data['account_password']) || (!isset($data['account_username']) && !isset($data['account_email']))) {
+			return false;
+		}
+		
+		\Lang::load('account', 'account');
+		
+		// set required var.
+		if (!isset($data['account_username'])) {
+			$data['account_username'] = null;
+		}
+		if (!isset($data['account_email'])) {
+			$data['account_email'] = null;
+		}
+		
+		$query = self::query()
+				->where('account_username', $data['account_username'])
+				->or_where('account_email', $data['account_email']);
+		
+		if ($query->count() > 0) {
+			// found
+			$row = $query->get_one();
+			
+			// check enabled account.
+			if ($row->account_status == '1') {
+				// enabled
+				// check password
+				if (self::instance()->checkPassword($data['account_password'], $row->account_password) === true) {
+					// check password passed
+					if (\Model_AccountLevelPermission::checkAdminPermission('account_admin_login', 'account_admin_login', $row->account_id) === true) {
+						// generate session id for check simultaneous login
+						$session_id = \Session::key('session_id');
+						
+						// if login set to remember, set expires.
+						if (\Input::post('remember') == 'yes') {
+							$expires = (\Model_Config::getval('member_login_remember_length')*24*60*60);
+						} else {
+							$expires = 0;
+						}
+
+						// get member cookie to check if this user ever logged in at frontend.
+						$cookie_member = self::instance()->getAccountCookie();
+						
+						if (isset($cookie_member['account_id']) && isset($cookie_member['account_username']) && isset($cookie_member['account_email']) && isset($cookie_member['account_display_name']) && isset($cookie_member['account_online_code'])) {
+							// already logged in at front end.
+							$session_id = $cookie_member['account_online_code'];
+						} else {
+							// never logged in at front end.
+							// set cookie (member cookie)
+							$cookie_account['account_id'] = $row->account_id;
+							$cookie_account['account_username'] = $row->account_username;
+							$cookie_account['account_email'] = $row->account_email;
+							$cookie_account['account_display_name'] = $row->account_display_name;
+							$cookie_account['account_online_code'] = $session_id;
+							$cookie_account = \Crypt::encode(serialize($cookie_account));
+							Extension\Cookie::set('member_account', $cookie_account, $expires);
+							unset($cookie_account);
+						}
+						
+						// set cookie (admin cookie)
+						$cookie_account['account_id'] = $row->account_id;
+						$cookie_account['account_username'] = $row->account_username;
+						$cookie_account['account_email'] = $row->account_email;
+						$cookie_account['account_display_name'] = $row->account_display_name;
+						$cookie_account['account_online_code'] = $session_id;
+						$cookie_account = \Crypt::encode(serialize($cookie_account));
+						Extension\Cookie::set('admin_account', $cookie_account, 0);// admin cookie always expire when close browser. (set to 0)
+						unset($cookie_account, $expires);
+
+						// update last login in accounts table
+						$accounts = self::find($row->account_id);
+						$accounts->account_last_login = time();
+						$accounts->account_last_login_gmt = \Extension\Date::localToGmt();
+						$accounts->save();
+						unset($accounts);
+
+						// add/update last login session.
+						$account_session['account_id'] = $row->account_id;
+						$account_session['session_id'] = $session_id;
+
+						$account_site = new \Model_AccountSites();
+						$account_site->addLoginSession($account_session);
+						unset($account_session);
+
+						// record login
+						$account_logins = new Model_AccountLogins();
+						$account_logins->recordLogin($row->account_id, 1, 'account_login_success');
+
+						// @todo [api] any login success (member) api should be here.
+
+						unset($account_logins, $account_site, $query, $row, $session_id);
+
+						// login success
+						return true;
+					} else {
+						// permission deny. this user did not allowed to login admin page.
+						// record failed login
+						\Model_AccountLogins::forge()->recordLogin($row->account_id, 0, 'account_not_allow_to_login_to_admin_page');
+						
+						return \Lang::get('admin.admin_you_have_no_permission_to_access_this_page');
+					}
+				} else {
+					// check password failed, wrong password
+					$account_logins = new Model_AccountLogins();
+					$account_logins->recordLogin($row->account_id, 0, 'account_wrong_username_or_password');
+					
+					unset($query, $row);
+					
+					return \Lang::get('account.account_wrong_username_or_password');
+				}
+			} else {
+				// account disabled
+				$account_logins = new Model_AccountLogins();
+				$account_logins->recordLogin($row->account_id, 0, 'account_was_disabled');
+				
+				unset($query);
+				
+				return \Lang::get('account.account_was_disabled') . ' : ' . $row->account_status_text;
+			}
+		}
+		
+		// not found account. login failed
+		unset($query);
+		
+		return \Lang::get('account.account_wrong_username_or_password');
+	}// adminLogin
+	
+	
 	/**
 	 * check account is logged in correctly and status is enabled. also call to check simultaneous login.
 	 * 
@@ -63,7 +192,7 @@ class Model_Accounts extends \Orm\Model
 			return false;
 		}
 		
-		// @todo write code to get site id for multisite coding
+		// @todo [multisite] write code to get site id for multisite coding
 		$site_id = 1;
 		
 		// check for matches id username and email. ---------------------------------------------------------------
@@ -123,7 +252,7 @@ class Model_Accounts extends \Orm\Model
 	 */
 	public function checkPassword($entered_password = '', $hashed_password = '') 
 	{
-		// @todo any hash api for check password should be here.
+		// @todo [api] any hash api for check password should be here.
 		
 		include_once APPPATH . DS . 'vendor' . DS . 'phpass' . DS . 'PasswordHash.php';
 		$PasswordHash = new PasswordHash($this->password_hash_level, false);
@@ -347,7 +476,7 @@ class Model_Accounts extends \Orm\Model
 	 */
 	public function hashPassword($password = '') 
 	{
-		// @todo any hash password api should be here with if condition.
+		// @todo [api] any hash password api should be here with if condition.
 		
 		include_once APPPATH . DS . 'vendor' . DS . 'phpass' . DS . 'PasswordHash.php';
 		$PasswordHash = new PasswordHash($this->password_hash_level, false);
@@ -363,6 +492,24 @@ class Model_Accounts extends \Orm\Model
 	{
 		return new Model_Accounts();
 	}// instance
+	
+	
+	/**
+	 * is admin logged in?
+	 * work same as is member logged in. but it get admin cookie to check not member cookie.
+	 * 
+	 * @return boolean return true for logged in. return false for not logged in.
+	 */
+	public static function isAdminLogin() 
+	{
+		$cookie_account = self::instance()->getAccountCookie('admin');
+		
+		if (!isset($cookie_account['account_id']) || !isset($cookie_account['account_username']) || !isset($cookie_account['account_email']) || !isset($cookie_account['account_display_name']) || !isset($cookie_account['account_online_code'])) {
+			return false;
+		}
+		
+		return self::instance()->checkAccount($cookie_account['account_id'], $cookie_account['account_username'], $cookie_account['account_email'], $cookie_account['account_online_code']);
+	}// isAdminLogin
 	
 	
 	/**
@@ -398,7 +545,7 @@ class Model_Accounts extends \Orm\Model
 		}
 		
 		if ($site_id == null) {
-			// @todo write code to get current site id for multisite coding.
+			// @todo [multisite] write code to get current site id for multisite coding.
 			$site_id = 1;
 		}
 		
@@ -431,7 +578,7 @@ class Model_Accounts extends \Orm\Model
 	public static function logout($data = array()) 
 	{
 		if (!isset($data['site_id']) || (isset($data['site_id']) && $data['site_id'] == null)) {
-			// @todo add code to get current site id for multisite code.
+			// @todo [multisite] add code to get current site id for multisite code.
 			$data['site_id'] = 1;
 		}
 		
@@ -552,7 +699,7 @@ class Model_Accounts extends \Orm\Model
 						
 						unset($query, $row);
 						
-						// @todo api for changed password here.
+						// @todo [api] for changed password here.
 						
 						// flash message for changed password please login again.
 						\Session::set_flash(
@@ -605,7 +752,7 @@ class Model_Accounts extends \Orm\Model
 			unset($af);
 		}
 		
-		// @todo api edit account should be here.
+		// @todo [api] edit account should be here.
 		
 		// done
 		if (isset($password_changed) && $password_changed === true) {
@@ -690,7 +837,7 @@ class Model_Accounts extends \Orm\Model
 					$account_logins = new Model_AccountLogins();
 					$account_logins->recordLogin($row->account_id, 1, 'account_login_success');
 					
-					// @todo any login api should be here.
+					// @todo [api] any login success (member) api should be here.
 					
 					unset($query, $row, $session_id);
 					
@@ -808,7 +955,7 @@ class Model_Accounts extends \Orm\Model
 		// end add account to db -------------------------------------
 		
 		// add level to user.
-		// @todo for multi site with table site id prefix, you need to modify and loop those [site id]_account_level to add level to user.
+		// @todo [multisite] for multi site with table site id prefix, you need to modify and loop those [site id]_account_level to add level to user.
 		/*
 		//foreach ($list_site['items'] as $site) {
 		$account_level = new \Model_AccountLevel;
@@ -836,7 +983,7 @@ class Model_Accounts extends \Orm\Model
 			unset($account_fields, $field);
 		}
 		
-		// @todo register account api should be here.
+		// @todo [api] register account api should be here.
 		
 		return true;
 	}// registerAccount.

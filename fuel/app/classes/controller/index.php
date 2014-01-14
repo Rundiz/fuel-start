@@ -16,6 +16,7 @@ class Controller_Index extends \Controller
 	 */
 	public function action_index() 
 	{
+		// load language
 		\Lang::load('fslang', 'fslang');
 		
 		// <head> output ----------------------------------------------------------------------------------------------

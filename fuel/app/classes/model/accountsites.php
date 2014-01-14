@@ -31,7 +31,7 @@ class Model_AccountSites extends \Orm\Model
 	 */
 	public function addLoginSession($data = array()) 
 	{
-		// @todo for multi site, add get site id here.
+		// @todo [multisite] for multi site, add get site id here.
 		$site_id = 1;
 		
 		// find exists last login on target site id.

@@ -3,6 +3,7 @@
  * 
  * @author Vee W.
  * @license http://opensource.org/licenses/MIT
+ * @todo add cron to purge old logins.
  * 
  */
 

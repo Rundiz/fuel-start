@@ -92,7 +92,7 @@ class Model_AccountLogins extends \Orm\Model
 			$attempt_text = null;
 		}
 		
-		// @todo set site id for multiple site management
+		// @todo [multisite] set site id for multiple site management
 		$site_id = 1;
 		
 		// get browser class for use instead of fuelphp agent which is does not work.
