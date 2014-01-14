@@ -61,15 +61,18 @@ class Model_Config extends \Orm\Model
 		}
 		
 		// because FuelPHP ORM cannot get multiple results if that table has no primary key.
-		// we will use array loop to get a single value.
+		// we will use DB class
 		$output = array();
 		
-		foreach ($config_name as $a_config_name) {
-			$a_cfg = self::getval($a_config_name, null);
-			$output[$a_cfg->config_name]['value'] = $a_cfg->config_value;
-			$output[$a_cfg->config_name]['core'] = $a_cfg->config_core;
-			$output[$a_cfg->config_name]['description'] = $a_cfg->config_description;
-		}
+		$result = \DB::select('*')->from('config')->as_object()->where('config_name', 'IN', $config_name)->execute();
+		if ((is_array($result) || is_object($result)) && !empty($result)) {
+			foreach ($result as $row) {
+				$output[$row->config_name]['value'] = $row->config_value;
+				$output[$row->config_name]['core'] = $row->config_core;
+				$output[$row->config_name]['description'] = $row->config_description;
+			}// endforeach;
+		}// endif;
+		unset($result, $row);
 		
 		return $output;
 		// end get values by array loop.
