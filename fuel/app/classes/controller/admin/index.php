@@ -13,7 +13,10 @@ class Controller_Admin_Index extends \Controller_AdminController
 	public function action_index() 
 	{
 		// load language
-		\Lang::load('admin', 'admin');
+		\Lang::load('index', 'index');
+		
+		// get total accounts
+		$output['total_accounts'] = \Model_Accounts::count();
 		
 		// <head> output ----------------------------------------------------------------------------------------------
 		$output['page_title'] = $this->generateTitle(\Lang::get('admin.admin_administrator_dashbord'));
