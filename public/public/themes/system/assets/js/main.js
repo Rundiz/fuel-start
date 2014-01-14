@@ -1,3 +1,15 @@
+/**
+ * frontend javascript.
+ * 
+ * @author Vee W.
+ * @license http://opensource.org/licenses/MIT
+ */
 
-// activate bootstrap tooltip
-$('.bootstrap-tooltip').tooltip();
+
+$(function() {
+	// auto focus at login page
+	$('.login-page-input-username').focus();
+	
+	// activate bootstrap tooltip
+	$('.bootstrap-tooltip').tooltip();
+});// jquery start

@@ -12,7 +12,7 @@
 		<div class="form-group">
 			<label for="account_username" class="col-sm-2 control-label"><?php echo __('account.account_username_or_email'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-4">
-				<?php echo \Form::input('account_identity', (isset($account_identity) ? $account_identity : ''), array('id' => 'account_username', 'maxlength' => '255', 'class' => 'form-control', 'autocomplete' => 'off')); ?> 
+				<?php echo \Form::input('account_identity', (isset($account_identity) ? $account_identity : ''), array('id' => 'account_username', 'maxlength' => '255', 'class' => 'form-control login-page-input-username', 'autocomplete' => 'off')); ?> 
 			</div>
 		</div>
 		<div class="form-group">
@@ -45,7 +45,7 @@
 	
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<button type="submit" class="btn btn-primary"><?php echo __('account.account_submit'); ?></button>
+				<button type="submit" class="btn btn-primary"><?php echo __('account.account_login'); ?></button>
 				<a href="<?php echo \Uri::create('account/forgotpw'); ?>" class="btn btn-default btn-sm"><?php echo \Lang::get('account.account_forgot_username_or_password'); ?></a>
 			</div>
 		</div>
@@ -96,7 +96,7 @@
 	
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<button type="button" class="btn btn-primary" onclick="ajax_member_login();"><?php echo __('account.account_submit'); ?></button>
+				<button type="button" class="btn btn-primary" onclick="ajax_member_login();"><?php echo __('account.account_login'); ?></button>
 			</div>
 		</div>
 	<?php echo \Form::close(); ?> 
