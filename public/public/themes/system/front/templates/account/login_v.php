@@ -110,7 +110,7 @@
 		var form_place_holder = $('.ajax-member-login .form-status-placeholder');
 		
 		$.ajax({
-			url: '<?php echo Uri::main(); ?>',
+			url: $('.ajax-member-login').attr('action'),
 			type: 'POST',
 			data: serialize_val,
 			dataType: 'json',

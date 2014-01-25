@@ -80,7 +80,10 @@ class Controller_Account_Login extends \Controller_BaseController
 				$output['form_status'] = 'error';
 				$output['form_status_message'] = $validate->show_errors();
 				
+				// if ajax request, return error message.
 				if (\Input::is_ajax()) {
+					unset($output['config']);
+					
 					$response = new \Response();
 					$response->set_header('Content-Type', 'application/json');
 					$response->body(json_encode($output));
@@ -123,12 +126,14 @@ class Controller_Account_Login extends \Controller_BaseController
 					\Session::delete('show_captcha');
 					
 					if (\Input::is_ajax()) {
+						unset($output['config']);
+
 						$output['login_status'] = true;
 						$output['form_status'] = 'success';
 						$output['form_status_message'] = \Lang::get('account.account_login_success');
 						
 						if (!isset($output['go_to'])) {
-							$output['go_to'] = \Uri::main();
+							$output['go_to'] = \Uri::base();
 						} else {
 							$output['go_to'] = urldecode($output['go_to']);
 						}
@@ -160,6 +165,8 @@ class Controller_Account_Login extends \Controller_BaseController
 					$output['form_status_message'] = $result;
 					
 					if (\Input::is_ajax()) {
+						unset($output['config']);
+
 						$response = new \Response();
 						$response->set_header('Content-Type', 'application/json');
 						$response->body(json_encode($output));
