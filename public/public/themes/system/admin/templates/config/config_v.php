@@ -27,7 +27,7 @@
 						<div class="form-group">
 							<label for="cfg-site_name" class="col-sm-2 control-label"><?php echo __('config.config_site_name'); ?>: <span class="txt_require">*</span></label>
 							<div class="col-sm-10">
-								<?php echo \Extension\Form::input('site_name', (isset($site_name) ? $site_name : ''), array('maxlength' => '255', 'id' => 'cfg-site_name', 'class' => 'form-control')); ?> 
+								<?php echo \Extension\Form::input('site_name', (isset($site_name) ? $site_name : ''), array('maxlength' => '255', 'id' => 'cfg-site_name', 'class' => 'form-control', 'required' => '')); ?> 
 							</div>
 						</div>
 						<div class="form-group">
@@ -100,9 +100,9 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="cfg-member_admin_verify_emails" class="col-sm-12"><?php echo \Lang::get('config.config_member_admin_verify_emails'); ?>:</label>
+							<label for="cfg-member_admin_verify_emails" class="col-sm-12"><?php echo \Lang::get('config.config_member_admin_verify_emails'); ?>: <span class="txt_require">*</span></label>
 							<div class="col-sm-12">
-								<?php echo \Extension\Form::input('member_admin_verify_emails', (isset($member_admin_verify_emails) ? $member_admin_verify_emails : ''), array('maxlength' => '255', 'id' => 'cfg-member_admin_verify_emails', 'class' => 'form-control')); ?> 
+								<?php echo \Extension\Form::input('member_admin_verify_emails', (isset($member_admin_verify_emails) ? $member_admin_verify_emails : ''), array('maxlength' => '255', 'id' => 'cfg-member_admin_verify_emails', 'class' => 'form-control', 'required' => '')); ?> 
 								<div class="help-block"><?php echo \Lang::get('config.config_member_admin_verify_emails_help'); ?></div>
 							</div>
 						</div>
@@ -205,46 +205,162 @@
 			
 			
 			<div class="tab-pane" id="tabs-email">
-				email config.<br />
-				<pre>
-				// mail_protocol
-				// mail_mailpath
-				// mail_smtp_host
-				// mail_smtp_user
-				// mail_smtp_pass
-				// mail_smtp_port
-				// mail_sender_email
-				</pre>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label for="cfg-mail_protocol" class="col-sm-2 control-label"><?php echo \Lang::get('config.config_mail_protocol'); ?>:</label>
+							<div class="col-sm-10">
+								<?php 
+								echo \Extension\Form::select('mail_protocol', (isset($mail_protocol) ? $mail_protocol : ''), 
+									array(
+										'mail' => \Lang::get('config.config_mail_protocol_mail'),
+										'sendmail' => \Lang::get('config.config_mail_protocol_sendmail'),
+										'smtp' => \Lang::get('config.config_mail_protocol_smtp'),
+									), 
+									array(
+										'id' => 'cfg-mail_protocol',
+										'class' => 'form-control'
+									)
+								);
+								?> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="cfg-mail_mailpath" class="col-sm-2 control-label"><?php echo \Lang::get('config.config_mail_mailpath'); ?>:</label>
+							<div class="col-sm-10">
+								<?php echo \Extension\Form::input('mail_mailpath', (isset($mail_mailpath) ? $mail_mailpath : ''), array('maxlength' => '255', 'id' => 'cfg-mail_mailpath', 'class' => 'form-control')); ?> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="cfg-mail_smtp_host" class="col-sm-2 control-label"><?php echo \Lang::get('config.config_mail_smtp_host'); ?>:</label>
+							<div class="col-sm-10">
+								<?php echo \Extension\Form::input('mail_smtp_host', (isset($mail_smtp_host) ? $mail_smtp_host : ''), array('maxlength' => '255', 'id' => 'cfg-mail_smtp_host', 'class' => 'form-control')); ?> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="cfg-mail_smtp_user" class="col-sm-2 control-label"><?php echo \Lang::get('config.config_mail_smtp_user'); ?>:</label>
+							<div class="col-sm-5">
+								<?php echo \Extension\Form::input('mail_smtp_user', (isset($mail_smtp_user) ? $mail_smtp_user : ''), array('maxlength' => '255', 'id' => 'cfg-mail_smtp_user', 'class' => 'form-control')); ?> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="cfg-mail_smtp_pass" class="col-sm-2 control-label"><?php echo \Lang::get('config.config_mail_smtp_pass'); ?>:</label>
+							<div class="col-sm-5">
+								<?php echo \Extension\Form::password('mail_smtp_pass', (isset($mail_smtp_pass) ? $mail_smtp_pass : ''), array('maxlength' => '255', 'id' => 'cfg-mail_smtp_pass', 'class' => 'form-control')); ?> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="cfg-mail_smtp_port" class="col-sm-2 control-label"><?php echo \Lang::get('config.config_mail_smtp_port'); ?>:</label>
+							<div class="col-sm-3">
+								<?php echo \Extension\Form::number('mail_smtp_port', (isset($mail_smtp_port) ? $mail_smtp_port : ''), array('maxlength' => '3', 'id' => 'cfg-mail_smtp_port', 'class' => 'form-control')); ?> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="cfg-mail_sender_email" class="col-sm-2 control-label"><?php echo \Lang::get('config.config_mail_sender_email'); ?>: <span class="txt_require">*</span></label>
+							<div class="col-sm-5">
+								<?php echo \Extension\Form::email('mail_sender_email', (isset($mail_sender_email) ? $mail_sender_email : ''), array('maxlength' => '255', 'id' => 'cfg-mail_sender_email', 'class' => 'form-control', 'required' => '')); ?> 
+								<div class="help-block"><?php echo \Lang::get('config.config_mail_sender_email_help'); ?></div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div><!--.tab-pane-->
 			
 			
 			<div class="tab-pane" id="tabs-content">
-				content config.<br />
-				<pre>
-				// content_items_perpage
-				// content_admin_items_perpage
-				</pre>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label for="cfg-content_items_perpage" class="col-sm-2 control-label"><?php echo \Lang::get('config.config_content_items_perpage'); ?>: <span class="txt_require">*</span></label>
+							<div class="col-sm-3">
+								<?php echo \Extension\Form::number('content_items_perpage', (isset($content_items_perpage) ? $content_items_perpage : ''), array('maxlength' => '3', 'id' => 'cfg-content_items_perpage', 'class' => 'form-control', 'required' => '')); ?> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="cfg-content_admin_items_perpage" class="col-sm-2 control-label"><?php echo \Lang::get('config.config_content_admin_items_perpage'); ?>: <span class="txt_require">*</span></label>
+							<div class="col-sm-3">
+								<?php echo \Extension\Form::number('content_admin_items_perpage', (isset($content_admin_items_perpage) ? $content_admin_items_perpage : ''), array('maxlength' => '3', 'id' => 'cfg-content_admin_items_perpage', 'class' => 'form-control', 'required' => '')); ?> 
+							</div>
+						</div>
+					</div>
+				</div>
 			</div><!--.tab-pane-->
 			
 			
 			<div class="tab-pane" id="tabs-media">
-				media config.<br />
-				<pre>
-				// media_allowed_types
-				</pre>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label for="cfg-media_allowed_types" class="col-sm-2 control-label"><?php echo __('config.config_media_allowed_types'); ?>:</label>
+							<div class="col-sm-10">
+								<?php echo \Extension\Form::input('media_allowed_types', (isset($media_allowed_types) ? $media_allowed_types : ''), array('maxlength' => '255', 'id' => 'cfg-media_allowed_types', 'class' => 'form-control')); ?> 
+								<div class="help-block"><?php echo \Lang::get('config.config_media_allowed_types_help'); ?></div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div><!--.tab-pane-->
 			
 			
 			<div class="tab-pane" id="tabs-ftp">
-				ftp config.<br />
-				<pre>
-				// ftp_host
-				// ftp_username
-				// ftp_password
-				// ftp_port
-				// ftp_passive
-				// ftp_basepath
-				</pre>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label for="cfg-ftp_host" class="col-sm-2 control-label"><?php echo __('config.config_ftp_host'); ?>:</label>
+							<div class="col-sm-10">
+								<?php echo \Extension\Form::input('ftp_host', (isset($ftp_host) ? $ftp_host : ''), array('maxlength' => '255', 'id' => 'cfg-ftp_host', 'class' => 'form-control')); ?> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="cfg-ftp_username" class="col-sm-2 control-label"><?php echo __('config.config_ftp_username'); ?>:</label>
+							<div class="col-sm-5">
+								<?php echo \Extension\Form::input('ftp_username', (isset($ftp_username) ? $ftp_username : ''), array('maxlength' => '255', 'id' => 'cfg-ftp_username', 'class' => 'form-control')); ?> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="cfg-ftp_password" class="col-sm-2 control-label"><?php echo __('config.config_ftp_password'); ?>:</label>
+							<div class="col-sm-5">
+								<?php echo \Extension\Form::password('ftp_password', (isset($ftp_password) ? $ftp_password : ''), array('maxlength' => '255', 'id' => 'cfg-ftp_password', 'class' => 'form-control')); ?> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="cfg-ftp_port" class="col-sm-2 control-label"><?php echo __('config.config_ftp_port'); ?>:</label>
+							<div class="col-sm-3">
+								<?php echo \Extension\Form::number('ftp_port', (isset($ftp_port) ? $ftp_port : ''), array('maxlength' => '255', 'id' => 'cfg-ftp_port', 'class' => 'form-control')); ?> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="cfg-ftp_passive" class="col-sm-2 control-label"><?php echo __('config.config_ftp_passive'); ?>:</label>
+							<div class="col-sm-3">
+								<?php 
+								echo \Extension\Form::select('ftp_passive', (isset($ftp_passive) ? $ftp_passive : ''), 
+									array(
+										'true' => \Lang::get('admin.admin_yes'),
+										'false' => \Lang::get('config.admin_no'),
+									), 
+									array(
+										'id' => 'cfg-ftp_passive',
+										'class' => 'form-control'
+									)
+								);
+								?> 
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="cfg-ftp_basepath" class="col-sm-2 control-label"><?php echo __('config.config_ftp_basepath'); ?>:</label>
+							<div class="col-sm-10">
+								<?php echo \Extension\Form::input('ftp_basepath', (isset($ftp_basepath) ? $ftp_basepath : ''), array('maxlength' => '255', 'id' => 'cfg-ftp_basepath', 'class' => 'form-control')); ?> 
+								<div class="help-block"><?php echo \Lang::get('config.config_ftp_basepath_help'); ?></div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<button type="button" class="btn btn-default test-ftp-btn" onclick="ajax_test_ftp();"><?php echo \Lang::get('config.config_test_ftp_connection'); ?></button>
+								<div class="ftp-test-result"></div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div><!--.tab-pane-->
 		</div>
 	</div><!--.config-page-form-tab-container-->
@@ -267,4 +383,41 @@ echo \Theme::instance()->asset->js('amplify.min.js', array(), 'fuelstart_config'
 	$(function() {
 		makeBs3Tabs();
 	});
+	
+	
+	function ajax_test_ftp() {
+		$('.test-ftp-btn').prepend('<span class="fa fa-spinner fa-spin"></span> ');
+		$('.test-ftp-btn').attr('disabled', 'disabled');
+		$('.ftp-test-result').fadeOut();
+		
+		var ftp_host = $('#cfg-ftp_host').val();
+		var username = $('#cfg-ftp_username').val();
+		var password = $('#cfg-ftp_password').val();
+		var port = $('#cfg-ftp_port').val();
+		var passive = $('#cfg-ftp_passive').val();
+		var basepath = $('#cfg-ftp_basepath').val();
+		
+		$.ajax({
+			url: base_url+'admin/config/ajax_test_ftp',
+			type: 'POST',
+			data: csrf_name+'='+nocsrf_val+'&hostname='+ftp_host+'&username='+username+'&password='+password+'&port='+port+'&passive='+passive+'&basepath='+basepath,
+			dataType: 'json',
+			success: function(data) {
+				$('.ftp-test-result').html('<div class="alert alert-'+data.form_status.replace('error', 'danger')+'">'+data.form_status_message+'</div>');
+				if (typeof data.list_files != 'undefined') {
+					$('.ftp-test-result').append(data.list_files);
+				}
+				$('.ftp-test-result').show();
+				
+				$('.test-ftp-btn').removeAttr('disabled');
+				$('.test-ftp-btn').html('<?php echo \Lang::get('config.config_test_ftp_connection'); ?>');
+			},
+			error: function() {
+				$('.ftp-test-result').html('');
+				$('.ftp-test-result').fadeOut();
+				$('.test-ftp-btn').removeAttr('disabled');
+				$('.test-ftp-btn').html('<?php echo \Lang::get('config.config_test_ftp_connection'); ?>');
+			}
+		});
+	}// ajax_test_ftp
 </script>

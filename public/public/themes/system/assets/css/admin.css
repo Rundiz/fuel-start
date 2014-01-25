@@ -98,6 +98,15 @@ html, body {
 }
 
 
+.ftp-test-result {
+	border: 1px dotted #ccc;
+	border-radius: 5px;
+	display: none;
+	margin: 10px 0 0;
+	padding: 10px;
+}
+
+
 
 /* @todo remove this if BS after 3.0.3 fixed. */
 .navbar .container-fluid {

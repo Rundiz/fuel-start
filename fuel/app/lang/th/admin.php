@@ -4,10 +4,13 @@ $lang['admin_administrator_dashbord'] = 'หน้าแรกผู้ดูแ
 $lang['admin_cancel'] = 'ยกเลิก';
 $lang['admin_get_modern_browser'] = 'โปรดอัพเดทไปใช้เบราเซอร์รุ่นใหม่ๆ หรือดาวน์โหลดเบราเซอร์ยี่ห้ออื่นๆได้ฟรี. <a href="http://browsehappy.com" target="browsehappy">ที่นี่</a>';
 $lang['admin_javascript'] = 'จาวาสคริปต์';
+$lang['admin_no'] = 'ไม่';
 $lang['admin_please_enable_javascript'] = 'กรุณาเปิดใช้งานจาวาสคริปต์.';
 $lang['admin_save'] = 'บันทึก';
+$lang['admin_saved'] = 'บันทึกเรียบร้อยแล้ว.';
 $lang['admin_using_unknow_browser'] = 'คุณกำลังใช้เบราเซอร์ที่เราไม่สามารถยืนยันได้ว่าจะทำงานกับระบบอย่างได้ผล. คุณอาจสามารถใช้งานได้อย่างไม่มีปัญหา แต่ถ้าหากไม่, แนะนำให้ใช้เบราเซอร์หลักจาก<a href="http://browsehappy.com" target="browsehappy">ที่นี่</a>.';
 $lang['admin_web_browser'] = 'เว็บเบราเซอร์';
+$lang['admin_yes'] = 'ใช่';
 $lang['admin_you_have_no_permission_to_access_this_page'] = 'คุณไม่ได้รับอนุญาตให้เข้าถึงหน้านี้.';
 
 

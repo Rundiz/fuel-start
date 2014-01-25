@@ -77,6 +77,27 @@ class Model_Config extends \Orm\Model
 		return $output;
 		// end get values by array loop.
 	}// getvalues
+	
+	
+	/**
+	 * save
+	 * 
+	 * @param array $data
+	 * @return boolean
+	 */
+	public static function saveData(array $data = array()) 
+	{
+		if (empty($data)) {return false;}
+		
+		foreach ($data as $key => $value) {
+			\DB::update('config')
+				->value('config_value', $value)
+				->where('config_name', $key)
+				->execute();
+		}
+		
+		return true;
+	}// saveData
 
 
 }
