@@ -58,7 +58,7 @@
 			<?php if (isset($list_accounts['items']) && is_array($list_accounts['items']) && !empty($list_accounts['items'])) { ?> 
 			<?php foreach ($list_accounts['items'] as $row) { ?> 
 			<tr>
-				<td class="check-column"><?php echo \Extension\Form::checkbox('id[]', $row->account_id, array(($row->account_id == '0' ? 'disabled' : ''))); ?></td>
+				<td class="check-column"><?php echo \Extension\Form::checkbox('id[]', $row->account_id, array(($row->account_id == '0' ? 'disabled' : null))); ?></td>
 				<td><?php echo $row->account_id; ?></td>
 				<td><?php echo \Security::htmlentities($row->account_username); ?></td>
 				<td><?php echo $row->account_email; ?></td>
