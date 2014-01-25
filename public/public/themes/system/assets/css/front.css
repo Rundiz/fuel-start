@@ -50,6 +50,9 @@ fieldset legend small {
 .sidebar h3 {
 	margin-top: 0;
 }
+.sidebar .sidebar-block {
+	margin-bottom: 20px;
+}
 
 
 
