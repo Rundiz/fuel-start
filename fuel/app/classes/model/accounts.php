@@ -569,6 +569,46 @@ class Model_Accounts extends \Orm\Model
 	}// isSimultaneousLogin
 	
 	
+	public static function listAccounts($option = array()) 
+	{
+		// get total logins of current user
+		$query = self::query();
+		
+		$output['total'] = $query->count();
+		
+		// sort and order
+		$orders = \Security::strip_tags(trim(\Input::get('orders')));
+		$allowed_orders = array('account_id', 'account_username', 'account_email', 'account_display_name', 'account_firstname', 'account_middlename', 'account_lastname', 'account_birthdate', 'account_signature', 'account_timezone', 'account_language', 'account_create', 'account_create_gmt', 'account_last_login', 'account_last_login_gmt', 'account_status', 'account_status_text');
+		if ($orders == null || !in_array($orders, $allowed_orders)) {
+			$orders = 'account_id';
+		}
+		unset($allowed_orders);
+		$sort = \Security::strip_tags(trim(\Input::get('sort')));
+		if ($sort == null || $sort != 'DESC') {
+			$sort = 'ASC';
+		}
+		
+		// offset and limit
+		if (!isset($option['offset'])) {
+			$option['offset'] = 0;
+		}
+		if (!isset($option['limit'])) {
+			if (isset($option['list_for']) && $option['list_for'] == 'admin') {
+				$option['limit'] = \Model_Config::getval('content_admin_items_perpage');
+			} else {
+				$option['limit'] = \Model_Config::getval('content_items_perpage');
+			}
+		}
+		
+		// get the results from sort, order, offset, limit.
+		$output['items'] = $query->order_by($orders, $sort)->offset($option['offset'])->limit($option['limit'])->get();
+		
+		unset($orders, $query, $sort);
+		
+		return $output;
+	}// listAccounts
+	
+	
 	/**
 	 * logout
 	 * 

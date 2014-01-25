@@ -79,6 +79,21 @@ html, body {
 
 
 
+.cmds {
+	margin-bottom: 20px;
+}
+.cmds .pagination {
+	float: right;
+	margin: 0;
+}
+.cmds .pagination:after {
+	clear: both;
+	content: '';
+	display: table;
+}
+
+
+
 /* @todo remove this if BS after 3.0.3 fixed. */
 .container-fluid {
 	padding: 0 15px;
@@ -139,6 +154,19 @@ html, body {
 
 .row-with-vspace {
 	margin-bottom: 20px;
+}
+
+
+
+.select-inline {
+	display: inline-block;
+	width: auto;
+}
+
+
+
+.table .check-column {
+	text-align: center;
 }
 
 

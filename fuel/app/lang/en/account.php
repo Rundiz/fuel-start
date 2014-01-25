@@ -1,5 +1,7 @@
 <?php
 
+$lang['account_add'] = 'Add account';
+$lang['account_accounts'] = 'Accounts';
 $lang['account_admin_login'] = 'Administrator login';
 $lang['account_administrator_does_not_allow_to_register'] = 'Administrator does not allow to register.';
 $lang['account_are_you_sure_delete_avatar'] = 'Are you sure to delete avatar?';
@@ -34,9 +36,11 @@ $lang['account_file_size_less_than_or_equal_to'] = 'File size less than or equal
 $lang['account_file_type_allowed'] = 'Allowed file types: :file_types.';
 $lang['account_firstname'] = 'First name';
 $lang['account_forgot_username_or_password'] = 'Forgot username or password';
+$lang['account_id'] = 'ID';
 $lang['account_invalid_confirm_change_email_code'] = 'Your confirm change email code was not correct. Please copy the link from email and try again.';
 $lang['account_invalid_reset_password_request_code'] = 'Your reset password request URL was not correct. Please copy from email or try again in forgot password step.';
 $lang['account_invalid_space_between_text'] = 'Do not allow space between text in :label.';
+$lang['account_last_login'] = 'Last login';
 $lang['account_lastname'] = 'Last name';
 $lang['account_login'] = 'Login';
 $lang['account_login_failed_too_many'] = 'You had failed to login too many time, please wait :wait_minute minutes or until :wait_til_time and then try again.';
@@ -57,6 +61,7 @@ $lang['account_please_enter_email_that_is_using_by_your_account'] = 'Please ente
 $lang['account_please_enter_your_new_password'] = 'Please enter your new password.';
 $lang['account_please_verify_user_registration'] = 'Please verify user registration';
 $lang['account_register'] = 'Register';
+$lang['account_register_since'] = 'Register since';
 $lang['account_registration_complted'] = 'Registration completed. You can now use your username or email and password to login.';
 $lang['account_registration_completed_need_admin_verify'] = 'Registration completed. Please wait until administrator verify your account before you can login.';
 $lang['account_registration_completed_need_confirm'] = 'Registration completed. Please go to check your email and confirm register to make register complete successfully.';
@@ -67,9 +72,11 @@ $lang['account_reset_password'] = 'Reset password';
 $lang['account_reset_password_please_wait_until'] = 'You have already send the request and it not being reach the wait time, please wait until after :wait_til_time and then try again.';
 $lang['account_reset_password_successfully'] = 'The reset password request was successfully.';
 $lang['account_reset_password_time_expired'] = 'Reset password request was expired. Please try the forgot password step again and confirm in time.';
+$lang['account_role'] = 'Role';
 $lang['account_saved'] = 'Your data has beed saved.';
 $lang['account_send'] = 'Send';
 $lang['account_simultaneous_login_detected'] = 'Simultaneous login detected. There is another logged in to your account. If this is not you, please login again and change your password immediately.';
+$lang['account_status'] = 'Status';
 $lang['account_submit'] = 'Submit';
 $lang['account_timezone'] = 'Time zone';
 $lang['account_unable_to_load_email_template'] = 'Unable to load email template.';
@@ -77,6 +84,7 @@ $lang['account_username'] = 'Username';
 $lang['account_username_already_exists'] = 'This username is already exists.';
 $lang['account_username_disallowed'] = 'Your username was disallowed. Please enter new username.';
 $lang['account_username_or_email'] = 'Username or email';
+$lang['account_view_login_history'] = 'View login history';
 $lang['account_view_login_history_of'] = 'View login history of :name';
 $lang['account_waiting_for_admin_verification'] = 'Waiting for administrator to verify your account.';
 $lang['account_was_disabled'] = 'Account was disabled.';
@@ -87,5 +95,14 @@ $lang['account_your_email_change_was_cancelled'] = 'You had cancelled change ema
 $lang['account_your_confirm_register_code_is_invalid'] = 'Your confirm register code or username is invalid.';
 $lang['account_your_password_changed_please_login_again'] = 'Your password had changed, please login again.';
 $lang['account_your_reset_password_request_was_cancelled'] = 'Your reset password request was cancelled.';
+
+// permissions
+$lang['account_add_perm'] = 'Add user';
+$lang['account_delete_perm'] = 'Delete user';
+$lang['account_deletelogin_log_perm'] = 'Delete login history';
+$lang['account_edit_perm'] = 'Edit user';
+$lang['account_perm'] = 'User account';
+$lang['account_viewlogin_log_perm'] = 'View login history';
+$lang['account_viewusers_perm'] = 'View all users';
 
 return $lang;

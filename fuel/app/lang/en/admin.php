@@ -1,7 +1,10 @@
 <?php
 
+$lang['admin_add'] = 'Add';
 $lang['admin_administrator_dashbord'] = 'Administrator dashboard';
 $lang['admin_cancel'] = 'Canel';
+$lang['admin_delete'] = 'Delete';
+$lang['admin_edit'] = 'Edit';
 $lang['admin_get_modern_browser'] = 'Please update your web browser or <a href="http://browsehappy.com" target="browsehappy">download</a> other browser for free.';
 $lang['admin_javascript'] = 'Javascript';
 $lang['admin_no'] = 'No';
@@ -9,6 +12,9 @@ $lang['admin_permission_denied'] = 'Access denied. You did not allowed to access
 $lang['admin_please_enable_javascript'] = 'Please enable Javascript.';
 $lang['admin_save'] = 'Save';
 $lang['admin_saved'] = 'Saved successfully.';
+$lang['admin_search'] = 'Search';
+$lang['admin_submit'] = 'Submit';
+$lang['admin_total'] = 'Total :total items';
 $lang['admin_using_unknow_browser'] = 'You are using web browser that cannot confirm to work correctly. You may use without problem or if not, please use other browser from <a href="http://browsehappy.com" target="browsehappy">here</a>.';
 $lang['admin_web_browser'] = 'Web browser';
 $lang['admin_yes'] = 'Yes';
