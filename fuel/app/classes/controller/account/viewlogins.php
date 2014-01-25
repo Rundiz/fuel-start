@@ -48,7 +48,7 @@ class Controller_Account_ViewLogins extends \Controller_BaseController
 		unset($next_sort);
 		
 		// list logins -----------------------------------------------------------------------------------------------------
-		$option['limit'] = 11;//\Model_Config::getval('content_items_perpage');
+		$option['limit'] = \Model_Config::getval('content_items_perpage');
 		$option['offset'] = (trim(\Input::get('page')) != null ? ((int)\Input::get('page')-1)*$option['limit'] : 0);
 		
 		$list_logins = \Model_AccountLogins::listLogins(array('account_id' => $cookie_account['account_id']), $option);
