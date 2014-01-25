@@ -5,6 +5,7 @@ $lang['admin_cancel'] = 'Canel';
 $lang['admin_get_modern_browser'] = 'Please update your web browser or <a href="http://browsehappy.com" target="browsehappy">download</a> other browser for free.';
 $lang['admin_javascript'] = 'Javascript';
 $lang['admin_no'] = 'No';
+$lang['admin_permission_denied'] = 'Access denied. You did not allowed to access :page.';
 $lang['admin_please_enable_javascript'] = 'Please enable Javascript.';
 $lang['admin_save'] = 'Save';
 $lang['admin_saved'] = 'Saved successfully.';

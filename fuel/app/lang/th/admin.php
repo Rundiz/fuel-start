@@ -5,6 +5,7 @@ $lang['admin_cancel'] = 'ยกเลิก';
 $lang['admin_get_modern_browser'] = 'โปรดอัพเดทไปใช้เบราเซอร์รุ่นใหม่ๆ หรือดาวน์โหลดเบราเซอร์ยี่ห้ออื่นๆได้ฟรี. <a href="http://browsehappy.com" target="browsehappy">ที่นี่</a>';
 $lang['admin_javascript'] = 'จาวาสคริปต์';
 $lang['admin_no'] = 'ไม่';
+$lang['admin_permission_denied'] = 'คุณไม่ได้รับอนุญาตให้เข้าถึงหน้า :page.';
 $lang['admin_please_enable_javascript'] = 'กรุณาเปิดใช้งานจาวาสคริปต์.';
 $lang['admin_save'] = 'บันทึก';
 $lang['admin_saved'] = 'บันทึกเรียบร้อยแล้ว.';
