@@ -26,6 +26,13 @@ class Controller_Admin_Config extends \Controller_AdminController
 	{
 		// check permission
 		if (\Model_AccountLevelPermission::checkAdminPermission('config_global', 'config_global') == false) {
+			\Session::set_flash(
+				'form_status',
+				array(
+					'form_status' => 'error',
+					'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+				)
+			);
 			\Response::redirect(\Uri::create('admin'));
 		}
 		
@@ -89,6 +96,13 @@ class Controller_Admin_Config extends \Controller_AdminController
 	{
 		// check permission
 		if (\Model_AccountLevelPermission::checkAdminPermission('config_global', 'config_global') == false) {
+			\Session::set_flash(
+				'form_status',
+				array(
+					'form_status' => 'error',
+					'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+				)
+			);
 			\Response::redirect(\Uri::create('admin'));
 		}
 		

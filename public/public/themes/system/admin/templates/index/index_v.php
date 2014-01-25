@@ -1,5 +1,11 @@
 <h1><?php echo \Lang::get('admin.admin_administrator_dashbord'); ?></h1>
 
+<div class="form-status-placeholder">
+	<?php if (isset($form_status) && isset($form_status_message)) { ?> 
+	<div class="alert alert-<?php echo str_replace('error', 'danger', $form_status); ?>"><button type="button" class="close" data-dismiss="alert">&times;</button><?php echo $form_status_message; ?></div>
+	<?php } ?> 
+</div>
+
 <div class="dashboard-block dashboard-block-introduce">
 	<h2>Welcome to Fuel Start admin dashboard.</h2>
 	<p>You can start modify this controller and theme to build your own admin dashboard.</p>

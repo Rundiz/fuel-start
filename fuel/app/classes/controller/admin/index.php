@@ -15,6 +15,14 @@ class Controller_Admin_Index extends \Controller_AdminController
 		// load language
 		\Lang::load('index', 'index');
 		
+		// read flash message for display errors.
+		$form_status = \Session::get_flash('form_status');
+		if (isset($form_status['form_status']) && isset($form_status['form_status_message'])) {
+			$output['form_status'] = $form_status['form_status'];
+			$output['form_status_message'] = $form_status['form_status_message'];
+		}
+		unset($form_status);
+		
 		// get total accounts
 		$output['total_accounts'] = \Model_Accounts::count();
 		
