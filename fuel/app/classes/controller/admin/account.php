@@ -613,6 +613,10 @@ class Controller_Admin_Account extends \Controller_AdminController
 				
 				if (is_array($ids)) {
 					foreach ($ids as $id) {
+						if ($id == '0') {
+							continue;
+						}
+						
 						// get target level group id
 						$lvls = \Model_AccountLevel::query()->where('account_id', $id)->get();
 						
@@ -643,6 +647,10 @@ class Controller_Admin_Account extends \Controller_AdminController
 				
 				if (is_array($ids)) {
 					foreach ($ids as $id) {
+						if ($id == '0') {
+							continue;
+						}
+						
 						// get target level group id
 						$lvls = \Model_AccountLevel::query()->where('account_id', $id)->get();
 						
