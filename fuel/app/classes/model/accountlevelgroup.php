@@ -32,6 +32,14 @@ class Model_AccountLevelGroup extends \Orm\Model
 	
 	
 	/**
+	 *disallowed edit or delete level_group_id
+	 * 
+	 * @var array array of disallowed ids
+	 */
+	public $disallowed_edit_delete = array(1, 2, 3, 4);
+	
+	
+	/**
 	 * list level groups
 	 * 
 	 * @param array $option
@@ -48,6 +56,8 @@ class Model_AccountLevelGroup extends \Orm\Model
 			$query->where_close();
 		}
 		
+		$output['total'] = $query->count();
+		
 		// sort order
 		$allowed_orders = array('level_group_id', 'level_name', 'level_description', 'level_priority');
 		if (!isset($option['orders']) || (isset($option['orders']) && !in_array($option['orders'], $allowed_orders))) {
@@ -61,7 +71,11 @@ class Model_AccountLevelGroup extends \Orm\Model
 			$sort = $option['sort'];
 		}
 		
-		return $query->order_by($orders, $sort)->get();
+		$output['items'] = $query->order_by($orders, $sort)->get();
+		
+		unset($allowed_orders, $orders, $query, $sort);
+		
+		return $output;
 	}// listLevels
 
 
