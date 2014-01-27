@@ -108,14 +108,15 @@
 	
 	<div class="row cmds">
 		<div class="col-sm-6">
-			<?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm')) { ?> 
+			 
 			<select name="act" class="form-control select-inline chosen-select">
 				<option value="" selected="selected"></option>
-				<option value="del"><?php echo \Lang::get('admin.admin_delete'); ?></option>
+				<?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm')) { ?><option value="enable"><?php echo \Lang::get('admin.admin_enable'); ?></option><?php } ?> 
+				<?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm')) { ?><option value="disable"><?php echo \Lang::get('admin.admin_disable'); ?></option><?php } ?> 
+				<?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm')) { ?><option value="del"><?php echo \Lang::get('admin.admin_delete'); ?></option><?php } ?> 
 			</select>
 			<button type="submit" class="bb-button btn btn-warning"><?php echo \Lang::get('admin.admin_submit'); ?></button>
 			<?php echo \Extension\Html::anchor('admin', \Lang::get('admin.admin_cancel'), array('class' => 'btn btn-default')); ?> 
-			<?php } ?> 
 		</div>
 		<div class="col-sm-6">
 			<?php if (isset($pagination)) {echo $pagination->render();} ?> 

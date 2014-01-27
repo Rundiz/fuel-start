@@ -594,6 +594,7 @@ class Controller_Admin_Account extends \Controller_AdminController
 						if ($lvls == null) {
 							continue;
 						} else {
+							// format level group for check can i add, edit
 							$level_group = array();
 							foreach ($lvls as $lvl) {
 								$level_group[] = $lvl->level_group_id;
@@ -603,6 +604,66 @@ class Controller_Admin_Account extends \Controller_AdminController
 						if (\Model_Accounts::forge()->canIAddEditAccount($level_group) == true) {
 							// delete account.
 							\Model_Accounts::deleteAccount($id);
+						}
+					}
+				}
+			} elseif ($act == 'enable') {
+				// check permission.
+				if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
+				
+				if (is_array($ids)) {
+					foreach ($ids as $id) {
+						// get target level group id
+						$lvls = \Model_AccountLevel::query()->where('account_id', $id)->get();
+						
+						// not found
+						if ($lvls == null) {
+							continue;
+						} else {
+							// format level group for check can i add, edit
+							$level_group = array();
+							foreach ($lvls as $lvl) {
+								$level_group[] = $lvl->level_group_id;
+							}
+						}
+						
+						if (\Model_Accounts::forge()->canIAddEditAccount($level_group) == true) {
+							$entry = \Model_Accounts::find($id);
+							$entry->account_status = '1';
+							$entry->account_status_text = null;
+							$entry->save();
+							
+							unset($entry);
+						}
+					}
+				}
+			} elseif ($act == 'disable') {
+				// check permission.
+				if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
+				
+				if (is_array($ids)) {
+					foreach ($ids as $id) {
+						// get target level group id
+						$lvls = \Model_AccountLevel::query()->where('account_id', $id)->get();
+						
+						// not found
+						if ($lvls == null) {
+							continue;
+						} else {
+							// format level group for check can i add, edit
+							$level_group = array();
+							foreach ($lvls as $lvl) {
+								$level_group[] = $lvl->level_group_id;
+							}
+						}
+						
+						if (\Model_Accounts::forge()->canIAddEditAccount($level_group) == true) {
+							$entry = \Model_Accounts::find($id);
+							$entry->account_status = '0';
+							$entry->account_status_text = null;
+							$entry->save();
+							
+							unset($entry);
 						}
 					}
 				}
