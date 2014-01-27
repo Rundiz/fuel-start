@@ -89,9 +89,10 @@
 					<td><span class="glyphicon glyphicon-<?php echo ($row->account_status == '1' ? 'ok' : 'remove'); ?>"></span> <?php echo $row->account_status_text; ?></td>
 					<td>
 						<?php if ($row->account_id != '0') { ?> 
-						<?php echo \Extension\Html::anchor('admin/account/edit/' . $row->account_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin.admin_edit'), array('class' => 'btn btn-default btn-xs')); ?> 
-						|
-						<?php echo \Extension\Html::anchor('admin/account/viewlogins/' . $row->account_id, '<span class="glyphicon glyphicon-list"></span> ' . \Lang::get('account.account_view_login_history'), array('class' => 'btn btn-default btn-xs')); ?> 
+						<ul class="actions-inline">
+							<?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/account/edit/' . $row->account_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin.admin_edit'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
+							<?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_viewlogin_log_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/account/viewlogins/' . $row->account_id, '<span class="glyphicon glyphicon-list"></span> ' . \Lang::get('account.account_view_login_history'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
+						</ul>
 						<?php } ?> 
 					</td>
 				</tr>

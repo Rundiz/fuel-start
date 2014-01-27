@@ -343,7 +343,7 @@ class Controller_Admin_Account extends \Controller_AdminController
 		// get timezone list to display.
 		\Config::load('timezone', 'timezone');
 		$output['timezone_list'] = \Config::get('timezone.timezone', array());
-		$output['default_timezone'] = \Model_Config::getval('site_timezone');
+		$output['default_timezone'] = $config['site_timezone']['value'];
 		
 		// get levels to select
 		$output['account_levels'] = \Model_AccountLevelGroup::listLevels(array('no_guest' => true));

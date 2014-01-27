@@ -133,8 +133,8 @@
 				<select name="level_group_id[]" multiple="multiple" id="level_group_id" class="form-control chosen-select">
 					<option value=""></option>
 					<?php 
-					if (isset($account_levels) && is_array($account_levels)) {
-						foreach ($account_levels as $lvg) {
+					if (isset($account_levels['items']) && is_array($account_levels['items'])) {
+						foreach ($account_levels['items'] as $lvg) {
 							echo '<option value="' . $lvg->level_group_id . '"' . (isset($level_group_id) && is_array($level_group_id) && in_array($lvg->level_group_id, $level_group_id) ? ' selected="selected"' : '') . '>' . $lvg->level_name . '</option>' . "\n";
 						}
 					}

@@ -16,6 +16,20 @@ html, body {
 
 
 
+.actions-inline {
+	display: inline-block;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.actions-inline li {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+}
+
+
+
 .admin-login-page-layout {
 	margin: 40px auto 0;
 	max-width: 310px;

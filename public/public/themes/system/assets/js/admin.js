@@ -53,6 +53,8 @@ $(function() {
 	
 	// chosen custom styled select box
 	$('.chosen-select').chosen({
-		disable_search: true
+		allow_single_deselect: true,
+		disable_search: true,
+		display_disabled_options: true
 	});
 });// jquery start
