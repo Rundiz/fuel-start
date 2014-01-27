@@ -26,7 +26,6 @@ class Model_Accounts extends \Orm\Model
 			'key_from' => 'account_id',
 			'model_to' => 'Model_AccountLevel',
 			'key_to' => 'account_id',
-			'cascade_save' => true,
 			'cascade_delete' => true,
 		),
 		'account_logins' => array(
@@ -47,6 +46,95 @@ class Model_Accounts extends \Orm\Model
 	protected $password_hash_level = 12;
 	
 	
+	/**
+	 * add account
+	 * @param array $data
+	 * @param array $data_fields
+	 * @param array $data_level
+	 * @return mixed
+	 */
+	public static function addAccount(array $data = array(), $data_fields = array(), $data_level = array()) 
+	{
+		if (empty($data) || empty($data_level)) {return false;}
+		
+		// check permission that can i add or edit this account
+		if (self::instance()->canIAddEditAccount($data_level['level_group_id']) == false) {
+			return \Lang::get('account.account_you_cannot_add_account_that_contain_role_higher_than_yours');
+		}
+		
+		// check for duplicate account (username)
+		$query = self::query()->where('account_username', $data['account_username']);
+		if ($query->count() > 0) {
+			unset($query);
+			return \Lang::get('account.account_username_already_exists');
+		}
+		unset($query);
+		
+		// check for uploaded avatar
+		if (\Model_Config::getval('allow_avatar') == '1' && isset($_FILES['account_avatar']['name']) && $_FILES['account_avatar']['name'] != null) {
+			$result = self::instance()->uploadAvatar(array('input_field' => 'account_avatar'));
+			
+			if (isset($result['result']) && $result['result'] === true) {
+				$data['account_avatar'] = $result['account_avatar'];
+			} else {
+				unset($config);
+				
+				return $result;
+			}
+		}
+		
+		// set values for insert to accounts table.
+		$data['account_password'] = self::instance()->hashPassword($data['account_password']);
+		$data['account_create'] = time();
+		$data['account_create_gmt'] = \Extension\Date::localToGmt();
+		
+		// add account to db. ----------------------------------------
+		//list($account_id) = \DB::insert('accounts')->set($data); // query builder style.
+		$account = self::forge($data);
+		
+		// add level to user. -----------------------------------------
+		// @todo [multisite] for multi site with table site id prefix, you need to modify and loop those [site id]_account_level to add level to user.
+		// 
+		// below is add level to user by use single site table structure.
+		$i = 0;
+		foreach ($data_level['level_group_id'] as $level_group_id) {
+			$account->account_level[$i] = new Model_AccountLevel();
+			$account->account_level[$i]->level_group_id = $level_group_id;
+			$i++;
+		}
+		
+		$account->save();
+		
+		$account_id = $account->account_id;
+		unset($account, $i);
+		
+		// add account fields if there is any value. -----------------
+		// to add account fields data structure shoud be like this...
+		// array(array('field_name' => 'website', 'field_value' => 'http://domain.tld'), array('field_name' => 'fb', 'field_value' => 'http://fb.com/myprofile'));
+		// or
+		// $af[0]['field_name'] = 'website';
+		// $af[0]['field_value'] = 'http://domain.tld';
+		// $sf[1]['field_name'] = 'fb';
+		// $sf[1]['field_value'] = 'http://fb.com/myprofile';
+		if (!empty($data_fields) && is_array($data_fields)) {
+			foreach ($data_fields as $field) {
+				$account_fields = self::forge($field);
+				$account_fields->account_id = $account_id;
+				$account_fields->save();
+			}
+			unset($account_fields, $field);
+		}
+		
+		return true;
+	}// addAccount
+	
+	
+	/**
+	 * admin login
+	 * 
+	 * @param array $data
+	 * @return mixed
+	 */
 	public static function adminLogin(array $data = array()) 
 	{
 		if (!isset($data['account_password']) || (!isset($data['account_username']) && !isset($data['account_email']))) {
@@ -177,6 +265,55 @@ class Model_Accounts extends \Orm\Model
 	
 	
 	/**
+	 * can i add or edit account
+	 * 
+	 * @param array $level_groups
+	 * @return boolean
+	 */
+	public function canIAddEditAccount($level_groups) 
+	{
+		if (!is_array($level_groups) || (is_array($level_groups) && empty($level_groups))) {
+			return false;
+		}
+		
+		// get account id
+		$cookie = $this->getAccountCookie('admin');
+		if (!isset($cookie['account_id'])) {
+			return false;
+		}
+		$account_id = $cookie['account_id'];
+		unset($cookie);
+		
+		// get current user level group priority
+		$my_level = \Model_AccountLevel::query()->related(array('account_level_group'))->where('account_id', $account_id)->order_by('account_level_group.level_priority', 'DESC')->get_one();
+		if ($my_level == null) {
+			return false;
+		}
+		$my_level_priority = $my_level->account_level_group->level_priority;
+		
+		// loop check each target level group.
+		foreach ($level_groups as $level_group_id) {
+			// get target level group priority
+			$target_level = \Model_AccountLevelGroup::query()->where('level_group_id', $level_group_id)->get_one();
+			
+			if ($target_level == null) {
+				return false;
+			}
+			
+			// check if target level is higher than current user level (priority of target is less than my)
+			if ($target_level->level_priority < $my_level_priority) {
+				return false;
+			}
+		}
+		
+		unset($level_group_id, $my_level, $my_level_priority, $target_level);
+		
+		// all checked pass!
+		return true;
+	}// canIAddEditAccount
+	
+	
+	/**
 	 * check account is logged in correctly and status is enabled. also call to check simultaneous login.
 	 * 
 	 * @param intger $account_id
@@ -297,66 +434,27 @@ class Model_Accounts extends \Orm\Model
 	
 	
 	/**
-	 * count continueous login fail
+	 * delete account
 	 * 
-	 * @deprecated not use anymore
-	 * @param array $data
-	 * @return int|boolean return false on failed to get data, number for countable data
+	 * @param integer $account_id
+	 * @return boolean
 	 */
-	/*public static function countContinuousLoginFail($data = array()) 
-	{
-		if (!isset($data['account_username']) && !isset($data['account_email'])) {
-			// nothing set, return false.
-			return false;
-		} else {
-			if (!isset($data['account_username'])) {
-				$data['account_username'] = null;
-			}
-			if (!isset($data['account_email'])) {
-				$data['account_email'] = null;
-			}
-		}
+	public static function deleteAccount($account_id = '') {
+		// check if it is guest or site owner (id = 1), not delete.
+		if ($account_id === '0' || $account_id === '1') {return false;}
 		
-		// get account_id from username or email
-		$query = self::query()
-				->where('account_username', $data['account_username'])
-				->or_where('account_email', $data['account_email']);
+		// delete avatar
+		self::instance()->deleteAccountAvatar($account_id, false);
 		
-		if ($query->count() <= 0) {
-			unset($query);
-			// not found account, return false.
-			return false;
-		} else {
-			$row = $query->get_one();
-			$account_id = $row->account_id;
-			unset($query, $row);
-		}
+		// @todo [api] for deleting account here.
 		
-		// get account logins data
-		$query = \Model_AccountLogins::find('all', 
-			array(
-				'where' => array(array('account_id', $account_id)),
-				'order_by' => array('account_login_id' => 'DESC')
-			)
-		);
+		// @todo [multisite] delete any accounts related in multi site tables.
 		
-		if (is_object($query) || is_array($query)) {
-			$i = 0;
-			foreach ($query as $row) {
-				if ($row->login_attempt == '1') {
-					unset($query, $row);
-					return $i;
-				}
-				$i++;
-			}
-			
-			unset($query, $row);
-			return $i;
-		}
+		// delete account now.
+		self::find($account_id)->delete();// needs to use ::find() to delete in related table
 		
-		unset($query);
-		return (int) 0;
-	}// countContinuousLoginFail*/ // not use anymore
+		return true;
+	}// deleteAccount
 	
 	
 	/**
@@ -395,6 +493,173 @@ class Model_Accounts extends \Orm\Model
 	
 	
 	/**
+	 * edit account
+	 * 
+	 * @param array $data
+	 * @param array $data_fields
+	 * @param array $data_level
+	 * @return boolean
+	 */
+	public static function editAccount(array $data = array(), $data_fields = array(), $data_level = array()) 
+	{
+		if (empty($data) || empty($data_level)) {return false;}
+		
+		// get config
+		$config = \Model_Config::getvalues(array('allow_avatar', 'member_email_change_need_confirm'));
+		
+		// check things -------------------------------------------------------------------------------------------------
+		
+		// check permission that can i add or edit this account
+		if (self::instance()->canIAddEditAccount($data_level['level_group_id']) == false) {
+			return \Lang::get('account.account_you_cannot_edit_account_that_contain_role_higher_than_yours');
+		}
+		
+		// check for duplicate account (username)
+		$query = self::query()->where('account_id', '!=', $data['account_id'])->where('account_username', $data['account_username']);
+		if ($query->count() > 0) {
+			unset($query);
+			return \Lang::get('account.account_username_already_exists');
+		}
+		unset($query);
+		
+		// if email changed
+		if (isset($data['account_old_email']) && $data['account_old_email'] != $data['account_email']) {
+			$email_change = true;
+			
+			// check duplicate email
+			$query = self::query()->where('account_id', '!=', $data['account_id'])->where('account_email', $data['account_email']);
+			if ($query->count() > 0) {
+				unset($query);
+				return \Lang::get('account.account_email_already_exists');
+			}
+			unset($query);
+		} else {
+			$email_change = false;
+		}
+		
+		// check password change and set new password data for update in db.
+		if (!empty($data['account_password'])) {
+			// there is current password input.
+			if ($data['account_new_password'] != null) {
+				// check current password match in db.
+				$query = self::query()->where('account_id', $data['account_id'])->where('account_username', $data['account_username']);
+				if ($query->count() > 0) {
+					$row = $query->get_one();
+					
+					if (self::instance()->checkPassword($data['account_password'], $row->account_password)) {
+						$data['account_password'] = self::instance()->hashPassword($data['account_new_password']);
+						
+						unset($query, $row);
+						
+						// @todo [api] for changed password here.
+						
+						// flash message for changed password please login again.
+						\Session::set_flash(
+							'form_status',
+							array(
+								'form_status' => 'success',
+								'form_status_message' => \Lang::get('account.account_your_password_changed_please_login_again')
+							)
+						);
+						
+						$password_changed = true;
+					} else {
+						unset($config, $query, $row);
+						
+						return \Lang::get('account.account_wrong_password');
+					}
+				} else {
+					unset($config, $query);
+					
+					return \Lang::get('account.account_not_found_account_in_db');
+				}
+			} else {
+				unset($config);
+				
+				return \Lang::get('account.account_please_enter_your_new_password');
+			}
+		} else {
+			// no password change
+			// remove password data to prevent db update password field to null
+			unset($data['account_password']);
+		}
+		unset($data['account_new_password']);
+		
+		// action things -------------------------------------------------------------------------------------------------
+		
+		// check avatar upload and move if verified
+		if ($config['allow_avatar']['value'] == '1' && (isset($_FILES['account_avatar']['name']) && $_FILES['account_avatar']['name'] != null)) {
+			$result = self::instance()->uploadAvatar(array('account_id' => $data['account_id'], 'input_field' => 'account_avatar'));
+			
+			if (isset($result['result']) && $result['result'] === true) {
+				$data['account_avatar'] = $result['account_avatar'];
+			} else {
+				unset($config);
+				
+				return $result;
+			}
+		}
+		unset($result);
+		
+		// if email changed, send confirm
+		if ($email_change === true) {
+			if ($config['member_email_change_need_confirm']['value'] == '1') {
+				// need to send email change confirmation.
+				$data['confirm_code'] = Extension\Str::random('alnum', 5);
+				$data['confirm_code_since'] = time();
+				$send_email_change_confirmation = self::instance()->sendEmailChangeConfirmation($data);
+
+				if ($send_email_change_confirmation === true) {
+					$data['account_confirm_code'] = $data['confirm_code'];
+					$data['account_confirm_code_since'] = $data['confirm_code_since'];
+				} else {
+					unset($config);
+
+					return $send_email_change_confirmation;
+				}
+
+				unset($data['confirm_code'], $data['confirm_code_since'], $data['account_email'], $send_email_change_confirmation);
+			}
+		}
+		unset($email_change, $data['account_old_email']);
+		
+		// update account to db. ----------------------------------------
+		$account_id = $data['account_id'];
+		unset($data['account_id']);
+		
+		$accounts = self::find($account_id);
+		$accounts->set($data);
+		$accounts->save();
+		
+		// update level to user. -----------------------------------------
+		if (isset($data_level['level_group_id']) && !empty($data_level['level_group_id'])) {
+			$al = new \Model_AccountLevel();
+			$al->updateLevels($account_id, $data_level['level_group_id']);
+			unset($al);
+		}
+		
+		// update account fields if there is any value. -----------------
+		// if set data_field to null means not update account fields
+		if (is_array($data_fields) && !empty($data_fields)) {
+			$af = new \Model_AccountFields();
+			$af->updateAccountFields($data['account_id'], $data_fields);
+			unset($af);
+		}
+		
+		// @todo [api] edit account should be here.
+		
+		// done
+		if (isset($password_changed) && $password_changed === true) {
+			self::logout();
+		}
+		
+		unset($config);
+		
+		return true;
+	}// editAccount
+	
+	
+	/**
 	 * get account cookie
 	 * 
 	 * @param string $level
@@ -415,58 +680,6 @@ class Model_Accounts extends \Orm\Model
 		
 		return $cookie_account;
 	}// getAccountCookie
-	
-	
-	/**
-	 * get login fail last time
-	 * 
-	 * @deprecated not use anymore
-	 * @param array $data
-	 * @return mixed return false on failed, true on success (not found last login, found but success), timestamp on found last failed login.
-	 */
-	/*public static function getLoginFailLastTime($data = array()) 
-	{
-		if (!isset($data['account_username']) && !isset($data['account_email'])) {
-			// nothing set, return false.
-			return false;
-		} else {
-			if (!isset($data['account_username'])) {
-				$data['account_username'] = null;
-			}
-			if (!isset($data['account_email'])) {
-				$data['account_email'] = null;
-			}
-		}
-		
-		// get account_id from username or email
-		$query = self::query()
-				->where('account_username', $data['account_username'])
-				->or_where('account_email', $data['account_email']);
-		
-		if ($query->count() <= 0) {
-			unset($query);
-			// not found account, return false.
-			return false;
-		} else {
-			$row = $query->get_one();
-			$account_id = $row->account_id;
-			unset($query, $row);
-		}
-		
-		// get account login failed last time
-		$account = \Model_AccountLogins::query()->where('account_id', $account_id)->order_by('account_login_id', 'DESC')->get_one();
-		
-		if (is_object($account)) {
-			if ($account->login_attempt == '0') {
-				// found last login and it was failed. return date/time in timestamp (data in db is timestamp)
-				return $account->login_time;
-			}
-		}
-		
-		// not found last login (maybe never login before), found but succeed.
-		unset($account);
-		return true;
-	}// getLoginFailLastTime*/ // not use anymore
 	
 	
 	/**
@@ -569,10 +782,37 @@ class Model_Accounts extends \Orm\Model
 	}// isSimultaneousLogin
 	
 	
+	/**
+	 * list accounts
+	 * 
+	 * @param array $option
+	 * @return mixed
+	 */
 	public static function listAccounts($option = array()) 
 	{
 		// get total logins of current user
 		$query = self::query();
+		
+		// search
+		if (trim(\Input::get('q')) != null) {
+			$search = trim(\Input::get('q'));
+			
+			$query->where_open()
+				->where('account_id', 'LIKE', '%' . $search . '%')
+				->or_where('account_username', 'LIKE', '%' . $search . '%')
+				->or_where('account_email', 'LIKE', '%' . $search . '%')
+				->or_where('account_display_name', 'LIKE', '%' . \Security::htmlentities($search) . '%')
+				->or_where('account_firstname', 'LIKE', '%' . \Security::htmlentities($search) . '%')
+				->or_where('account_middlename', 'LIKE', '%' . \Security::htmlentities($search) . '%')
+				->or_where('account_lastname', 'LIKE', '%' . \Security::htmlentities($search) . '%')
+				->or_where('account_birthdate', 'LIKE', '%' . $search . '%')
+				->or_where('account_avatar', 'LIKE', '%' . $search . '%')
+				->or_where('account_signature', 'LIKE', '%' . \Security::htmlentities($search) . '%')
+				->or_where('account_status_text', 'LIKE', '%' . $search . '%')
+			->where_close();
+			
+			unset($search);
+		}
 		
 		$output['total'] = $query->count();
 		
@@ -640,8 +880,10 @@ class Model_Accounts extends \Orm\Model
 			// delete online code for certain site, so when program check for logged in or simultaneous it will return false.
 			$account_sites = \Model_AccountSites::query()->where('account_id', $data['account_id'])->where('site_id', $data['site_id']);
 			$row = $account_sites->get_one();
-			$row->account_online_code = null;
-			$row->save();
+			if ($row != null) {
+				$row->account_online_code = null;
+				$row->save();
+			}
 
 			unset($account_sites, $row);
 		}
@@ -666,6 +908,8 @@ class Model_Accounts extends \Orm\Model
 		// get config
 		$config = \Model_Config::getvalues(array('allow_avatar', 'member_email_change_need_confirm'));
 		
+		// check things -------------------------------------------------------------------------------------------------
+		
 		// check email change?
 		if ($data['account_old_email'] == $data['account_email']) {
 			$email_change = false;
@@ -683,46 +927,6 @@ class Model_Accounts extends \Orm\Model
 				$data['account_new_email'] = $data['account_email'];
 			}
 			unset($query);
-		}
-		
-		// if email change, send confirm link to old email
-		if ($email_change === true) {
-			if ($config['member_email_change_need_confirm']['value'] == '1') {
-				// need to send email change confirmation.
-				$data['confirm_code'] = Extension\Str::random('alnum', 5);
-				$data['confirm_code_since'] = time();
-				$send_email_change_confirmation = self::instance()->sendEmailChangeConfirmation($data);
-
-				if ($send_email_change_confirmation === true) {
-					$data['account_confirm_code'] = $data['confirm_code'];
-					$data['account_confirm_code_since'] = $data['confirm_code_since'];
-				} else {
-					unset($config);
-
-					return $send_email_change_confirmation;
-				}
-
-				unset($data['confirm_code'], $data['confirm_code_since'], $data['account_email'], $send_email_change_confirmation);
-			} else {
-				// no need to send email change confirmation. just change email.
-				$data['account_email'] = $data['account_new_email'];
-				
-				unset($data['account_new_email']);
-			}
-		}
-		unset($email_change);
-		
-		// check avatar upload
-		if ($config['allow_avatar']['value'] == '1' && (isset($_FILES['account_avatar']['name']) && $_FILES['account_avatar']['name'] != null)) {
-			$result = self::instance()->uploadAvatar(array('account_id' => $data['account_id'], 'input_field' => 'account_avatar'));
-			
-			if (isset($result['result']) && $result['result'] === true) {
-				$data['account_avatar'] = $result['account_avatar'];
-			} else {
-				unset($config);
-				
-				return $result;
-			}
 		}
 		
 		// check password change and set new password data for update in db.
@@ -771,9 +975,49 @@ class Model_Accounts extends \Orm\Model
 			// remove password data to prevent db update password field to null
 			unset($data['account_password']);
 		}
+		unset($data['account_new_password']);
 		
-		// remove un-necessary variables to prevent error when update db.
-		unset($data['account_old_email'], $data['account_new_password']);
+		// action things -------------------------------------------------------------------------------------------------
+		
+		// check avatar upload and move if verified.
+		if ($config['allow_avatar']['value'] == '1' && (isset($_FILES['account_avatar']['name']) && $_FILES['account_avatar']['name'] != null)) {
+			$result = self::instance()->uploadAvatar(array('account_id' => $data['account_id'], 'input_field' => 'account_avatar'));
+			
+			if (isset($result['result']) && $result['result'] === true) {
+				$data['account_avatar'] = $result['account_avatar'];
+			} else {
+				unset($config);
+				
+				return $result;
+			}
+		}
+		
+		// if email change, send confirm link to old email
+		if ($email_change === true) {
+			if ($config['member_email_change_need_confirm']['value'] == '1') {
+				// need to send email change confirmation.
+				$data['confirm_code'] = Extension\Str::random('alnum', 5);
+				$data['confirm_code_since'] = time();
+				$send_email_change_confirmation = self::instance()->sendEmailChangeConfirmation($data);
+
+				if ($send_email_change_confirmation === true) {
+					$data['account_confirm_code'] = $data['confirm_code'];
+					$data['account_confirm_code_since'] = $data['confirm_code_since'];
+				} else {
+					unset($config);
+
+					return $send_email_change_confirmation;
+				}
+
+				unset($data['confirm_code'], $data['confirm_code_since'], $data['account_email'], $send_email_change_confirmation);
+			} else {
+				// no need to send email change confirmation. just change email.
+				$data['account_email'] = $data['account_new_email'];
+				
+				unset($data['account_new_email']);
+			}
+		}
+		unset($email_change, $data['account_old_email']);
 		
 		// update to db.
 		$datasave = $data;
@@ -1152,6 +1396,12 @@ class Model_Accounts extends \Orm\Model
 	}// sendRegisterEmail
 	
 	
+	/**
+	 * send reset password email
+	 * 
+	 * @param array $data
+	 * @return mixed
+	 */
 	public static function sendResetPasswordEmail(array $data = array()) 
 	{
 		if (!isset($data['account_email'])) {
@@ -1224,7 +1474,7 @@ class Model_Accounts extends \Orm\Model
 	 */
 	public function uploadAvatar(array $data = array()) 
 	{
-		if (!isset($data['account_id']) || (isset($data['account_id']) && !is_numeric($data['account_id']))) {
+		if ((isset($data['account_id']) && !is_numeric($data['account_id']))) {
 			return 'Account ID is required.';
 		}
 		
@@ -1254,7 +1504,9 @@ class Model_Accounts extends \Orm\Model
 			return '<ul>' . $upload->displayErrors('<li>', '</li>') . '</ul>';
 		} else {
 			// upload success. delete old avatar but not delete path in db.
-			$this->deleteAccountAvatar($data['account_id'], false);
+			if (isset($data['account_id'])) {
+				$this->deleteAccountAvatar($data['account_id'], false);
+			}
 			
 			// get uploaded data
 			$upload_data = $upload->getData();
@@ -1274,7 +1526,9 @@ class Model_Accounts extends \Orm\Model
 				\File::delete($config['avatar_path']['value'] . $upload_data['name']);
 				
 				// delete old avatar path in db
-				$this->deleteAccountAvatar($data['account_id']);
+				if (isset($data['account_id'])) {
+					$this->deleteAccountAvatar($data['account_id']);
+				}
 				
 				// not enough memory to resize image.
 				unset($config, $upload, $upload_data);

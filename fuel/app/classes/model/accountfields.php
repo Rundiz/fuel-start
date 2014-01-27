@@ -50,6 +50,13 @@ class Model_AccountFields extends \Orm\Model
 	}// getData
 	
 	
+	/**
+	 * update account fields
+	 * 
+	 * @param integer $account_id
+	 * @param array $data_fields
+	 * @return boolean
+	 */
 	public function updateAccountFields($account_id = '', array $data_fields = array()) 
 	{
 		if (!is_numeric($account_id)) {

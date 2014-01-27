@@ -7,6 +7,7 @@ $theme = \Theme::instance();
 // get browser class for use instead of fuelphp agent which is does not work.
 include_once APPPATH . 'vendor' . DS . 'browser' . DS . 'lib' . DS . 'Browser.php';
 $browser = new Browser();
+$pc_class = '';
 if (!$browser->isMobile() && !$browser->isTablet()) {
 	$pc_class = ' pc_device';
 }
@@ -48,10 +49,11 @@ include_once __DIR__ . DS . 'functions.php';
 		?> 
 
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap.min.css')); ?>">
+		<?php /*<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap-theme.min.css')); ?>">*/ ?> 
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/font-awesome.min.css')); ?>">
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/sm-core-css.css')); ?>">
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/sm-bsblack/sm-bsblack.css')); ?>">
-		<?php /*<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap-theme.min.css')); ?>">*/ ?> 
+		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('js/chosen/chosen.min.css')); ?>">
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/admin.css')); ?>">
 		<?php 
 		// render <link>

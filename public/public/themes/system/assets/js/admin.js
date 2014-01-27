@@ -50,4 +50,9 @@ $(function() {
 		subMenusSubOffsetX: 1,
 		subMenusSubOffsetY: -2
 	});
+	
+	// chosen custom styled select box
+	$('.chosen-select').chosen({
+		disable_search: true
+	});
 });// jquery start

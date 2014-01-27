@@ -10,6 +10,12 @@ html, body {
 
 
 
+.account_status_text_group {
+	display: none;
+}
+
+
+
 .admin-login-page-layout {
 	margin: 40px auto 0;
 	max-width: 310px;
@@ -75,6 +81,21 @@ html, body {
 }
 .captcha-form-group .fa {
 	color: #333;
+}
+
+
+
+/* fix chosen input (select multiple) */
+.chosen-container-multi .chosen-choices {
+	border-color: #ccc;
+	border-radius: 4px;
+}
+.chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+	height: 30px;
+	padding: 6px 12px;
+}
+.chosen-container-single .chosen-single {
+	height: 27px;
 }
 
 
