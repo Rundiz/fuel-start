@@ -5,14 +5,6 @@
 		<?php echo \Html::anchor('admin/account-level/add', \Lang::get('admin.admin_add'), array('class' => 'btn btn-default')); ?> 
 		| <?php printf(\Lang::get('admin.admin_total', array('total' => (isset($list_levels['total']) ? $list_levels['total'] : '0')))); ?>
 	</div>
-	<div class="col-sm-6">
-		<form method="get" class="form-inline pull-right">
-			<div class="form-group">
-				<?php echo \Form::input('q', (isset($q) ? $q : ''), array('class' => 'form-control search-input', 'maxlength' => '255')); ?> 
-			</div>
-			<button type="submit" class="btn btn-default"><?php echo \Lang::get('admin.admin_search'); ?></button>
-		</form>
-	</div>
 </div>
 
 <?php echo \Form::open(array('action' => 'admin/account/multiple', 'class' => 'form-horizontal', 'role' => 'form')); ?> 
