@@ -10,4 +10,6 @@ return array(
 	'account/view-logins' => 'account/ViewLogins',
 	
 	'admin' => 'admin/index',
+	'admin/account-level(.*)' => 'admin/AccountLevel$1',
+	'admin/account-permission(.*)' => 'admin/AccountPermission$1',
 );
