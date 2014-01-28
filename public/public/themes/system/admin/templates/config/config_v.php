@@ -336,7 +336,7 @@
 								echo \Extension\Form::select('ftp_passive', (isset($ftp_passive) ? $ftp_passive : ''), 
 									array(
 										'true' => \Lang::get('admin.admin_yes'),
-										'false' => \Lang::get('config.admin_no'),
+										'false' => \Lang::get('admin.admin_no'),
 									), 
 									array(
 										'id' => 'cfg-ftp_passive',
