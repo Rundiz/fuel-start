@@ -82,6 +82,7 @@ $theme = \Theme::instance();
 							<div class="sidebar-block">
 								<h3><?php echo \Lang::get('fslang.fslang_navigation'); ?></h3>
 								<ul>
+									<li><a href="<?php echo Uri::create('admin'); ?>">Go to Admin dashboard</a></li>
 									<li><a href="<?php echo Uri::create('account/register'); ?>">Register account</a></li>
 									<li><a href="<?php echo Uri::create('account/resend-activate'); ?>">Re-send confirm register code</a></li>
 									<li><a href="<?php echo Uri::create('account/login'); ?>">Login</a></li>
@@ -89,7 +90,6 @@ $theme = \Theme::instance();
 									<li><a href="<?php echo Uri::create('account/edit'); ?>">Edit account</a></li>
 									<li><a href="<?php echo Uri::create('account/view-logins'); ?>">View logins</a></li>
 									<li><a href="<?php echo Uri::create('account/logout'); ?>">Logout</a></li>
-									<li><a href="<?php echo Uri::create('admin'); ?>">Go to Admin dashboard</a></li>
 								</ul>
 							</div>
 						</aside>
