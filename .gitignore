@@ -50,3 +50,4 @@ $RECYCLE.BIN/
 ################
 fuel/app/logs/
 fuel/app/logs/**
+/index.php

@@ -15,13 +15,13 @@
 	<div class="form-group">
 		<label for="account_username" class="col-sm-2 control-label"><?php echo __('account.account_username'); ?>: <span class="txt_require">*</span></label>
 		<div class="col-sm-10">
-			<?php echo \Extension\Form::input('account_username', (isset($account_username) ? $account_username : ''), array('id' => 'account_username', 'maxlength' => '255', 'class' => 'form-control', (\Uri::segment(3) == 'edit' ? 'disabled' : null))); ?> 
+			<?php echo \Extension\Form::input('account_username', (isset($account_username) ? $account_username : ''), array('id' => 'account_username', 'maxlength' => '255', 'class' => 'form-control', (\Uri::segment(3) == 'edit' ? 'disabled' : 'required'))); ?> 
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="account_email" class="col-sm-2 control-label"><?php echo __('account.account_email'); ?>: <span class="txt_require">*</span></label>
 		<div class="col-sm-10">
-			<?php echo \Extension\Form::email('account_email', (isset($account_email) ? $account_email : ''), array('id' => 'account_email', 'maxlength' => '255', 'class' => 'form-control')); ?> 
+			<?php echo \Extension\Form::email('account_email', (isset($account_email) ? $account_email : ''), array('id' => 'account_email', 'maxlength' => '255', 'class' => 'form-control', 'required' => '')); ?> 
 		</div>
 	</div>
 
@@ -48,7 +48,7 @@
 		<div class="form-group">
 			<label for="account_display_name" class="col-sm-2 control-label"><?php echo __('account.account_display_name'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-7">
-				<?php echo \Extension\Form::input('account_display_name', (isset($account_display_name) ? $account_display_name : ''), array('id' => 'account_display_name', 'maxlength' => '255', 'class' => 'form-control')); ?> 
+				<?php echo \Extension\Form::input('account_display_name', (isset($account_display_name) ? $account_display_name : ''), array('id' => 'account_display_name', 'maxlength' => '255', 'class' => 'form-control', 'required' => '')); ?> 
 				<div class="help-block"><?php echo \Lang::get('account.account_display_name_use_for_prevent_showing_username'); ?></div>
 			</div>
 		</div>
@@ -72,7 +72,7 @@
 		<div class="form-group">
 			<label for="account_timezone" class="col-sm-2 control-label"><?php echo __('account.account_timezone'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-5">
-				<select name="account_timezone" id="account_timezone" class="form-control chosen-select">
+				<select name="account_timezone" id="account_timezone" class="form-control chosen-select" required="">
 					<option value=""></option>
 					<?php 
 					if (isset($account_timezone)) {
@@ -130,7 +130,7 @@
 		<div class="form-group">
 			<label for="level_group_id" class="col-sm-2 control-label"><?php echo __('account.account_role'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-5">
-				<select name="level_group_id[]" multiple="multiple" id="level_group_id" class="form-control chosen-select">
+				<select name="level_group_id[]" multiple="multiple" id="level_group_id" class="form-control chosen-select" required="">
 					<option value=""></option>
 					<?php 
 					if (isset($account_levels['items']) && is_array($account_levels['items'])) {

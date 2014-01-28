@@ -48,6 +48,7 @@ include_once __DIR__ . DS . 'functions.php';
 		}
 		?> 
 
+		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/smoothness/jquery-ui-1.10.4.custom.min.css')); ?>">
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap.min.css')); ?>">
 		<?php /*<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap-theme.min.css')); ?>">*/ ?> 
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/font-awesome.min.css')); ?>">

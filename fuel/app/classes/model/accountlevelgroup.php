@@ -40,6 +40,77 @@ class Model_AccountLevelGroup extends \Orm\Model
 	
 	
 	/**
+	 * add level groupo
+	 * 
+	 * @param array $data
+	 * @return boolean
+	 */
+	public static function addLevel($data = array()) 
+	{
+		// get new priority
+		$entry = self::query()->where('level_group_id', 'NOT IN', self::forge()->disallowed_edit_delete)->order_by('level_priority', 'DESC')->get_one();
+		
+		if ($entry == null) {
+			$data['level_priority'] = 3;
+		} else {
+			$data['level_priority'] = ($entry->level_priority+1);
+		}
+		
+		unset($entry);
+		
+		// add to db.
+		$alg = self::forge($data);
+		$alg->save();
+		
+		unset($alg);
+		
+		// done
+		return true;
+	}// addLevel
+	
+	
+	/**
+	 * delete level group.
+	 * 
+	 * @param integer $level_group_id
+	 * @return boolean
+	 */
+	public static function deleteLevel($level_group_id = '') 
+	{
+		if (in_array($level_group_id, self::forge()->disallowed_edit_delete)) {
+			return false;
+		}
+		
+		// @todo [api] for delete level group or role here.
+		
+		// delete level group
+		self::find($level_group_id)->delete();
+		
+		return true;
+	}// deleteLevel
+	
+	
+	/**
+	 * edit level group
+	 * 
+	 * @param array $data
+	 * @return boolean
+	 */
+	public static function editLevel($data = array()) 
+	{
+		// set level_group_id variable and unset it from $data to prevent update error PK
+		$level_group_id = $data['level_group_id'];
+		unset($data['level_group_id']);
+		
+		$alg = self::find($level_group_id);
+		$alg->set($data);
+		$alg->save();
+		
+		return true;
+	}// editLevel
+	
+	
+	/**
 	 * list level groups
 	 * 
 	 * @param array $option
