@@ -48,6 +48,8 @@ $RECYCLE.BIN/
 ################
 ##Fuel Start ignored files
 ################
+fuel/app/cache/
+fuel/app/cache/*
 fuel/app/logs/
 fuel/app/logs/**
 /index.php
