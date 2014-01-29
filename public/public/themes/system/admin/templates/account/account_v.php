@@ -24,7 +24,7 @@
 	<?php echo \Extension\NoCsrf::generate(); ?> 
 
 	<div class="table-responsive">
-		<table class="table table-striped list-logins-table">
+		<table class="table table-striped table-hover list-logins-table">
 			<?php 
 			// except querystring to generate
 			$except_querystring[] = 'page';
@@ -90,8 +90,8 @@
 					<td>
 						<?php if ($row->account_id != '0') { ?> 
 						<ul class="actions-inline">
-							<?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/account/edit/' . $row->account_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin.admin_edit'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
-							<?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_viewlogin_log_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/account/viewlogins/' . $row->account_id, '<span class="glyphicon glyphicon-list"></span> ' . \Lang::get('account.account_view_login_history'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
+							<?php if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_edit_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/account/edit/' . $row->account_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin.admin_edit'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
+							<?php if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_viewlogin_log_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/account/viewlogins/' . $row->account_id, '<span class="glyphicon glyphicon-list"></span> ' . \Lang::get('account.account_view_login_history'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
 						</ul>
 						<?php } ?> 
 					</td>
@@ -111,9 +111,9 @@
 			 
 			<select name="act" class="form-control select-inline chosen-select">
 				<option value="" selected="selected"></option>
-				<?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm')) { ?><option value="enable"><?php echo \Lang::get('admin.admin_enable'); ?></option><?php } ?> 
-				<?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm')) { ?><option value="disable"><?php echo \Lang::get('admin.admin_disable'); ?></option><?php } ?> 
-				<?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm')) { ?><option value="del"><?php echo \Lang::get('admin.admin_delete'); ?></option><?php } ?> 
+				<?php if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_edit_perm')) { ?><option value="enable"><?php echo \Lang::get('admin.admin_enable'); ?></option><?php } ?> 
+				<?php if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_edit_perm')) { ?><option value="disable"><?php echo \Lang::get('admin.admin_disable'); ?></option><?php } ?> 
+				<?php if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_delete_perm')) { ?><option value="del"><?php echo \Lang::get('admin.admin_delete'); ?></option><?php } ?> 
 			</select>
 			<button type="submit" class="bb-button btn btn-warning"><?php echo \Lang::get('admin.admin_submit'); ?></button>
 			<?php echo \Extension\Html::anchor('admin', \Lang::get('admin.admin_cancel'), array('class' => 'btn btn-default')); ?> 

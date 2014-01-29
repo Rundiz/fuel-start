@@ -165,7 +165,7 @@ class Model_Accounts extends \Orm\Model
 				// check password
 				if (self::instance()->checkPassword($data['account_password'], $row->account_password) === true) {
 					// check password passed
-					if (\Model_AccountLevelPermission::checkAdminPermission('account_admin_login', 'account_admin_login', $row->account_id) === true) {
+					if (\Model_AccountLevelPermission::checkAdminPermission('account.account_admin_login', 'account.account_admin_login', $row->account_id) === true) {
 						// generate session id for check simultaneous login
 						$session_id = \Session::key('session_id');
 						

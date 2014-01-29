@@ -9,7 +9,7 @@
 	<?php echo \Extension\NoCsrf::generate(); ?> 
 
 	<div class="table-responsive">
-		<table class="table table-striped list-logins-table">
+		<table class="table table-striped table-hover list-logins-table">
 			<?php 
 			// except querystring to generate
 			$except_querystring[] = 'page';
@@ -54,7 +54,7 @@
 
 	<div class="row cmds">
 		<div class="col-sm-6">
-			<?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_deletelogin_log_perm')) { ?> 
+			<?php if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_deletelogin_log_perm')) { ?> 
 			<select name="act" class="form-control select-inline chosen-select">
 				<option value="" selected="selected"></option>
 				<option value="del"><?php echo \Lang::get('admin.admin_delete'); ?></option>

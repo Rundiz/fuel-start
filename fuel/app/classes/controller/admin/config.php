@@ -10,22 +10,31 @@ class Controller_Admin_Config extends \Controller_AdminController
 {
 	
 	
+	public function __construct()
+	{
+		parent::__construct();
+
+		// load language
+		\Lang::load('config', 'config');
+	}// __construct
+	
+	
 	/**
 	 * define permissions for this app/controller.
 	 * 
 	 * @return array
 	 */
-	protected function _define_permission() 
+	public function _define_permission() 
 	{
 		// return array('controller page name' => array('action 1', 'action 2', 'action 3', 'a lot more action. up to you...'));
-		return array('config_global' => array('config_global'));
+		return array('config.config_global' => array('config.config_global'));
 	}// _define_permission
 	
 	
 	public function action_ajax_test_ftp() 
 	{
 		// check permission
-		if (\Model_AccountLevelPermission::checkAdminPermission('config_global', 'config_global') == false) {
+		if (\Model_AccountLevelPermission::checkAdminPermission('config.config_global', 'config.config_global') == false) {
 			\Session::set_flash(
 				'form_status',
 				array(
@@ -95,7 +104,7 @@ class Controller_Admin_Config extends \Controller_AdminController
 	public function action_index() 
 	{
 		// check permission
-		if (\Model_AccountLevelPermission::checkAdminPermission('config_global', 'config_global') == false) {
+		if (\Model_AccountLevelPermission::checkAdminPermission('config.config_global', 'config.config_global') == false) {
 			\Session::set_flash(
 				'form_status',
 				array(

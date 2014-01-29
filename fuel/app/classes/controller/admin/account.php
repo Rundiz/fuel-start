@@ -10,22 +10,31 @@ class Controller_Admin_Account extends \Controller_AdminController
 {
 	
 	
+	public function __construct()
+	{
+		parent::__construct();
+
+		// load language
+		\Lang::load('account', 'account');
+	}// __construct
+	
+	
 	/**
 	 * define permissions for this app/controller.
 	 * 
 	 * @return array
 	 */
-	protected function _define_permission() 
+	public function _define_permission() 
 	{
 		// return array('controller page name' => array('action 1', 'action 2', 'action 3', 'a lot more action. up to you...'));
-		return array('account_perm' => array('account_viewusers_perm', 'account_add_perm', 'account_edit_perm', 'account_delete_perm', 'account_viewlogin_log_perm', 'account_deletelogin_log_perm'));
+		return array('account.account_perm' => array('account.account_viewusers_perm', 'account.account_add_perm', 'account.account_edit_perm', 'account.account_delete_perm', 'account.account_viewlogin_log_perm', 'account.account_deletelogin_log_perm'));
 	}// _define_permission
 	
 	
 	public function action_add() 
 	{
 		// check permission
-		if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_add_perm') == false) {
+		if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_add_perm') == false) {
 			\Session::set_flash(
 				'form_status',
 				array(
@@ -195,7 +204,7 @@ class Controller_Admin_Account extends \Controller_AdminController
 		}
 		
 		// check permission
-		if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm') == false) {
+		if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_edit_perm') == false) {
 			return false;
 		}
 		
@@ -248,7 +257,7 @@ class Controller_Admin_Account extends \Controller_AdminController
 	public function action_delete_log($account_id = '') 
 	{
 		// check permission
-		if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_deletelogin_log_perm') == false) {
+		if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_deletelogin_log_perm') == false) {
 			\Session::set_flash(
 				'form_status',
 				array(
@@ -290,7 +299,7 @@ class Controller_Admin_Account extends \Controller_AdminController
 	public function action_edit($account_id = '') 
 	{
 		// check permission
-		if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm') == false) {
+		if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_edit_perm') == false) {
 			\Session::set_flash(
 				'form_status',
 				array(
@@ -502,7 +511,7 @@ class Controller_Admin_Account extends \Controller_AdminController
 	public function action_index() 
 	{
 		// check permission
-		if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_viewusers_perm') == false) {
+		if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_viewusers_perm') == false) {
 			\Session::set_flash(
 				'form_status',
 				array(
@@ -583,7 +592,7 @@ class Controller_Admin_Account extends \Controller_AdminController
 			// if action is delete.
 			if ($act == 'del') {
 				// check permission.
-				if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
+				if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
 
 				if (is_array($ids)) {
 					foreach ($ids as $id) {
@@ -609,7 +618,7 @@ class Controller_Admin_Account extends \Controller_AdminController
 				}
 			} elseif ($act == 'enable') {
 				// check permission.
-				if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
+				if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
 				
 				if (is_array($ids)) {
 					foreach ($ids as $id) {
@@ -643,7 +652,7 @@ class Controller_Admin_Account extends \Controller_AdminController
 				}
 			} elseif ($act == 'disable') {
 				// check permission.
-				if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
+				if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
 				
 				if (is_array($ids)) {
 					foreach ($ids as $id) {
@@ -690,7 +699,7 @@ class Controller_Admin_Account extends \Controller_AdminController
 	public function action_viewlogins($account_id = '') 
 	{
 		// check permission
-		if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_viewlogin_log_perm') == false) {
+		if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_viewlogin_log_perm') == false) {
 			\Session::set_flash(
 				'form_status',
 				array(

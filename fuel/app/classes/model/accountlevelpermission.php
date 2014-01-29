@@ -24,6 +24,17 @@ class Model_AccountLevelPermission extends \Orm\Model
 	);
 	
 	
+	public $app_admin_path;
+	
+	
+	public function __construct()
+	{
+		parent::__construct();
+		
+		$this->app_admin_path = APPPATH . 'classes' . DS . 'controller' . DS . 'admin' . DS;
+	}// __construct
+	
+	
 	/**
 	 * check admin permission
 	 * check permission match to user'sgroup_id page_name and action
@@ -88,6 +99,48 @@ class Model_AccountLevelPermission extends \Orm\Model
 		
 		return false;
 	}// checkAdminPermission
+	
+	
+	public static function fetchPermissionsFile() 
+	{
+		
+		$permission_array = array();
+		$self = self::forge();
+		$controller_prefix = 'Controller_Admin_';
+		
+		if (is_dir($self->app_admin_path)) {
+			/*if ($dh = opendir($self->app_admin_path)) {
+				while ($file = readdir($dh) !== false) {
+					if ($file != '.' && $file != '..' && is_file($self->app_admin_path . $file)) {
+						
+					}
+				}
+			}*/
+			$files = \Extension\File::readDir2D($self->app_admin_path);
+			natsort($files);
+			
+			foreach ($files as $file) {
+				$file_name = str_replace($self->app_admin_path, '', $file);
+				if (is_file($file)) {
+					// prevent re-declare self class.
+					if ($file_name != 'accountpermission') {
+						include_once $file;
+					}
+					
+					$file_to_class = $controller_prefix . str_replace(array('.php', DS), array('', '_'), $file_name);
+					$obj = new $file_to_class;
+					
+					if (method_exists($obj, '_define_permission')) {
+						$permission_array = array_merge($permission_array, $obj->_define_permission());
+					}
+				}
+			}
+		}
+		
+		unset($controller_prefix, $files, $file, $file_name, $file_to_class, $obj, $self);
+		
+		return $permission_array;
+	}// fetchPermissionsFile
 
 
 }

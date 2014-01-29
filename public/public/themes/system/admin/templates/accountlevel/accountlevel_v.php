@@ -16,7 +16,7 @@
 	<?php echo \Extension\NoCsrf::generate(); ?> 
 
 	<div class="table-responsive">
-		<table class="table table-striped list-logins-table table-sortable">
+		<table class="table table-striped table-hover list-logins-table table-sortable">
 			<thead>
 				<tr>
 					<th class="check-column"><input type="checkbox" name="id_all" value="" onclick="checkAll(this.form,'id[]',this.checked)" /></th>
@@ -47,7 +47,7 @@
 					<td><?php echo $row->level_name; ?></td>
 					<td><?php echo $row->level_description; ?></td>
 					<td>
-						<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_edit_perm')) { ?> 
+						<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_edit_perm')) { ?> 
 						<?php echo \Extension\Html::anchor('admin/account-level/edit/' . $row->level_group_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin.admin_edit'), array('class' => 'btn btn-default btn-xs' . (in_array($row->level_group_id, $disallowed_edit_delete) ? ' disabled' : null))); ?> 
 						<?php } ?> 
 					</td>
@@ -64,7 +64,7 @@
 
 	<div class="row cmds">
 		<div class="col-sm-6">
-			<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_delete_perm')) { ?> 
+			<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_delete_perm')) { ?> 
 			<select name="act" class="form-control select-inline chosen-select">
 				<option value="" selected="selected"></option>
 				<option value="del"><?php echo \Lang::get('admin.admin_delete'); ?></option>

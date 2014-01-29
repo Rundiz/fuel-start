@@ -22,6 +22,9 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 	{
 		parent::__construct();
 		
+		// load language
+		\Lang::load('accountlv', 'accountlv');
+		
 		// set disallowed ids
 		$this->disallowed_edit_delete = \Model_AccountLevelGroup::forge()->disallowed_edit_delete;
 	}// __construct
@@ -32,17 +35,17 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 	 * 
 	 * @return array
 	 */
-	protected function _define_permission() 
+	public function _define_permission() 
 	{
 		// return array('controller page name' => array('action 1', 'action 2', 'action 3', 'a lot more action. up to you...'));
-		return array('accountlv_perm' => array('accountlv_viewlevels_perm', 'accountlv_add_perm', 'accountlv_edit_perm', 'accountlv_delete_perm', 'accountlv_sort_perm'));
+		return array('accountlv.accountlv_perm' => array('accountlv.accountlv_viewlevels_perm', 'accountlv.accountlv_add_perm', 'accountlv.accountlv_edit_perm', 'accountlv.accountlv_delete_perm', 'accountlv.accountlv_sort_perm'));
 	}// _define_permission
 	
 	
 	public function action_add() 
 	{
 		// check permission
-		if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_add_perm') == false) {
+		if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_add_perm') == false) {
 			\Session::set_flash(
 				'form_status',
 				array(
@@ -121,7 +124,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 	public function action_ajaxsort() 
 	{
 		// check permission
-		if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_sort_perm') == false) {
+		if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_sort_perm') == false) {
 			\Session::set_flash(
 				'form_status',
 				array(
@@ -178,7 +181,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 	public function action_edit($level_group_id = '') 
 	{
 		// check permission
-		if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_edit_perm') == false) {
+		if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_edit_perm') == false) {
 			\Session::set_flash(
 				'form_status',
 				array(
@@ -276,7 +279,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 	public function action_index() 
 	{
 		// check permission
-		if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_viewlevels_perm') == false) {
+		if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_viewlevels_perm') == false) {
 			\Session::set_flash(
 				'form_status',
 				array(
@@ -324,7 +327,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 		if (\Extension\NoCsrf::check()) {
 			if ($act == 'del') {
 				// check permission.
-				if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account-level'));}
+				if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account-level'));}
 				
 				if (is_array($ids)) {
 					foreach ($ids as $id) {
@@ -338,7 +341,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 		if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
 			\Response::redirect(\Input::referrer());
 		} else {
-			\Response::redirect('admin/account');
+			\Response::redirect('admin/account-level');
 		}
 	}// action_multiple
 	

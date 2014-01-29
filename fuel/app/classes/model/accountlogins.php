@@ -76,6 +76,25 @@ class Model_AccountLogins extends \Orm\Model
 	
 	
 	/**
+	 * purge old login history
+	 * 
+	 * @param integer $day_old
+	 * @return boolean
+	 */
+	public static function purgeOldLogins($day_old = 90) 
+	{
+		if (!is_int($day_old)) {
+			$day_old = 90;
+		}
+		
+		$query = self::query()->where('login_time', '<', DB::expr('unix_timestamp(now() - interval '.$day_old.' day)'))->delete();
+		
+		// done.
+		return true;
+	}// purgeOldLogins
+	
+	
+	/**
 	 * record login
 	 * @param integer $account_id
 	 * @param integer $attempt 0 for failed, 1 for success

@@ -13,15 +13,24 @@ class Controller_Admin_Login extends \Controller_BaseController
 	public $login_fail_time_show_captcha = 3;
 	
 	
+	public function __construct()
+	{
+		parent::__construct();
+
+		// load language
+		\Lang::load('account', 'account');
+	}// __construct
+	
+	
 	/**
 	 * define permissions for this app/controller.
 	 * 
 	 * @return array
 	 */
-	protected function _define_permission() 
+	public function _define_permission() 
 	{
 		// return array('controller page name' => array('action 1', 'action 2', 'action 3', 'a lot more action. up to you...'));
-		return array('account_admin_login' => array('account_admin_login'));
+		return array('account.account_admin_login' => array('account.account_admin_login'));
 	}// _define_permission
 	
 	
