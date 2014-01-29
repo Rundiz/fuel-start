@@ -331,6 +331,10 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 				
 				if (is_array($ids)) {
 					foreach ($ids as $id) {
+						if (in_array($id, $this->disallowed_edit_delete)) {
+							continue;
+						}
+						
 						\Model_AccountLevelGroup::deleteLevel($id);
 					}
 				}
