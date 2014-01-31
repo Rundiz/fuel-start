@@ -10,6 +10,14 @@ This can help those developers build their project very fast.
 * Admin configuration page.
 * Easy template layout system.
 
+##Installation
+System requirement: 
+ * PHP 5.3 or above
+ * Memory 32MB or more
+ * Disk space 30MB or more
+
+Installation instruction please go to [wiki][3]
+
 ---
 
 ##License
@@ -22,3 +30,4 @@ Fuel Start is released under [MIT license][2]
 
 [1]: http://fuelphp.com/
 [2]: http://opensource.org/licenses/MIT
+[3]: https://github.com/ve3/fuel-start/wiki
