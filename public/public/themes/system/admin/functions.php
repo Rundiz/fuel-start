@@ -8,6 +8,19 @@
  */
 
 /**
+ * check admin permission
+ * 
+ * @param string $page_name
+ * @param string $action
+ * @param integer $account_id
+ * @return boolean
+ */
+function checkAdminPermission($page_name = '', $action = '', $account_id = '') 
+{
+	return \Model_AccountLevelPermission::checkAdminPermission($page_name, $action, $account_id);
+}// checkAdminPermission
+
+/**
  * language switch for admin page.
  * 
  * @return string

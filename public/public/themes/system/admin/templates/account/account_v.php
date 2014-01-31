@@ -2,7 +2,7 @@
 
 <div class="row cmds">
 	<div class="col-sm-6">
-		<?php echo \Html::anchor('admin/account/add', \Lang::get('admin.admin_add'), array('class' => 'btn btn-default')); ?> 
+		<?php if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_edit_perm')) {echo \Html::anchor('admin/account/add', \Lang::get('admin.admin_add'), array('class' => 'btn btn-default'));} ?> 
 		| <?php printf(\Lang::get('admin.admin_total', array('total' => (isset($list_accounts['total']) ? $list_accounts['total'] : '0')))); ?>
 	</div>
 	<div class="col-sm-6">

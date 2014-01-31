@@ -26,7 +26,6 @@ if (!isset($cookie_admin) || !isset($cookie_admin['account_display_name'])) {
 
 // load functions file to work with theme.
 include_once __DIR__ . DS . 'functions.php';
-// @todo navbar menu needs to check permission. do it when permission management was done.
 ?>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->

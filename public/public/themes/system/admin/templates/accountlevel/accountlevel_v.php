@@ -2,7 +2,7 @@
 
 <div class="row cmds">
 	<div class="col-sm-6">
-		<?php echo \Html::anchor('admin/account-level/add', \Lang::get('admin.admin_add'), array('class' => 'btn btn-default')); ?> 
+		<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_add_perm')) {echo \Html::anchor('admin/account-level/add', \Lang::get('admin.admin_add'), array('class' => 'btn btn-default'));} ?> 
 		| <?php printf(\Lang::get('admin.admin_total', array('total' => (isset($list_levels['total']) ? $list_levels['total'] : '0')))); ?>
 	</div>
 </div>
@@ -64,14 +64,12 @@
 
 	<div class="row cmds">
 		<div class="col-sm-6">
-			<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_delete_perm')) { ?> 
 			<select name="act" class="form-control select-inline chosen-select">
 				<option value="" selected="selected"></option>
-				<option value="del"><?php echo \Lang::get('admin.admin_delete'); ?></option>
+				<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_delete_perm')) { ?><option value="del"><?php echo \Lang::get('admin.admin_delete'); ?></option><?php } ?> 
 			</select>
 			<button type="submit" class="bb-button btn btn-warning"><?php echo \Lang::get('admin.admin_submit'); ?></button>
 			<?php echo \Extension\Html::anchor('admin', \Lang::get('admin.admin_cancel'), array('class' => 'btn btn-default')); ?> 
-			<?php } ?> 
 		</div>
 		<div class="col-sm-6">
 			
