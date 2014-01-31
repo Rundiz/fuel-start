@@ -1,0 +1,8 @@
+Any views or theme file of blog module can store here to override default module's views.
+
+This including all modules can store in public/themes/<theme_name>/modules/<module_name>/
+
+
+ไฟล์สำหรับวิวหรือธีมของโมดูลบล็อก จะเก็บไว้ที่นี่ได้ เพื่อแสดงแทนไฟล์วิวภายในโฟลเดอร์โมดูล เป็นการปรับแต่งแทนการแก้ที่ไฟล์หลัก
+
+นี่รวมถึงโมดูลทั้งหมดด้วย ที่จะเก็บธีมไว้ในนี้ได้ public/themes/<ชื่อธีม>/modules/<ชื่อโมดูล>/
