@@ -18,6 +18,6 @@ return array(
 	'paths' => array(
 		THEMEDIR
 	),
-	'use_modules' => true,
+	'use_modules' => 'modules',
 	'view_ext' => '.php',
 );
