@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `ws_accounts` (
   `account_confirm_code` varchar(255) DEFAULT NULL COMMENT 'confirmation code. use for confirm register, change email, reset password',
   `account_confirm_code_since` bigint(20) DEFAULT NULL COMMENT 'confirm code generated since',
   PRIMARY KEY (`account_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='contain user account' AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='contain user account' AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `ws_accounts`
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `ws_account_level` (
   PRIMARY KEY (`level_id`),
   KEY `level_group_id` (`level_group_id`),
   KEY `account_id` (`account_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `ws_account_level`
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `ws_account_level_group` (
   `level_description` text,
   `level_priority` int(5) NOT NULL DEFAULT '1' COMMENT 'lower is more higher priority',
   PRIMARY KEY (`level_group_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='contain user role or level' AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='contain user role or level' AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `ws_account_level_group`
@@ -137,6 +137,8 @@ INSERT INTO `ws_account_level_group` (`level_group_id`, `level_name`, `level_des
 CREATE TABLE IF NOT EXISTS `ws_account_level_permission` (
   `permission_id` int(11) NOT NULL AUTO_INCREMENT,
   `level_group_id` int(11) NOT NULL,
+  `permission_core` int(1) NOT NULL DEFAULT '0' COMMENT '1=core permission, 0=modules permission',
+  `module_system_name` varchar(255) DEFAULT NULL COMMENT 'module system name',
   `permission_page` varchar(255) NOT NULL,
   `permission_action` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`permission_id`),
@@ -189,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `ws_account_sites` (
   `account_last_login_gmt` bigint(20) DEFAULT NULL COMMENT 'last login date time in gmt 0',
   `account_online_code` varchar(255) DEFAULT NULL COMMENT 'store session code for check dubplicate log in if enabled.',
   PRIMARY KEY (`account_site_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='contain account online code for each site (if use multisite)' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='contain account online code for each site (if use multisite)' AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `ws_account_sites`
