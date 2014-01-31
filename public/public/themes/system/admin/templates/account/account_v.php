@@ -24,7 +24,7 @@
 	<?php echo \Extension\NoCsrf::generate(); ?> 
 
 	<div class="table-responsive">
-		<table class="table table-striped table-hover list-logins-table">
+		<table class="table table-striped table-hover">
 			<?php 
 			// except querystring to generate
 			$except_querystring[] = 'page';
