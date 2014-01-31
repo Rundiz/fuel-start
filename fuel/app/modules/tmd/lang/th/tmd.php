@@ -2,6 +2,8 @@
 
 return array(
 	'tmd' => 'test module',
+	'tmd_manage' => 'จัดการ',
+	'tmd_test_module' => 'Test module',
 	
 	'tmd_perm' => 'test module',
 	'tmd_act1_perm' => 'act 1',

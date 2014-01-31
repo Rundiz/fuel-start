@@ -28,5 +28,15 @@ class TmdAdmin
 	}// _define_permission
 	
 	
+	public function admin_navbar() 
+	{
+		return '<li><a href="#" onclick="return false;">' . \Lang::get('tmd.tmd_test_module') . '</a>
+			<ul>
+				<li>' . \Extension\Html::anchor('tmd/admin', \Lang::get('tmd.tmd_manage')) . '</li>
+			</ul>
+		</li>';
+	}// admin_navbar
+	
+	
 }
 
