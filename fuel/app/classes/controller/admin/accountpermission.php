@@ -151,8 +151,12 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
 			\Response::redirect(\Uri::create('admin/account-permission'));
 		}
 		
-		$result = \Model_AccountLevelPermission::resetPermission();
-		$output['result'] = $result;
+		if (!\Extension\NoCsrf::check()) {
+			$output['result'] = false;
+		} else {
+			$result = \Model_AccountLevelPermission::resetPermission();
+			$output['result'] = $result;
+		}
 		
 		$response = new \Response();
 		$response->set_header('Content-Type', 'application/json');
@@ -177,16 +181,18 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
 		
 		// if form submitted
 		if (\Input::method() == 'POST') {
-			$data['permission_core'] = (int) trim(\Input::post('permission_core'));
-				if ($data['permission_core'] != '1') {$data['permission_core'] = '0';}
-			$data['module_system_name'] = \Security::strip_tags(trim(\Input::post('module_system_name')));
-				if ($data['module_system_name'] == null || $data['permission_core'] == '1') {$data['module_system_name'] = null;}
-			
-			$data['level_group_id'] = \Input::post('level_group_id');
-			$data['permission_page'] = \Input::post('permission_page');
-			$data['permission_action'] = \Input::post('permission_action');
-			
-			\Model_AccountLevelPermission::savePermissions($data);
+			if (\Extension\NoCsrf::check()) {
+				$data['permission_core'] = (int) trim(\Input::post('permission_core'));
+					if ($data['permission_core'] != '1') {$data['permission_core'] = '0';}
+				$data['module_system_name'] = \Security::strip_tags(trim(\Input::post('module_system_name')));
+					if ($data['module_system_name'] == null || $data['permission_core'] == '1') {$data['module_system_name'] = null;}
+
+				$data['level_group_id'] = \Input::post('level_group_id');
+				$data['permission_page'] = \Input::post('permission_page');
+				$data['permission_action'] = \Input::post('permission_action');
+
+				\Model_AccountLevelPermission::savePermissions($data);
+			}
 		}
 		
 		// set success message
