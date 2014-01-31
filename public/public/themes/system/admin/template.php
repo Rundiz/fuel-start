@@ -34,25 +34,29 @@ include __DIR__ . DS . 'inc_html_head.php';
 									<ul>
 										<li><?php echo \Html::anchor('admin', \Lang::get('admin.admin_admin_home')); ?></li>
 										<li><?php echo \Html::anchor('', \Lang::get('admin.admin_visit_site')); ?></li>
-										<li><?php echo \Html::anchor('admin/config', \Lang::get('admin.admin_global_configuration')); ?></li>
+										<?php if (checkAdminPermission('config.config_global', 'config.config_global')) { ?><li><?php echo \Html::anchor('admin/config', \Lang::get('admin.admin_global_configuration')); ?></li><?php } ?> 
 									</ul>
 								</li>
 								<li>
 									<a href="#" onclick="return false;"><?php echo \Lang::get('admin.admin_users_roles_permissions'); ?></a>
 									<ul>
-										<li><?php echo \Html::anchor('admin/account', \Lang::get('admin.admin_users')); ?></li>
-										<li><?php echo \Html::anchor('admin/account/add', \Lang::get('admin.admin_add_user')); ?></li>
-										<li><?php echo \Html::anchor('admin/account/edit', \Lang::get('admin.admin_edit_my_account')); ?></li>
+										<?php if (checkAdminPermission('account.account_perm', 'account.account_viewusers_perm')) { ?><li><?php echo \Html::anchor('admin/account', \Lang::get('admin.admin_users')); ?></li><?php } ?> 
+										<?php if (checkAdminPermission('account.account_perm', 'account.account_add_perm')) { ?><li><?php echo \Html::anchor('admin/account/add', \Lang::get('admin.admin_add_user')); ?></li><?php } ?> 
+										<?php if (checkAdminPermission('account.account_perm', 'account.account_edit_perm')) { ?><li><?php echo \Html::anchor('admin/account/edit', \Lang::get('admin.admin_edit_my_account')); ?></li><?php } ?> 
+										<?php if (checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_viewlevels_perm') || checkAdminPermission('acperm.acperm_perm', 'acperm.acperm_manage_perm')) { ?> 
 										<li>
 											<a href="#" onclick="return false;"><?php echo \Lang::get('admin.admin_roles_permissions'); ?></a>
 											<ul>
-												<li><?php echo \Html::anchor('admin/account-level', \Lang::get('admin.admin_roles')); ?></li>
-												<li><?php echo \Html::anchor('admin/account-permission', \Lang::get('admin.admin_permissions')); ?></li>
+												<?php if (checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_viewlevels_perm')) { ?><li><?php echo \Html::anchor('admin/account-level', \Lang::get('admin.admin_roles')); ?></li><?php } ?> 
+												<?php if (checkAdminPermission('acperm.acperm_perm', 'acperm.acperm_manage_perm')) { ?><li><?php echo \Html::anchor('admin/account-permission', \Lang::get('admin.admin_permissions')); ?></li><?php } ?> 
 											</ul>
 										</li>
+										<?php } ?> 
 									</ul>
 								</li>
-								<li><a href="#" onclick="return false;"><?php echo \Lang::get('admin.admin_components'); ?></a></li>
+								<li><a href="#" onclick="return false;"><?php echo \Lang::get('admin.admin_components'); ?></a>
+									<?php echo \Library\Modules::forge()->listAdminNavbar(); ?> 
+								</li>
 							</ul>
 							<ul class="nav navbar-nav navbar-right">
 								<li><a href="#" onclick="return false;" class="non-link-navbar"><span class="glyphicon glyphicon-user"></span> <?php echo \Lang::get('admin.admin_hello_admin', array('displayname' => $cookie_admin['account_display_name'])); ?></a></li>

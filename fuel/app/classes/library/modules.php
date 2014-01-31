@@ -25,6 +25,12 @@ class Modules
 	}// __construct
 	
 	
+	/**
+	 * fetch permission from specific module
+	 * 
+	 * @param string $module_system_name
+	 * @return mixed
+	 */
 	public function fetchPermissionModule($module_system_name = '') 
 	{
 		if ($module_system_name == null) {return false;}
@@ -104,6 +110,54 @@ class Modules
 	
 	
 	/**
+	 * list admin navbar from module's admin file.
+	 * 
+	 * @return string|boolean
+	 */
+	public function listAdminNavbar() 
+	{
+		if (is_array($this->module_paths) && !empty($this->module_paths)) {
+			$output = '';
+			
+			// loop module paths
+			foreach ($this->module_paths as $module_path) {
+				if ($handle = opendir($module_path)) {
+					while (false != ($file = readdir($handle))) {
+						if ($file != '.' && $file != '..' && is_dir($module_path . $file)) {
+							if (file_exists($module_path . $file . DS . 'classes' . DS . $file . 'admin.php') && is_file($module_path . $file . DS . 'classes' . DS . $file . 'admin.php')) {
+								$class_name_with_namespace = '\\' . ucfirst($file) . '\\' . ucfirst($file) . 'Admin' ;
+								
+								// load module to check class exists, method exists.
+								\Module::load($file);
+								
+								if (class_exists($class_name_with_namespace)) {
+									if (method_exists($class_name_with_namespace, '_define_permission')) {
+										$obj = new $class_name_with_namespace;
+										$output .= "\t" . call_user_func_array(array($obj, 'admin_navbar'), array()) . "\n";
+									}
+								}
+							}
+						}
+					}
+					
+					closedir($handle);
+				}
+			}
+			
+			unset($class_name_with_namespace, $file, $handle, $module_path, $obj);
+			
+			if ($output != null) {
+				$output = '<ul>' . "\n" . $output . '</ul>' . "\n";
+			}
+			
+			return $output;
+		}
+		
+		return false;
+	}// listAdminNavbar
+	
+	
+	/**
 	 * list modules that has permission
 	 * 
 	 * @return mixed
@@ -127,10 +181,6 @@ class Modules
 								
 								if (class_exists($class_name_with_namespace)) {
 									if (method_exists($class_name_with_namespace, '_define_permission')) {
-										// no need to call those _define_permission.
-										//$class = new $class_name_with_namespace;
-										//$output = array_merge($output, call_user_func_array(array($class, '_define_permission'), array()));
-										
 										// get module name.
 										$info = $this->readModuleMetadata($module_path . $file . DS . $file . '_module.php');
 										if ($info['name'] == null) {
