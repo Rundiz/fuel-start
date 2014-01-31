@@ -187,12 +187,11 @@ class Uri extends \Fuel\Core\Uri
 				// clean vars.
 				unset($default_lang, $first_uri, $locales, $need_redirect);
 				
-				// go! redirect.
-				//\Fuel\Core\Response::redirect($redirect_url, 'location', 301);// use fuel redirection will cause error 404 in home page.
+				// go! redirect. (do not use fuelphp redirect because it generate error 404 in home page)
 				$redirect_url = self::createNL($redirect_url);
 				// use redirect manually.
 				$response->set_status(301);
-				$response->set_header('Location',$redirect_url);
+				$response->set_header('Location', $redirect_url);
 				$response->send(true);
 				exit;
 			}
