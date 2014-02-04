@@ -200,6 +200,12 @@ class Controller_Admin_Index extends \Controller_AdminController
 			\Response::redirect(\Uri::create('admin'));
 		}
 		
+		// check table exists and link to install page.
+		if (!\DBUtil::table_exists('blog') && !\DBUtil::table_exists('blog_comment')) {
+			echo \Extension\Html::anchor('blog/admin/setup', 'Installation required');
+			exit;
+		}
+		
 		// read flash message for display errors.
 		$form_status = \Session::get_flash('form_status');
 		if (isset($form_status['form_status']) && isset($form_status['form_status_message'])) {
