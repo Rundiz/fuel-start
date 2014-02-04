@@ -129,13 +129,6 @@ html, body {
 
 
 
-/* @todo remove this if BS after 3.0.3 fixed. */
-.container-fluid {
-	padding: 0 15px;
-}
-
-
-
 .cursor-default {
 	cursor: default;
 }
@@ -167,19 +160,8 @@ html, body {
 
 
 
-/* @todo remove this if BS after 3.0.3 fixed. */
-.navbar .container-fluid {
-	padding-left: 0;
-	padding-right: 0;
-}
 .navbar .navbar-nav .non-link-navbar {
 	cursor: text;
-}
-.navbar-fixed-bottom .navbar-collapse, 
-.navbar-fixed-top .navbar-collapse, 
-.navbar-static-top .navbar-collapse {
-	padding-left: 15px;
-	padding-right: 15px;
 }
 
 
