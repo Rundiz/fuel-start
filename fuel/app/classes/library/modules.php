@@ -131,7 +131,7 @@ class Modules
 								\Module::load($file);
 								
 								if (class_exists($class_name_with_namespace)) {
-									if (method_exists($class_name_with_namespace, '_define_permission')) {
+									if (method_exists($class_name_with_namespace, 'admin_navbar')) {
 										$obj = new $class_name_with_namespace;
 										$output .= "\t" . call_user_func_array(array($obj, 'admin_navbar'), array()) . "\n";
 									}
