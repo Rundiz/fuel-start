@@ -21,7 +21,7 @@ function languageSwitchDropdown()
 	
 	$current_lang = \Lang::get_lang();
 	$output = "\n" . '<div class="dropdown">' . "\n";
-	$output .= "\t" . '<button class="btn dropdown-toggle" type="button" id="language-switch-dropdown" data-toggle="dropdown">';
+	$output .= "\t" . '<button class="btn btn-default dropdown-toggle" type="button" id="language-switch-dropdown" data-toggle="dropdown">';
 	$output .= $languages[$current_lang]['name'];
 	$output .= '<span class="caret"></span>';
 	$output .= '</button>' . "\n";

@@ -6,7 +6,7 @@
 include dirname(dirname(__DIR__)) . DS . 'inc_html_head.php';
 ?> 
 <?php if (isset($browser_check) && $browser_check != 'yes') { ?> 
-<div class="browser-alert browser-alert-<?php echo $browser_check; ?>">
+<div class="alert alert-block alert-warning browser-alert browser-alert-<?php echo $browser_check; ?>">
 	<?php 
 	if ($browser_check == 'no') {
 		echo \Lang::get('admin.admin_get_modern_browser');

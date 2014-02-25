@@ -7,6 +7,7 @@
  * 
  */
 
+
 /**
  * check admin permission
  * 
@@ -19,6 +20,7 @@ function checkAdminPermission($page_name = '', $action = '', $account_id = '')
 {
 	return \Model_AccountLevelPermission::checkAdminPermission($page_name, $action, $account_id);
 }// checkAdminPermission
+
 
 /**
  * language switch for admin page.
@@ -71,7 +73,7 @@ function languageSwitchAdminSelectBox()
 	ksort($languages);
 	
 	$current_lang = \Lang::get_lang();
-	$output = "\n" . '<select name="admin_language" onchange="change_redirect($(this));" class="form-control">' . "\n";
+	$output = "\n" . '<select name="admin_language" onchange="change_redirect($(this));" class="form-control chosen-select">' . "\n";
 	if (is_array($languages) && !empty($languages)) {
 		foreach ($languages as $language => $item) {
 			$output .= "\t" . '<option value="' . \Uri::createNL($language . '/admin'). '"';

@@ -25,7 +25,7 @@ $theme = \Theme::instance();
 		?> 
 
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap.min.css')); ?>">
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap-theme.min.css')); ?>">
+		<?php /*<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap-theme.min.css')); ?>">*/ ?> 
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/front.css')); ?>">
 		<?php 
 		// render <link>
