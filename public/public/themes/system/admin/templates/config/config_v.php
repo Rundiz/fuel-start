@@ -39,7 +39,7 @@
 						<div class="form-group">
 							<label for="cfg-site_timezone" class="col-sm-2 control-label"><?php echo __('config.config_site_timezone'); ?>:</label>
 							<div class="col-sm-10">
-								<select name="site_timezone" id="cfg-site_timezone" class="form-control">
+								<select name="site_timezone" id="cfg-site_timezone" class="form-control chosen-select">
 									<option value=""></option>
 									<?php 
 									$site_timezone_selectbox = (isset($site_timezone) ? $site_timezone : '');
@@ -93,7 +93,7 @@
 									), 
 									array(
 										'id' => 'cfg-member_verification',
-										'class' => 'form-control'
+										'class' => 'form-control chosen-select'
 									)
 								);
 								?> 
@@ -219,7 +219,7 @@
 									), 
 									array(
 										'id' => 'cfg-mail_protocol',
-										'class' => 'form-control'
+										'class' => 'form-control chosen-select'
 									)
 								);
 								?> 
@@ -340,7 +340,7 @@
 									), 
 									array(
 										'id' => 'cfg-ftp_passive',
-										'class' => 'form-control'
+										'class' => 'form-control chosen-select'
 									)
 								);
 								?> 

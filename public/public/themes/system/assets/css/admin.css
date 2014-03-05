@@ -191,6 +191,18 @@ html, body {
 
 
 
+/*
+ * fix chosen in tab and hidden area.
+ * for more information please see: https://github.com/harvesthq/chosen/issues/92
+ * @todo fix chosen in tab when chosen release update.
+ */
+.tab-content .chosen-container,
+.tab-content .chosen-drop {
+	width: 100% !important;
+}
+
+
+
 .table .check-column {
 	text-align: center;
 }
