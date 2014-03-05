@@ -13,7 +13,7 @@ function ajaxAdminLogin(obj) {
 	// disable button to prevent double click
 	$('.admin-page-login-btn').attr('disabled', 'disabled');
 	
-	$('.ajac-admin-login-processing').addClass('fa fa-spinner fa-spin');
+	$('.ajax-admin-login-processing').addClass('fa fa-spinner fa-spin');
 	
 	$.ajax({
 		url: obj.attr('action'),
@@ -25,7 +25,7 @@ function ajaxAdminLogin(obj) {
 				window.location = data.go_to;
 			} else {
 				$('.admin-page-login-btn').removeAttr('disabled');
-				$('.ajac-admin-login-processing').removeClass('fa fa-spinner fa-spin');
+				$('.ajax-admin-login-processing').removeClass('fa fa-spinner fa-spin');
 				
 				if (data.form_status == 'error') {
 					$('.form-status-placeholder').html(
@@ -48,7 +48,7 @@ function ajaxAdminLogin(obj) {
 		error: function(data, status, e) {
 			alert('Login error '+e);
 			$('.admin-page-login-btn').removeAttr('disabled');
-			$('.ajac-admin-login-processing').removeClass('fa fa-spinner fa-spin');
+			$('.ajax-admin-login-processing').removeClass('fa fa-spinner fa-spin');
 			$('.form-status-placeholder').html('');
 			
 			return false;

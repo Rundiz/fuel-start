@@ -58,7 +58,7 @@ include dirname(dirname(__DIR__)) . DS . 'inc_html_head.php';
 
 						<div class="form-group">
 							<div class="col-sm-12">
-								<button type="submit" class="btn btn-primary btn-block admin-page-login-btn"><span class="ajac-admin-login-processing"></span> <?php echo __('account.account_login'); ?></button>
+								<button type="submit" class="btn btn-primary btn-block admin-page-login-btn"><span class="ajax-admin-login-processing"></span> <?php echo __('account.account_login'); ?></button>
 								
 							</div>
 						</div>
