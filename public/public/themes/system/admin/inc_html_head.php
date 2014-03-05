@@ -54,6 +54,7 @@ include_once __DIR__ . DS . 'functions.php';
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/sm-core-css.css')); ?>">
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/sm-bsblack/sm-bsblack.css')); ?>">
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('js/chosen/chosen.min.css')); ?>">
+		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('js/icheck/skins/minimal/_all.css')); ?>">
 		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/admin.css')); ?>">
 		<?php 
 		// render <link>

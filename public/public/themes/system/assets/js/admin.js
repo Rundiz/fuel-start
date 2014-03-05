@@ -57,4 +57,10 @@ $(function() {
 		disable_search: true,
 		display_disabled_options: true
 	});
+	
+	// custom checkbox
+	$('.custom-checkbox, .custom-radio').iCheck({
+		checkboxClass: 'custom-checkbox-radio-icheck icheckbox_minimal-grey',
+		radioClass: 'custom-checkbox-radio-icheck iradio_minimal-grey'
+	});
 });// jquery start

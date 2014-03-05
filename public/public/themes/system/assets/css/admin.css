@@ -138,6 +138,15 @@ html, body {
 
 
 
+/*
+ * fix icheck with bootstrap design. 
+*/
+.custom-checkbox-radio-icheck {
+	margin-left: -20px;
+}
+
+
+
 .dashboard-block {
 	background: #f5f5f5;
 	border-radius: 5px;

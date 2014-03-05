@@ -70,14 +70,14 @@
 						<div class="form-group">
 							<div class="col-sm-12">
 								<label class="checkbox-inline">
-									<?php echo \Extension\Form::checkbox('member_allow_register', '1', (isset($member_allow_register) && $member_allow_register == '1' ? true : false), array('id' => 'cfg-member_allow_register')); ?> <?php echo \Lang::get('config.config_member_allow_register'); ?> 
+									<?php echo \Extension\Form::checkbox('member_allow_register', '1', (isset($member_allow_register) && $member_allow_register == '1' ? true : false), array('id' => 'cfg-member_allow_register', 'class' => 'custom-checkbox')); ?> <?php echo \Lang::get('config.config_member_allow_register'); ?> 
 								</label>
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-sm-12">
 								<label class="checkbox-inline">
-									<?php echo \Extension\Form::checkbox('member_register_notify_admin', '1', (isset($member_register_notify_admin) && $member_register_notify_admin == '1' ? true : false), array('id' => 'cfg-member_register_notify_admin')); ?> <?php echo \Lang::get('config.config_member_register_notify_admin'); ?> <span class="text-muted">(<?php echo \Lang::get('config.config_email_notification_still_send_when_require_admin_to_verify_register_user'); ?>)</span>
+									<?php echo \Extension\Form::checkbox('member_register_notify_admin', '1', (isset($member_register_notify_admin) && $member_register_notify_admin == '1' ? true : false), array('id' => 'cfg-member_register_notify_admin', 'class' => 'custom-checkbox')); ?> <?php echo \Lang::get('config.config_member_register_notify_admin'); ?> <span class="text-muted">(<?php echo \Lang::get('config.config_email_notification_still_send_when_require_admin_to_verify_register_user'); ?>)</span>
 								</label>
 							</div>
 						</div>
@@ -118,7 +118,7 @@
 						<div class="form-group">
 							<div class="col-sm-12">
 								<label class="checkbox-inline">
-									<?php echo \Extension\Form::checkbox('simultaneous_login', '1', (isset($simultaneous_login) && $simultaneous_login == '1' ? true : false), array('id' => 'cfg-simultaneous_login')); ?> <?php echo \Lang::get('config.config_account_simultaneous_login'); ?> 
+									<?php echo \Extension\Form::checkbox('simultaneous_login', '1', (isset($simultaneous_login) && $simultaneous_login == '1' ? true : false), array('id' => 'cfg-simultaneous_login', 'class' => 'custom-checkbox')); ?> <?php echo \Lang::get('config.config_account_simultaneous_login'); ?> 
 								</label>
 							</div>
 						</div>
@@ -161,7 +161,7 @@
 						<div class="form-group">
 							<div class="col-sm-12">
 								<label class="checkbox-inline">
-									<?php echo \Extension\Form::checkbox('member_email_change_need_confirm', '1', (isset($member_email_change_need_confirm) && $member_email_change_need_confirm == '1' ? true : false), array('id' => 'cfg-member_email_change_need_confirm')); ?> <?php echo \Lang::get('config.config_member_email_change_need_confirm'); ?> 
+									<?php echo \Extension\Form::checkbox('member_email_change_need_confirm', '1', (isset($member_email_change_need_confirm) && $member_email_change_need_confirm == '1' ? true : false), array('id' => 'cfg-member_email_change_need_confirm', 'class' => 'custom-checkbox')); ?> <?php echo \Lang::get('config.config_member_email_change_need_confirm'); ?> 
 									<span class="text-muted">(<?php echo \Lang::get('config.config_member_email_change_need_confirm_help'); ?>)</span>
 								</label>
 							</div>
@@ -172,7 +172,7 @@
 						<div class="form-group">
 							<div class="col-sm-12">
 								<label class="checkbox-inline">
-									<?php echo \Extension\Form::checkbox('allow_avatar', '1', (isset($allow_avatar) && $allow_avatar == '1' ? true : false), array('id' => 'cfg-allow_avatar')); ?> <?php echo \Lang::get('config.config_account_allow_avatar'); ?> 
+									<?php echo \Extension\Form::checkbox('allow_avatar', '1', (isset($allow_avatar) && $allow_avatar == '1' ? true : false), array('id' => 'cfg-allow_avatar', 'class' => 'custom-checkbox')); ?> <?php echo \Lang::get('config.config_account_allow_avatar'); ?> 
 								</label>
 							</div>
 						</div>
