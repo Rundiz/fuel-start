@@ -351,6 +351,9 @@ class Model_Accounts extends \Orm\Model
 					// log out
 					static::logout(array('remove_online_code' => false));
 					
+					// load langauge for set error msg.
+					\Lang::load('account', 'account');
+					
 					// set error message.
 					\Session::set_flash(
 						'form_status',
