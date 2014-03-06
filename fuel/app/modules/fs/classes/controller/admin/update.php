@@ -35,10 +35,25 @@ class Controller_Admin_Update extends \Controller_AdminController
 			\Response::redirect(\Uri::create('admin'));
 		}
 		
-		// update to 1.5 first time
-		$result = \Fs\update0001::run();
-		
-		$output['result'] = $result;
+		if (\Input::method() == 'POST') {
+			if (!\Extension\NoCsrf::check()) {
+				// validate token failed
+				$output['form_status'] = 'error';
+				$output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+			} else {
+				// update to 1.5 first time
+				$result = \Fs\update0001::run();
+
+				if ($result === true) {
+					$output['hide_form'] = true;
+					$output['form_status'] = 'success';
+					$output['form_status_message'] = \Lang::get('fs_update_completed');
+				} else {
+					$output['form_status'] = 'error';
+					$output['form_status_message'] = \Lang::get('fs_failed_to_update');
+				}
+			}
+		}
 		
 		// <head> output ----------------------------------------------------------------------------------------------
 		$output['page_title'] = $this->generateTitle(\Lang::get('fs_updater'));
