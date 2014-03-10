@@ -35,7 +35,7 @@ class EmailTemplate
 			$output = file_get_contents($template_path.$email_file);
 			$output = str_replace("%site_name%", $site_name, $output);
 			$output = str_replace("%site_url%", \Uri::base(), $output);
-			$output = str_replace("%site_admin%", \Uri::create('site-admin'), $output);
+			$output = str_replace("%site_admin%", \Uri::create('admin'), $output);
 			
 			unset($site_name, $template_path);
 			
