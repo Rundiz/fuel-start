@@ -8,7 +8,7 @@
 
 namespace Fs;
 
-class Controller_Admin_Update extends \Controller_AdminController
+class Controller_Update extends \Controller_BaseController
 {
 	
 	
@@ -24,7 +24,7 @@ class Controller_Admin_Update extends \Controller_AdminController
 	public function action_index()
 	{
 		// check permission
-		if (\Model_AccountLevelPermission::checkAdminPermission('fsupdater_perm', 'fs_update_perm') == false) {
+		/*if (\Model_AccountLevelPermission::checkAdminPermission('fsupdater_perm', 'fs_update_perm') == false) {
 			\Session::set_flash(
 				'form_status',
 				array(
@@ -33,7 +33,7 @@ class Controller_Admin_Update extends \Controller_AdminController
 				)
 			);
 			\Response::redirect(\Uri::create('admin'));
-		}
+		}*/// do not need to check permission since update run from frontend.
 		
 		if (\Input::method() == 'POST') {
 			if (!\Extension\NoCsrf::check()) {
@@ -59,7 +59,7 @@ class Controller_Admin_Update extends \Controller_AdminController
 		$output['page_title'] = $this->generateTitle(\Lang::get('fs_updater'));
 		// <head> output ----------------------------------------------------------------------------------------------
 		
-		return $this->generatePage('admin/update_v', $output, false);
+		return $this->generatePage('update_v', $output, false);
 	}// action_index
 	
 	
