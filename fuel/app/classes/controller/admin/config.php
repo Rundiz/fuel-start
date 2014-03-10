@@ -202,6 +202,13 @@ class Controller_Admin_Config extends \Controller_AdminController
 				// try to save config.
 				$result = \Model_Config::saveData($data);
 				
+				// save change site name to sites table
+				$site_id = \Model_Sites::getSiteId(false);
+				$entry = \Model_Sites::find($site_id);
+				$entry->site_name = $data['site_name'];
+				$entry->save();
+				unset($entry, $site_id);
+				
 				if ($result === true) {
 					\Session::set_flash(
 						'form_status',
