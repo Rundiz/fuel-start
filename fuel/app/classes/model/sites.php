@@ -72,7 +72,7 @@ class Model_Sites extends \Orm\Model
         // @todo [theme][multisite] for any theme management that get config from db from each site. you need to add set default theme for each created site here.
 
         // set config for new site. this step should reset core config values in new site for security reason.
-        // @todo [multisite] when developers add new core config names and values, you have to add those default values here.
+        // @todo [core_config] when developers add new core config names and values, you have to add those default values here.
         $cfg_data['site_name'] = $data['site_name'];
         $cfg_data['page_title_separator'] = ' | ';
         $cfg_data['site_timezone'] = 'Asia/Bangkok';
@@ -139,8 +139,6 @@ class Model_Sites extends \Orm\Model
 
             if ($table == 'config') {
                 $sql = 'CREATE TABLE IF NOT EXISTS ' . $table_site_withprefix . ' SELECT * FROM ' . $table_withprefix . ' WHERE config_core = 1';
-            } elseif ($table == 'account_level') {
-                $sql = 'CREATE TABLE IF NOT EXISTS ' . $table_site_withprefix . ' SELECT * FROM ' . $table_withprefix;
             } else {
                 $sql = 'CREATE TABLE IF NOT EXISTS ' . $table_site_withprefix . ' LIKE ' . $table_withprefix;
             }
@@ -160,11 +158,22 @@ class Model_Sites extends \Orm\Model
 
         unset($sql, $table, $table_site_withprefix, $table_withprefix);
 
-        // change all accounts level to member (except super admin(id=1) and guest(id=0)).
-        \DB::update($site_id . '_account_level')
-                ->where('account_id', '!=', '0')->where('account_id', '!=', '1')
-                ->value('level_group_id', '3')
+        // loop get account and add default levels
+        $exist_account_id = array();
+        $result = \DB::select('*')
+                ->from('account_level')
+                ->as_object()
                 ->execute();
+        foreach ($result as $row) {
+            if (!in_array($row->account_id, $exist_account_id)) {
+                \DB::insert($site_id . '_account_level')->set(array(
+                    'level_group_id' => $row->level_group_id,
+                    'account_id' => $row->account_id
+                ))->execute();
+                
+                $exist_account_id = array_merge($exist_account_id, array($row->account_id));
+            }
+        }
 
         // done
         return true;
@@ -289,6 +298,24 @@ class Model_Sites extends \Orm\Model
 
         return 1;
     }// getSiteId
+    
+    
+    /**
+     * get table name with site id prefix
+     * 
+     * @param string $table_name
+     * @return string
+     */
+    public function getTableSiteId($table_name = '')
+    {
+        $site_id = static::getSiteId(false);
+        
+        if ($site_id == '1') {
+            return $table_name;
+        } else {
+            return $site_id . '_' . $table_name;
+        }
+    }// getTableSiteId
 
 
     /**

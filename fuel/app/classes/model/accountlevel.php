@@ -29,6 +29,21 @@ class Model_AccountLevel extends \Orm\Model
 
 
     /**
+     * run before initialize the class
+     * use this method to set new table prefix with multisite.
+     */
+    public static function _init()
+    {
+        // get current site id
+        $site_id = \Model_Sites::getSiteId(false);
+
+        if ($site_id != '1') {
+            static::$_table_name = $site_id . '_' . static::$_table_name;
+        }
+    }// _init
+
+
+    /**
      * update account levels
      *
      * @param integer $account_id
@@ -37,10 +52,6 @@ class Model_AccountLevel extends \Orm\Model
      */
     public function updateLevels($account_id = '', $data_level = array())
     {
-        // @todo [multisite] for multi site with table site id prefix, you need to modify and loop those [site id]_account_level to add level to user.
-        //
-        // below is add level to user by use single site table structure.
-
         // delete not exists level
         $lvls = static::query()->where('account_id', $account_id);
         if ($lvls->count() > 0) {

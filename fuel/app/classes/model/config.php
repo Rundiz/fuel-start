@@ -18,8 +18,6 @@ class Model_Config extends \Orm\Model
     /**
      * run before initialize the class
      * use this method to set new table prefix with multisite.
-     *
-     * @param integer $site_id
      */
     public static function _init()
     {
@@ -27,9 +25,20 @@ class Model_Config extends \Orm\Model
         $site_id = \Model_Sites::getSiteId(false);
 
         if ($site_id != '1') {
-            static::$_table_name = $site_id . '_config';
+            static::$_table_name = $site_id . '_' . static::$_table_name;
         }
     }// _init
+    
+    
+    /**
+     * get table name based on current site.
+     * 
+     * @return string
+     */
+    public static function getTableName()
+    {
+        return static::$_table_name;
+    }// getTableName
 
 
     /**
@@ -81,7 +90,7 @@ class Model_Config extends \Orm\Model
         // we will use DB class
         $output = array();
 
-        $result = \DB::select('*')->from('config')->as_object()->where('config_name', 'IN', $config_name)->execute();
+        $result = \DB::select('*')->from(static::$_table_name)->as_object()->where('config_name', 'IN', $config_name)->execute();
         if ((is_array($result) || is_object($result)) && !empty($result)) {
             foreach ($result as $row) {
                 $output[$row->config_name]['value'] = $row->config_value;
@@ -107,7 +116,7 @@ class Model_Config extends \Orm\Model
         if (empty($data)) {return false;}
 
         foreach ($data as $key => $value) {
-            \DB::update('config')
+            \DB::update(static::$_table_name)
                 ->value('config_value', $value)
                 ->where('config_name', $key)
                 ->execute();

@@ -20,7 +20,12 @@ class Model_AccountLogins extends \Orm\Model
             'model_to' => 'Model_Accounts',
             'key_from' => 'account_id',
             'key_to' => 'account_id',
-        )
+        ),
+        'sites' => array(
+            'model_to' => 'Model_Sites',
+            'key_from' => 'site_id',
+            'key_to' => 'site_id',
+        ),
     );
 
 
@@ -39,12 +44,17 @@ class Model_AccountLogins extends \Orm\Model
 
         // get total logins of current user
         $query = static::query()->where('account_id', $data['account_id']);
+        
+        // if specify to view logins from site id.
+        if (isset($data['site_id'])) {
+            $query->where('site_id', $data['site_id']);
+        }
 
         $output['total'] = $query->count();
 
         // sort and order
         $orders = \Security::strip_tags(trim(\Input::get('orders')));
-        $allowed_orders = array('account_login_id', 'login_ua', 'login_os', 'login_browser', 'login_ip', 'login_time', 'login_time_gmt', 'login_attempt', 'login_attempt_text');
+        $allowed_orders = array('account_login_id', 'site_id', 'login_ua', 'login_os', 'login_browser', 'login_ip', 'login_time', 'login_time_gmt', 'login_attempt', 'login_attempt_text');
         if ($orders == null || !in_array($orders, $allowed_orders)) {
             $orders = 'account_login_id';
         }
@@ -111,8 +121,7 @@ class Model_AccountLogins extends \Orm\Model
             $attempt_text = null;
         }
 
-        // @todo [multisite] set site id for multiple site management
-        $site_id = 1;
+        $site_id = \Model_Sites::getSiteId(false);
 
         // get browser class for use instead of fuelphp agent which is does not work.
         include_once APPPATH . 'vendor' . DS . 'browser' . DS . 'lib' . DS . 'Browser.php';

@@ -16,6 +16,7 @@
 			?> 
 			<thead>
 				<tr>
+					<th><?php echo \Lang::get('accountlogins.account_logins_website'); ?></th>
 					<th style="width: 50%;"><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ua', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_user_agent')); ?></th>
 					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_browser', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_browser')); ?></th>
 					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ip', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_ip')); ?></th>
@@ -25,6 +26,7 @@
 			</thead>
 			<tfoot>
 				<tr>
+					<th><?php echo \Lang::get('accountlogins.account_logins_website'); ?></th>
 					<th style="width: 50%;"><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ua', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_user_agent')); ?></th>
 					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_browser', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_browser')); ?></th>
 					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ip', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_ip')); ?></th>
@@ -36,6 +38,7 @@
 				<?php if (isset($list_logins['items']) && is_array($list_logins['items']) && !empty($list_logins['items'])) { ?> 
 				<?php foreach ($list_logins['items'] as $row) { ?> 
 				<tr>
+					<td><a href="http://<?php echo $row->sites->site_domain; ?>" target="site_view"><?php echo $row->sites->site_name; ?></a></td>
 					<td><?php echo $row->login_ua; ?></td>
 					<td><?php echo $row->login_browser; ?></td>
 					<td><?php echo $row->login_ip; ?></td>

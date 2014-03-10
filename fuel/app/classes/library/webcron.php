@@ -67,8 +67,10 @@ class WebCron
         } elseif ($option['second_expired'] > 0) {
             // get cache of this task name
             try {
-                // @todo [multisite] add site id to cache name on multi site code
-                $cache = \Cache::get('webcron-' . $option['name']);
+                // get site id
+                $site_id = \Model_Sites::getSiteId(false);
+                
+                $cache = \Cache::get('webcron-siteid' . $site_id . '-' . $option['name']);
             } catch (\CacheNotFoundException $e) {
                 $cache = false;
             }
@@ -77,8 +79,10 @@ class WebCron
             if ($cache === false) {
                 $run_task = true;
 
-                // @todo [multisite] add site id to cache name on multi site code
-                \Cache::set('webcron-' . $option['name'], 'done', $option['second_expired']);
+                // get site id
+                $site_id = \Model_Sites::getSiteId(false);
+                
+                \Cache::set('webcron-siteid' . $site_id . '-' . $option['name'], 'done', $option['second_expired']);
             }
         }
 

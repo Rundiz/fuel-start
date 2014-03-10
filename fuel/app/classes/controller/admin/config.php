@@ -133,7 +133,7 @@ class Controller_Admin_Config extends \Controller_AdminController
         $allowed_field = array();
 
         // load config to form.
-        $result = \DB::select('*')->from('config')->as_object('Model_Config')->where('config_core', '1')->execute();
+        $result = \DB::select('*')->from(\Model_Config::getTableName())->as_object('Model_Config')->where('config_core', '1')->execute();
         if ((is_array($result) || is_object($result)) && !empty($result)) {
             foreach ($result as $row) {
                 $allowed_field[] = $row->config_name;

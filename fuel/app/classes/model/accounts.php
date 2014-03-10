@@ -89,13 +89,10 @@ class Model_Accounts extends \Orm\Model
         $data['account_create_gmt'] = \Extension\Date::localToGmt();
 
         // add account to db. ----------------------------------------
-        //list($account_id) = \DB::insert('accounts')->set($data); // query builder style.
+        //list($account_id) = \DB::insert(static::$_table_name)->set($data); // query builder style.
         $account = static::forge($data);
 
         // add level to user. -----------------------------------------
-        // @todo [multisite] for multi site with table site id prefix, you need to modify and loop those [site id]_account_level to add level to user.
-        //
-        // below is add level to user by use single site table structure.
         $i = 0;
         foreach ($data_level['level_group_id'] as $level_group_id) {
             $account->account_level[$i] = new Model_AccountLevel();
@@ -107,6 +104,29 @@ class Model_Accounts extends \Orm\Model
 
         $account_id = $account->account_id;
         unset($account, $i);
+        
+        // loop sites to add level of this user to each site.
+        $site_id = \Model_Sites::getSiteId(false);
+        $list_site_option['list_for'] = 'admin';
+        $list_site_option['unlimit'] = true;
+        $sites = \Model_Sites::listSites($list_site_option);
+        if (isset($sites['items']) && is_array($sites['items']) && !empty($sites['items'])) {
+            foreach ($sites['items'] as $site) {
+                if ($site->site_id != $site_id) {
+                    if ($site->site_id == '1') {
+                        $table_name = 'account_level';
+                    } else {
+                        $table_name = $site->site_id . '_account_level';
+                    }
+                    
+                    \DB::insert($table_name)->set(array(
+                        'account_id' => $account_id,
+                        'level_group_id' => '3',// for other sites, set user level as member for security reason.
+                    ))->execute();
+                }
+            }
+        }
+        unset($list_site_option, $site, $sites, $site_id, $table_name);
 
         // add account fields if there is any value. -----------------
         // to add account fields data structure shoud be like this...
@@ -329,8 +349,7 @@ class Model_Accounts extends \Orm\Model
             return false;
         }
 
-        // @todo [multisite] write code to get site id for multisite coding
-        $site_id = 1;
+        $site_id = \Model_Sites::getSiteId(false);
 
         // check for matches id username and email. ---------------------------------------------------------------
         $query = static::query()
@@ -345,7 +364,7 @@ class Model_Accounts extends \Orm\Model
 
             // if not allow simultaneous login. (if not allow login from many places)
             if (\Model_Config::getval('simultaneous_login') == '0') {
-                if ($this->isSimultaneousLogin($account_id, $account_online_code) == true) {
+                if ($this->isSimultaneousLogin($account_id, $account_online_code, $site_id) == true) {
                     unset($row);
 
                     // log out
@@ -451,7 +470,32 @@ class Model_Accounts extends \Orm\Model
 
         // @todo [api] for deleting account here.
 
-        // @todo [multisite] delete any accounts related in multi site tables.
+        // loop sites to delete this account id related in multi-site tables.
+        $site_id = \Model_Sites::getSiteId(false);
+        $list_site_option['list_for'] = 'admin';
+        $list_site_option['unlimit'] = true;
+        $sites = \Model_Sites::listSites($list_site_option);
+        if (isset($sites['items']) && is_array($sites['items']) && !empty($sites['items'])) {
+            foreach ($sites['items'] as $site) {
+                // skip delete from current site id table.
+                if ($site->site_id != $site_id) {
+                    if ($site->site_id == '1') {
+                        $table_siteid_prefix = '';
+                    } else {
+                        $table_siteid_prefix = $site->site_id . '_';
+                    }
+                    
+                    // delete from account_level table
+                    \DB::delete($table_siteid_prefix . 'account_level')->where('account_id', $account_id)->execute();
+                    
+                    // delete from account_fields table
+                    \DB::delete($table_siteid_prefix . 'account_fields')->where('account_id', $account_id)->execute();
+                    
+                    // @todo [multisite] more multi-site tables that has account_id related should be delete here.
+                }
+            }
+        }
+        unset($list_site_option, $site, $sites, $site_id, $table_siteid_prefix);
 
         // delete account now.
         static::find($account_id)->delete();// needs to use ::find() to delete in related table
@@ -761,8 +805,7 @@ class Model_Accounts extends \Orm\Model
         }
 
         if ($site_id == null) {
-            // @todo [multisite] write code to get current site id for multisite coding.
-            $site_id = 1;
+            $site_id = \Model_Sites::getSiteId(false);
         }
 
         // find this account id and their online code on selected site.
@@ -861,8 +904,7 @@ class Model_Accounts extends \Orm\Model
     public static function logout($data = array())
     {
         if (!isset($data['site_id']) || (isset($data['site_id']) && $data['site_id'] == null)) {
-            // @todo [multisite] add code to get current site id for multisite code.
-            $data['site_id'] = 1;
+            $data['site_id'] = \Model_Sites::getSiteId(false);
         }
 
         // get account id if not set
@@ -1229,10 +1271,10 @@ class Model_Accounts extends \Orm\Model
         }
 
         // add account to db. ----------------------------------------
-        //list($account_id) = \DB::insert('accounts')->set($data); // query builder style.
+        //list($account_id) = \DB::insert(static::$_table_name)->set($data); // query builder style.
         $account = static::forge($data);
 
-        // add level to user by use single site table structure.
+        // add level to user for current site.
         $account->account_level[0] = new Model_AccountLevel();
         $account->account_level[0]->level_group_id = 3;
 
@@ -1242,16 +1284,28 @@ class Model_Accounts extends \Orm\Model
         // end add account to db -------------------------------------
 
         // add level to user.
-        // @todo [multisite] for multi site with table site id prefix, you need to modify and loop those [site id]_account_level to add level to user.
-        /*
-        //foreach ($list_site['items'] as $site) {
-        $account_level = new \Model_AccountLevel;
-        $account_level->level_group_id = 3;
-        $account_level->account_id = $account_id;
-        $account_level->save();
-        unset($account_level);
-        // }
-         */
+        // loop sites to add level of this user to each site.
+        $site_id = \Model_Sites::getSiteId(false);
+        $list_site_option['list_for'] = 'admin';
+        $list_site_option['unlimit'] = true;
+        $sites = \Model_Sites::listSites($list_site_option);
+        if (isset($sites['items']) && is_array($sites['items']) && !empty($sites['items'])) {
+            foreach ($sites['items'] as $site) {
+                if ($site->site_id != $site_id) {
+                    if ($site->site_id == '1') {
+                        $table_name = 'account_level';
+                    } else {
+                        $table_name = $site->site_id . '_account_level';
+                    }
+                    
+                    \DB::insert($table_name)->set(array(
+                        'account_id' => $account_id,
+                        'level_group_id' => '3',// for other sites, set user level as member for security reason.
+                    ))->execute();
+                }
+            }
+        }
+        unset($list_site_option, $site, $sites, $site_id, $table_name);
 
         // add account fields if there is any value.
         // to add account fields data structure shoud be like this...

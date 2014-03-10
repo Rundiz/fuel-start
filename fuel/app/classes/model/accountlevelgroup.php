@@ -40,6 +40,21 @@ class Model_AccountLevelGroup extends \Orm\Model
 
 
     /**
+     * run before initialize the class
+     * use this method to set new table prefix with multisite.
+     */
+    public static function _init()
+    {
+        // get current site id
+        $site_id = \Model_Sites::getSiteId(false);
+
+        if ($site_id != '1') {
+            static::$_table_name = $site_id . '_' . static::$_table_name;
+        }
+    }// _init
+
+
+    /**
      * add level groupo
      *
      * @param array $data

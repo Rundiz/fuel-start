@@ -36,6 +36,21 @@ class Model_AccountLevelPermission extends \Orm\Model
 
 
     /**
+     * run before initialize the class
+     * use this method to set new table prefix with multisite.
+     */
+    public static function _init()
+    {
+        // get current site id
+        $site_id = \Model_Sites::getSiteId(false);
+
+        if ($site_id != '1') {
+            static::$_table_name = $site_id . '_' . static::$_table_name;
+        }
+    }// _init
+
+
+    /**
      * check admin permission
      * check permission match to user'sgroup_id page_name and action
      * @param integer $account_id
@@ -184,7 +199,7 @@ class Model_AccountLevelPermission extends \Orm\Model
     {
         if ($core == null) {
             // reset all permissions
-            \DBUtil::truncate_table('account_level_permission');
+            \DBUtil::truncate_table(static::$_table_name);
             return true;
         } elseif ($core === 1) {
             // reset core permissions

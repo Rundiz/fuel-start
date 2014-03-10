@@ -49,8 +49,10 @@ class Controller_Account_ViewLogins extends \Controller_BaseController
         // list logins -----------------------------------------------------------------------------------------------------
         $option['limit'] = \Model_Config::getval('content_items_perpage');
         $option['offset'] = (trim(\Input::get('page')) != null ? ((int)\Input::get('page')-1)*$option['limit'] : 0);
+        $data['account_id'] = $cookie_account['account_id'];
+        $data['site_id'] = \Model_Sites::getSiteId();
 
-        $list_logins = \Model_AccountLogins::listLogins(array('account_id' => $cookie_account['account_id']), $option);
+        $list_logins = \Model_AccountLogins::listLogins($data, $option);
 
         // pagination config
         $config['pagination_url'] = \Uri::main() . \Uri::getCurrentQuerystrings(true, true, false);
@@ -73,7 +75,7 @@ class Controller_Account_ViewLogins extends \Controller_BaseController
         $output['list_logins'] = $list_logins;
         $output['pagination'] = $pagination;
 
-        unset($config, $list_logins, $option, $pagination);
+        unset($config, $data, $list_logins, $option, $pagination);
 
         // <head> output ----------------------------------------------------------------------------------------------
         $output['page_title'] = $this->generateTitle(\Lang::get('account.account_login_history'));

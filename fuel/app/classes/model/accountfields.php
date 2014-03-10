@@ -25,6 +25,21 @@ class Model_AccountFields extends \Orm\Model
 
 
     /**
+     * run before initialize the class
+     * use this method to set new table prefix with multisite.
+     */
+    public static function _init()
+    {
+        // get current site id
+        $site_id = \Model_Sites::getSiteId(false);
+
+        if ($site_id != '1') {
+            static::$_table_name = $site_id . '_' . static::$_table_name;
+        }
+    }// _init
+
+
+    /**
      * get data
      *
      * @param integer $account_id
@@ -36,7 +51,7 @@ class Model_AccountFields extends \Orm\Model
             return false;
         }
 
-        $query = \DB::select()->from('account_fields')->where('account_id', $account_id)->as_object(__CLASS__)->execute();
+        $query = \DB::select()->from(static::$_table_name)->where('account_id', $account_id)->as_object(__CLASS__)->execute();
         /**
          * as_object('Model_Name') means you can foreach loop and access $row::method_of_this_class() as you accessing that model object.
          * example:
@@ -96,7 +111,7 @@ class Model_AccountFields extends \Orm\Model
                     //  $object->save();
                     // }
                     // use update by db query. it is faster.
-                    \DB::update('account_fields')
+                    \DB::update(static::$_table_name)
                         ->value('field_value', $field_value)
                         ->where('account_id', '=', $account_id)
                         ->where('field_name', $field_name)

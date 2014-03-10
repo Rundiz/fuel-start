@@ -20,7 +20,12 @@ class Model_AccountSites extends \Orm\Model
             'model_to' => 'Model_Accounts',
             'key_from' => 'account_id',
             'key_to' => 'account_id',
-        )
+        ),
+        'sites' => array(
+            'model_to' => 'Model_Sites',
+            'key_from' => 'site_id',
+            'key_to' => 'site_id',
+        ),
     );
 
 
@@ -31,8 +36,7 @@ class Model_AccountSites extends \Orm\Model
      */
     public function addLoginSession($data = array())
     {
-        // @todo [multisite] for multi site, add get site id here.
-        $site_id = 1;
+        $site_id = \Model_Sites::getSiteId(false);
 
         // find exists last login on target site id.
         $account_sites = \Model_AccountSites::query()->where('account_id', $data['account_id'])->where('site_id', $site_id);
