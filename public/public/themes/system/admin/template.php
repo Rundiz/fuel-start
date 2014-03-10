@@ -57,6 +57,11 @@ include __DIR__ . DS . 'inc_html_head.php';
 								<li><a href="#" onclick="return false;"><?php echo \Lang::get('admin.admin_components'); ?></a>
 									<?php echo \Library\Modules::forge()->listAdminNavbar(); ?> 
 								</li>
+								<li><a href="#" onclick="return false;"><?php echo \Lang::get('admin.admin_extensions'); ?></a>
+									<ul>
+										<?php if (checkAdminPermission('siteman_perm', 'siteman_viewsites_perm')) { ?><li><?php echo \Html::anchor('admin/siteman', \Lang::get('admin.admin_multisite_manager')); ?></li><?php } ?> 
+									</ul>
+								</li>
 							</ul>
 							<ul class="nav navbar-nav navbar-right">
 								<li><a href="#" onclick="return false;" class="non-link-navbar"><span class="glyphicon glyphicon-user"></span> <?php echo \Lang::get('admin.admin_hello_admin', array('displayname' => $cookie_admin['account_display_name'])); ?></a></li>
