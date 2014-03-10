@@ -35,10 +35,14 @@
 				</tr>
 			</tfoot>
 			<tbody>
+				<?php
+				$site_protocol = \Uri::protocol();
+				$site_path = \Uri::sitePath();
+				?> 
 				<?php if (isset($list_logins['items']) && is_array($list_logins['items']) && !empty($list_logins['items'])) { ?> 
 				<?php foreach ($list_logins['items'] as $row) { ?> 
 				<tr>
-					<td><a href="http://<?php echo $row->sites->site_domain; ?>" target="site_view"><?php echo $row->sites->site_name; ?></a></td>
+					<td><a href="<?php echo $site_protocol . $row->sites->site_domain . $site_path; ?>" target="site_view"><?php echo $row->sites->site_name; ?></a></td>
 					<td><?php echo $row->login_ua; ?></td>
 					<td><?php echo $row->login_browser; ?></td>
 					<td><?php echo $row->login_ip; ?></td>
@@ -51,6 +55,7 @@
 					<td colspan="5"><?php echo \Lang::get('fslang.fslang_no_data'); ?></td>
 				</tr>
 				<?php } // endif; ?> 
+				<?php unset($site_path, $site_protocol); ?> 
 			</tbody>
 		</table>
 	</div>
