@@ -61,13 +61,13 @@ class Model_Sites extends \Orm\Model
 		$data['site_update_gmt'] = \Extension\Date::localToGmt();
 
 		// insert into db.
-		$site = self::forge($data);
+		$site = static::forge($data);
 		$site->save();
 		$site_id = $site->site_id;
 		unset($site);
 
 		// start copy tables
-		self::forge()->copyNewSiteTable($site_id);
+		static::forge()->copyNewSiteTable($site_id);
 
 		// @todo [theme][multisite] for any theme management that get config from db from each site. you need to add set default theme for each created site here.
 
@@ -300,7 +300,7 @@ class Model_Sites extends \Orm\Model
 	public static function listSites($option = array())
 	{
 		
-		$query = self::query();
+		$query = static::query();
 		// where conditions
 		if (!isset($option['list_for']) || (isset($option['list_for']) && $option['list_for'] == 'front')) {
 			$query->where('site_status', 1);

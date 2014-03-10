@@ -42,11 +42,11 @@ class Model_AccountLevel extends \Orm\Model
 		// below is add level to user by use single site table structure.
 		
 		// delete not exists level
-		$lvls = self::query()->where('account_id', $account_id);
+		$lvls = static::query()->where('account_id', $account_id);
 		if ($lvls->count() > 0) {
 			foreach ($lvls->get() as $lvl) {
 				if (!in_array($lvl->level_group_id, $data_level)) {
-					self::query()->where('account_id', $account_id)->where('level_id', $lvl->level_id)->delete();
+					static::query()->where('account_id', $account_id)->where('level_id', $lvl->level_id)->delete();
 				}
 			}
 		}
@@ -55,7 +55,7 @@ class Model_AccountLevel extends \Orm\Model
 		// update or insert fields
 		if (is_array($data_level) && !empty($data_level)) {
 			foreach ($data_level as $level_group_id) {
-				$entry = self::query()->where('account_id', $account_id)->where('level_group_id', $level_group_id)->get_one();
+				$entry = static::query()->where('account_id', $account_id)->where('level_group_id', $level_group_id)->get_one();
 				
 				if (!is_array($entry) && !is_object($entry)) {
 					// not exists, use insert.

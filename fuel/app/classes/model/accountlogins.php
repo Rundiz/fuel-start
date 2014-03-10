@@ -38,7 +38,7 @@ class Model_AccountLogins extends \Orm\Model
 		}
 		
 		// get total logins of current user
-		$query = self::query()->where('account_id', $data['account_id']);
+		$query = static::query()->where('account_id', $data['account_id']);
 		
 		$output['total'] = $query->count();
 		
@@ -87,7 +87,7 @@ class Model_AccountLogins extends \Orm\Model
 			$day_old = 90;
 		}
 		
-		$query = self::query()->where('login_time', '<', DB::expr('unix_timestamp(now() - interval '.$day_old.' day)'))->delete();
+		$query = static::query()->where('login_time', '<', DB::expr('unix_timestamp(now() - interval '.$day_old.' day)'))->delete();
 		
 		// done.
 		return true;

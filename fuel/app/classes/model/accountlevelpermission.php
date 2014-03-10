@@ -75,7 +75,7 @@ class Model_AccountLevelPermission extends \Orm\Model
 				}
 				
 				// check this level group in permission db.
-				$query2 = self::query()
+				$query2 = static::query()
 							->where('level_group_id', $row->level_group_id)
 							->where('permission_page', $page_name)
 							->where('permission_action', $action);
@@ -109,7 +109,7 @@ class Model_AccountLevelPermission extends \Orm\Model
 	public static function fetchPermissionsFile() 
 	{
 		$permission_array = array();
-		$self = self::forge();
+		$self = static::forge();
 		$controller_prefix = 'Controller_Admin_';
 		
 		if (is_dir($self->app_admin_path)) {
@@ -153,7 +153,7 @@ class Model_AccountLevelPermission extends \Orm\Model
 	public static function listPermissionChecked($core = 1, $module_system_name = '') 
 	{
 		$output = array();
-		$query = self::query();
+		$query = static::query();
 		
 		if ($core === 1) {
 			$query->where('permission_core', '1');
@@ -188,11 +188,11 @@ class Model_AccountLevelPermission extends \Orm\Model
 			return true;
 		} elseif ($core === 1) {
 			// reset core permissions
-			self::query()->where('permission_core', '1')->delete();
+			static::query()->where('permission_core', '1')->delete();
 			return true;
 		} elseif ($core === 0) {
 			// reset modules permissions
-			self::query()->where('permission_core', '0')->delete();
+			static::query()->where('permission_core', '0')->delete();
 			return true;
 		}
 		
@@ -212,14 +212,14 @@ class Model_AccountLevelPermission extends \Orm\Model
 		foreach ($data['level_group_id'] as $key => $lv_groups) {
 			foreach ($lv_groups as $level_group_id) {
 				// check if permission is in db or not.
-				$query = self::query()
+				$query = static::query()
 						->where('level_group_id', $level_group_id)
 						->where('permission_page', $data['permission_page'][$key])
 						->where('permission_action', $data['permission_action'][$key]);
 				
 				if ($query->count() <= 0) {
 					// not in db. insert it.
-					$entry = self::forge();
+					$entry = static::forge();
 					$entry->level_group_id = $level_group_id;
 					$entry->permission_core = $data['permission_core'];
 					$entry->module_system_name = $data['module_system_name'];
@@ -236,14 +236,14 @@ class Model_AccountLevelPermission extends \Orm\Model
 		// now remove permission in db that was not checked.
 		foreach ($data['permission_action'] as $key => $permission_action) {
 			if (isset($data['permission_page'][$key]) && isset($data['level_group_id'][$key])) {
-				$query = self::query()
+				$query = static::query()
 						->where('permission_page', $data['permission_page'][$key])
 						->where('permission_action', $permission_action);
 				
 				if ($query->count() > 0) {
 					foreach ($query->get() as $row) {
 						if (!in_array($row->level_group_id, $data['level_group_id'][$key])) {
-							self::find($row->permission_id)->delete();
+							static::find($row->permission_id)->delete();
 						}
 					}
 				}
