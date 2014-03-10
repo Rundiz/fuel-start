@@ -316,6 +316,37 @@ class Model_Sites extends \Orm\Model
             return $site_id . '_' . $table_name;
         }
     }// getTableSiteId
+    
+    
+    /**
+     * check if current site is enabled
+     * 
+     * @return boolean
+     */
+    public static function isSiteEnabled()
+    {
+        // get domain
+        if (isset($_SERVER['HTTP_HOST'])) {
+            $site_domain = $_SERVER['HTTP_HOST'];
+        } elseif (isset($_SERVER['SERVER_NAME'])) {
+            $site_domain = $_SERVER['SERVER_NAME'];
+        } else {
+            $site_domain = 'localhost';
+        }
+        
+        $query = static::query();
+        $query->where('site_domain', $site_domain);
+        $query->where('site_status', 1);
+        $total = $query->count();
+
+        unset($query, $site_domain);
+        
+        if ($total > 0) {
+            return true;
+        }
+        
+        return false;
+    }// isSiteEnabled
 
 
     /**

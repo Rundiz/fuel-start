@@ -13,6 +13,17 @@ abstract class Controller_BaseController extends \Controller
 
     public function __construct()
     {
+        // check that site was enabled.
+        if (!\Model_Sites::isSiteEnabled()) {
+            $request = \Request::forge('error/403')->execute();
+            $response = new \Response($request, 403);
+            $response->set_status(403);
+            $response->send(true);
+            
+            unset($request, $response);
+            exit;
+        }
+
         // fix changed current language but autoload not reload
         \Lang::load('fslang', 'fslang');
 
