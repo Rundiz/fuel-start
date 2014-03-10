@@ -134,6 +134,21 @@ class Uri extends \Fuel\Core\Uri
 
         return $querystring;
     }// getCurrentQuerystrings
+    
+    
+    /**
+     * get current protocol
+     * 
+     * @return string
+     */
+    public static function protocol()
+    {
+        if (\Input::server('SERVER_PORT') == '443') {
+            return 'https://';
+        } else {
+            return 'http://';
+        }
+    }// protocol
 
 
     /**
@@ -203,6 +218,23 @@ class Uri extends \Fuel\Core\Uri
         // clean vars.
         unset($default_lang, $locales);
     }// redirectLanguageUri
+    
+    
+    /**
+     * get website root path
+     * example: website install at /fuelstart from webroot (/). sitePath will return /fuelstart
+     * 
+     * @param string $uri
+     * @return string
+     */
+    public static function sitePath($uri = '')
+    {
+        $site_url = \Uri::create($uri);
+        
+        $domain = static::protocol() . \Input::server('HTTP_HOST');
+        
+        return str_replace($domain, '', $site_url);
+    }// sitePath
 
 
 }

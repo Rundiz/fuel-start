@@ -37,6 +37,20 @@ class Controller_AdminController extends \Controller_BaseController
         if (!is_array($output)) {
             $output = array();
         }
+        
+        // list sites to display links in admin page
+        $list_sites_option['list_for'] = 'admin';
+        $list_sites_option['unlimit'] = true;
+        $list_sites = \Model_Sites::listSites($list_sites_option);
+        
+        if (isset($list_sites['total']) && $list_sites['total'] > 1) {
+            if (isset($list_sites['items']) && is_array($list_sites['items']) && !empty($list_sites['items'])) {
+                $output['fs_list_sites'] = $list_sites['items'];
+            } else {
+                $output['fs_list_sites'] = null;
+            }
+        }
+        unset($list_sites, $list_sites_option);
 
         // start theme class
         $theme = \Theme::instance();
