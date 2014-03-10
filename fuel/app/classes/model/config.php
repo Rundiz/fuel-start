@@ -16,6 +16,23 @@ class Model_Config extends \Orm\Model
 	
 	
 	/**
+	 * run before initialize the class
+	 * use this method to set new table prefix with multisite.
+	 * 
+	 * @param integer $site_id
+	 */
+	public static function _init()
+	{
+		// get current site id
+		$site_id = \Model_Sites::getSiteId(false);
+		
+		if ($site_id != '1') {
+			static::$_table_name = $site_id . '_config';
+		}
+	}// _init
+	
+	
+	/**
 	 * get config value from config_name field in config table
 	 * 
 	 * @param string $config_name config name
@@ -27,7 +44,7 @@ class Model_Config extends \Orm\Model
 			return null;
 		}
 		
-		$query = self::query()->where('config_name', '=', $config_name)->get_one();
+		$query = static::query()->where('config_name', '=', $config_name)->get_one();
 		
 		if ($return_field == null) {
 			return $query;
@@ -44,7 +61,7 @@ class Model_Config extends \Orm\Model
 	 */
 	public static function getvalue($config_name = '', $return_field = 'config_vlue') 
 	{
-		return self::getval($config_name, $return_field);
+		return static::getval($config_name, $return_field);
 	}// getvalue
 	
 	
