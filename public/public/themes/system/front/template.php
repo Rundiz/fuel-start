@@ -46,8 +46,9 @@ $theme = \Theme::instance();
 		}
 		?> 
 
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/modernizr-2.6.2-respond-1.1.0.min.js')); ?>"></script>
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/jquery-1.10.2.min.js')); ?>"></script>
+		<script src="<?php echo Uri::createNL($theme->asset_path('js/modernizr.min.js')); ?>"></script>
+		<script src="<?php echo Uri::createNL($theme->asset_path('js/respond/respond.min.js')); ?>"></script>
+		<script src="<?php echo Uri::createNL($theme->asset_path('js/jquery-1.11.0.min.js')); ?>"></script>
 		<?php 
 		// render <script>
 		if (isset($page_script) && is_array($page_script)) {
