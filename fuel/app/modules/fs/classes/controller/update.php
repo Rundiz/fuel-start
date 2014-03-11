@@ -8,13 +8,13 @@
 
 namespace Fs;
 
-class Controller_Update extends \Controller_BaseController
+class Controller_Update extends \Controller
 {
 
 
-    public function __construct()
+    public function __construct(\Request $request)
     {
-        parent::__construct();
+        parent::__construct($request);
 
         // load language
         \Lang::load('fs::fs');
@@ -23,18 +23,6 @@ class Controller_Update extends \Controller_BaseController
 
     public function action_index()
     {
-        // check permission
-        /*if (\Model_AccountLevelPermission::checkAdminPermission('fsupdater_perm', 'fs_update_perm') == false) {
-            \Session::set_flash(
-                'form_status',
-                array(
-                    'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
-                )
-            );
-            \Response::redirect(\Uri::create('admin'));
-        }*/// do not need to check permission since update run from frontend.
-
         if (\Input::method() == 'POST') {
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
@@ -56,10 +44,11 @@ class Controller_Update extends \Controller_BaseController
         }
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('fs_updater'));
+        $output['page_title'] = \Lang::get('fs_updater');
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('update_v', $output, false);
+        $theme = \Theme::instance();
+        return $theme->view('update_v', $output, false);
     }// action_index
 
 

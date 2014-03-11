@@ -13,7 +13,14 @@ class update0001
     public static function run()
     {
         // get site name
-        $site_name = \Model_Config::getval('site_name');
+        $result = \DB::select('config_name', 'config_value')
+                ->from('config')
+                ->where('config_name', 'site_name')
+                ->as_object()
+                ->execute();
+        $row = $result->current();
+        $site_name = $row->config_value;
+        unset($result, $row);
 
         // get domain
         if (isset($_SERVER['HTTP_HOST'])) {
