@@ -32,8 +32,34 @@ include __DIR__ . DS . 'inc_html_head.php';
 								<li>
 									<a href="#" onclick="return false;"><?php echo \Lang::get('admin.admin_website'); ?></a>
 									<ul>
-										<li><?php echo \Html::anchor('admin', \Lang::get('admin.admin_admin_home')); ?></li>
-										<li><?php echo \Html::anchor('', \Lang::get('admin.admin_visit_site')); ?></li>
+										<li><?php echo \Html::anchor('admin', \Lang::get('admin.admin_admin_home')); ?> 
+											<?php if (isset($fs_list_sites) && $fs_list_sites != null) { ?> 
+											<ul>
+											<?php
+											$site_protocol = \Uri::protocol();
+											$site_path = \Uri::sitePath('admin');
+											?> 
+											<?php foreach ($fs_list_sites as $fs_site) { ?> 
+												<li><?php echo \Html::anchor($site_protocol . $fs_site->site_domain . $site_path, $fs_site->site_name); ?></li>
+											<?php }// endforeach; ?> 
+											<?php unset($site_path, $site_protocol); ?> 
+											</ul>
+											<?php }// endif; ?> 
+										</li>
+										<li><?php echo \Html::anchor('', \Lang::get('admin.admin_visit_site')); ?> 
+											<?php if (isset($fs_list_sites) && $fs_list_sites != null) { ?> 
+											<ul>
+											<?php
+											$site_protocol = \Uri::protocol();
+											$site_path = \Uri::sitePath();
+											?> 
+											<?php foreach ($fs_list_sites as $fs_site) { ?> 
+												<li><?php echo \Html::anchor($site_protocol . $fs_site->site_domain . $site_path, $fs_site->site_name); ?></li>
+											<?php }// endforeach; ?> 
+											<?php unset($site_path, $site_protocol); ?> 
+											</ul>
+											<?php }// endif; ?> 
+										</li>
 										<?php if (checkAdminPermission('config.config_global', 'config.config_global')) { ?><li><?php echo \Html::anchor('admin/config', \Lang::get('admin.admin_global_configuration')); ?></li><?php } ?> 
 									</ul>
 								</li>
@@ -56,6 +82,11 @@ include __DIR__ . DS . 'inc_html_head.php';
 								</li>
 								<li><a href="#" onclick="return false;"><?php echo \Lang::get('admin.admin_components'); ?></a>
 									<?php echo \Library\Modules::forge()->listAdminNavbar(); ?> 
+								</li>
+								<li><a href="#" onclick="return false;"><?php echo \Lang::get('admin.admin_extensions'); ?></a>
+									<ul>
+										<?php if (checkAdminPermission('siteman_perm', 'siteman_viewsites_perm')) { ?><li><?php echo \Html::anchor('admin/siteman', \Lang::get('admin.admin_multisite_manager')); ?></li><?php } ?> 
+									</ul>
 								</li>
 							</ul>
 							<ul class="nav navbar-nav navbar-right">

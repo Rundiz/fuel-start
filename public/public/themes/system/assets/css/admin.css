@@ -141,7 +141,7 @@ html, body {
 /*
  * fix icheck with bootstrap design. 
 */
-.custom-checkbox-radio-icheck {
+.checkbox-inline .custom-checkbox-radio-icheck {
 	margin-left: -20px;
 }
 

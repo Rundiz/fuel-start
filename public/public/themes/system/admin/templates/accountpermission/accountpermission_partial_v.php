@@ -48,7 +48,7 @@
 				<td class="perm-lv-cell<?php if ($count_act == 1): ?> perm-page-row<?php endif; ?>">
 					<input type="hidden" name="permission_page[<?php echo $count_all; ?>]" value="<?php echo $perm_page; ?>" />
 					<input type="hidden" name="permission_action[<?php echo $count_all; ?>]" value="<?php echo $perm_action; ?>" />
-					<input type="checkbox" name="level_group_id[<?php echo $count_all; ?>][]" value="<?php echo $lv->level_group_id; ?>"<?php if (in_array(array($perm_page => array($perm_action => $lv->level_group_id)), $list_permissions_check) || $lv->level_group_id == '1'): ?> checked="checked"<?php endif; ?> />
+                    <input type="checkbox" name="level_group_id[<?php echo $count_all; ?>][]" value="<?php echo $lv->level_group_id; ?>"<?php if (in_array(array($perm_page => array($perm_action => $lv->level_group_id)), $list_permissions_check) || $lv->level_group_id == '1'): ?> checked="checked"<?php endif; ?> class="custom-checkbox" />
 				</td>
 				<?php } // endforeach; ?> 
 			</tr>

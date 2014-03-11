@@ -16,6 +16,7 @@
 			?> 
 			<thead>
 				<tr>
+					<th><?php echo \Lang::get('accountlogins.account_logins_website'); ?></th>
 					<th style="width: 50%;"><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ua', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_user_agent')); ?></th>
 					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_browser', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_browser')); ?></th>
 					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ip', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_ip')); ?></th>
@@ -25,6 +26,7 @@
 			</thead>
 			<tfoot>
 				<tr>
+					<th><?php echo \Lang::get('accountlogins.account_logins_website'); ?></th>
 					<th style="width: 50%;"><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ua', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_user_agent')); ?></th>
 					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_browser', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_browser')); ?></th>
 					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ip', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_ip')); ?></th>
@@ -33,9 +35,14 @@
 				</tr>
 			</tfoot>
 			<tbody>
+				<?php
+				$site_protocol = \Uri::protocol();
+				$site_path = \Uri::sitePath();
+				?> 
 				<?php if (isset($list_logins['items']) && is_array($list_logins['items']) && !empty($list_logins['items'])) { ?> 
 				<?php foreach ($list_logins['items'] as $row) { ?> 
 				<tr>
+					<td><a href="<?php echo $site_protocol . $row->sites->site_domain . $site_path; ?>" target="site_view"><?php echo $row->sites->site_name; ?></a></td>
 					<td><?php echo $row->login_ua; ?></td>
 					<td><?php echo $row->login_browser; ?></td>
 					<td><?php echo $row->login_ip; ?></td>
@@ -48,6 +55,7 @@
 					<td colspan="5"><?php echo \Lang::get('fslang.fslang_no_data'); ?></td>
 				</tr>
 				<?php } // endif; ?> 
+				<?php unset($site_path, $site_protocol); ?> 
 			</tbody>
 		</table>
 	</div>
