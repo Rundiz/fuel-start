@@ -301,4 +301,4 @@ CREATE TABLE IF NOT EXISTS `ws_sites` (
 --
 
 INSERT INTO `ws_sites` (`site_id`, `site_name`, `site_domain`, `site_status`, `site_create`, `site_create_gmt`, `site_update`, `site_update_gmt`) VALUES
-(1, 'Fuel Start 1.5', 'localhost', 1, 1394102182, 1394076982, 1394102182, 1394076982);
+(1, 'Fuel Start', 'localhost', 1, 1394102182, 1394076982, 1394102182, 1394076982);
