@@ -9,6 +9,7 @@ This can help those developers build their project very fast.
 * Multilingual ready.
 * Admin configuration page.
 * Easy template layout system.
+* Multi-site management.
 
 ##Installation
 System requirement: 
