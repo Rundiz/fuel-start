@@ -8,9 +8,9 @@ return array(
 		'type' => 'mysqli',
 		'connection'  => array(
 			'hostname' => 'localhost',
-			'database' => 'v_fuelstart',
-			'username' => 'admin',
-			'password' => 'pass',
+			'database' => 'fuelstart',
+			'username' => 'root',
+			'password' => 'php13',
 		),
 		'table_prefix' => 'ws_',
 		'charset' => 'utf8',
