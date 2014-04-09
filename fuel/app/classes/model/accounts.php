@@ -386,7 +386,7 @@ class Model_Accounts extends \Orm\Model
                 }
             }
 
-            // check pass with or without simultaneous login check.
+            // check account passed! with or without simultaneous login check.
             unset($row);
 
             return true;
@@ -428,6 +428,7 @@ class Model_Accounts extends \Orm\Model
     public static function confirmRegister(array $data = array())
     {
         // check username and confirm code.
+        // confirm register has no time limitation.
         $query = static::query()
                 ->where('account_username', $data['account_username'])
                 ->where('account_confirm_code', $data['account_confirm_code'])
@@ -898,7 +899,7 @@ class Model_Accounts extends \Orm\Model
     /**
      * logout
      *
-     * @param array $data
+     * @param array $data options: site_id for logout with specific site id., account_id for logout target account, remove_online_code for remove online code that use to check simultaneous login.
      * @return boolean
      */
     public static function logout($data = array())
