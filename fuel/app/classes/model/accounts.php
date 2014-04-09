@@ -832,6 +832,7 @@ class Model_Accounts extends \Orm\Model
     /**
      * list accounts
      *
+     * @todo change get orders and sort from \Input::get directly to get it from $option array.
      * @param array $option
      * @return mixed
      */
@@ -1334,7 +1335,7 @@ class Model_Accounts extends \Orm\Model
     /**
      * send email change confirmation for require user to confirm changed action.
      *
-     * @param array $data
+     * @param array $data required data array: confirm_code, confirm_code_since, account_username, account_email
      * @return mixed
      */
     public function sendEmailChangeConfirmation(array $data = array())
@@ -1374,7 +1375,7 @@ class Model_Accounts extends \Orm\Model
 
     /**
      * send register email
-     * @param array $data
+     * @param array $data required data array: account_username, account_email, account_confirm_code
      * @return boolean|string return true when send register email was done and return error text when error occured.
      */
     public function sendRegisterEmail($data = array(), $options = array())
