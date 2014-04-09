@@ -305,7 +305,7 @@ class Model_Accounts extends \Orm\Model
         unset($cookie);
 
         // get current user level group priority
-        $my_level = \Model_AccountLevel::query()->related(array('account_level_group'))->where('account_id', $account_id)->order_by('account_level_group.level_priority', 'DESC')->get_one();
+        $my_level = \Model_AccountLevel::query()->related(array('account_level_group'))->where('account_id', $account_id)->order_by('account_level_group.level_priority', 'ASC')->get_one();
         if ($my_level == null) {
             return false;
         }
