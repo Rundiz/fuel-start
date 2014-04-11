@@ -48,8 +48,8 @@ include dirname(dirname(__DIR__)) . DS . 'inc_html_head.php';
 						<div class="form-group captcha-form-group<?php if (isset($show_captcha) && $show_captcha == true) { ?> show<?php }; ?>">
 							<label for="account_captcha" class="sr-only"><?php echo __('account.account_captcha'); ?>: <span class="txt_require">*</span></label>
 							<div class="col-sm-12">
-								<img src="<?php echo Uri::createNL(\Theme::instance()->asset_path('img/securimage_show.php')); ?>" alt="securimage" class="captcha" />
-								<a href="#" onclick="$('.captcha').attr('src', '<?php echo Uri::createNL(\Theme::instance()->asset_path('img/securimage_show.php')); ?>?' + Math.random()); this.blur(); return false;" tabindex="-1"><span class="fa fa-refresh fa-2x"></span></a>
+								<?php echo \Asset::img('securimage_show.php', array('class' => 'captcha')); ?>
+								<a href="#" onclick="$('.captcha').attr('src', '<?php echo \Asset::get_file('securimage_show.php', 'img'); ?>?' + Math.random()); this.blur(); return false;" tabindex="-1"><span class="fa fa-refresh fa-2x"></span></a>
 								<div>
 									<?php echo \Form::input('captcha', (isset($captcha) ? $captcha : null), array('id' => 'account_captcha', 'class' => 'form-control input-captcha', 'placeholder' => __('account.account_captcha_enter_text_you_see_in_image'))); ?> 
 								</div>

@@ -38,8 +38,8 @@
 		<div class="form-group">
 			<label for="account_captcha" class="col-sm-2 control-label"><?php echo __('account.account_captcha'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-5">
-				<img src="<?php echo Uri::createNL(\Theme::instance()->asset_path('img/securimage_show.php')); ?>" alt="securimage" class="captcha" />
-				<a href="#" onclick="$('.captcha').attr('src', '<?php echo Uri::createNL(\Theme::instance()->asset_path('img/securimage_show.php')); ?>?' + Math.random()); this.blur(); return false;" tabindex="-1"><img src="<?php echo Uri::createNL(\Theme::instance()->asset_path('img/reload.gif')); ?>" alt="" /></a>
+				<?php echo \Asset::img('securimage_show.php', array('class' => 'captcha')); ?>
+				<a href="#" onclick="$('.captcha').attr('src', '<?php echo \Asset::get_file('securimage_show.php', 'img'); ?>?' + Math.random()); this.blur(); return false;" tabindex="-1"><?php echo \Asset::img('reload.gif'); ?></a>
 				<div>
 					<?php echo \Form::input('captcha', $captcha, array('id' => 'account_captcha', 'class' => 'form-control input-captcha', 'placeholder' => __('account.account_captcha_enter_text_you_see_in_image'))); ?> 
 				</div>

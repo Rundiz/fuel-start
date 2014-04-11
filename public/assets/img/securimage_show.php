@@ -34,7 +34,7 @@
  *
  */
 
-include dirname(dirname(dirname(dirname(dirname(dirname(__DIR__)))))) . DIRECTORY_SEPARATOR . 'fuel' . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'securimage' . DIRECTORY_SEPARATOR . 'securimage.php';
+include dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'fuel' . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'securimage' . DIRECTORY_SEPARATOR . 'securimage.php';
 
 $img = new securimage();
 

@@ -33,7 +33,7 @@ function ajaxAdminLogin(obj) {
 					);
 				}
 				
-				$('.captcha').attr('src', theme_assets+'img/securimage_show.php?' + Math.random());
+				$('.captcha').attr('src', base_url+'assets/img/securimage_show.php?' + Math.random());
 				$('.login-page-input-username').focus();
 				
 				if (data.show_captcha == true) {
