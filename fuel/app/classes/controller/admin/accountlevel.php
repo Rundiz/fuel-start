@@ -23,7 +23,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
         parent::__construct();
 
         // load language
-        \Lang::load('accountlv', 'accountlv');
+        \Lang::load('accountlv');
 
         // set disallowed ids
         $this->disallowed_edit_delete = \Model_AccountLevelGroup::forge()->disallowed_edit_delete;
@@ -38,27 +38,26 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
     public function _define_permission()
     {
         // return array('controller page name' => array('action 1', 'action 2', 'action 3', 'a lot more action. up to you...'));
-        return array('accountlv.accountlv_perm' => array('accountlv.accountlv_viewlevels_perm', 'accountlv.accountlv_add_perm', 'accountlv.accountlv_edit_perm', 'accountlv.accountlv_delete_perm', 'accountlv.accountlv_sort_perm'));
+        return array('accountlv_perm' => array('accountlv_viewlevels_perm', 'accountlv_add_perm', 'accountlv_edit_perm', 'accountlv_delete_perm', 'accountlv_sort_perm'));
     }// _define_permission
 
 
     public function action_add()
     {
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_add_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_add_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
             \Response::redirect(\Uri::create('admin/account-level'));
         }
 
         // load language
-        \Lang::load('account', 'account');
-        \Lang::load('accountlv', 'accountlv');
+        \Lang::load('account');
 
         // read flash message for display errors.
         $form_status = \Session::get_flash('form_status');
@@ -76,12 +75,12 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 
             // validate form.
             $validate = \Validation::forge();
-            $validate->add('level_name', \Lang::get('accountlv.accountlv_role'), array(), array('required'));
+            $validate->add('level_name', \Lang::get('accountlv_role'), array(), array('required'));
 
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -96,7 +95,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
                             'form_status',
                             array(
                                 'form_status' => 'success',
-                                'form_status_message' => \Lang::get('admin.admin_saved')
+                                'form_status_message' => \Lang::get('admin_saved')
                             )
                         );
                     }
@@ -114,7 +113,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
         }
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('accountlv.accountlv_role'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('accountlv_role'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/accountlevel/accountlevel_form_v', $output, false);
@@ -124,12 +123,12 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
     public function action_ajaxsort()
     {
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_sort_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_sort_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
             \Response::redirect(\Uri::create('admin/account-level'));
@@ -162,7 +161,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
                         'form_status',
                         array(
                             'form_status' => 'success',
-                            'form_status_message' => \Lang::get('admin.admin_saved')
+                            'form_status_message' => \Lang::get('admin_saved')
                         )
                     );
                 }
@@ -182,12 +181,12 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
     public function action_edit($level_group_id = '')
     {
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_edit_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_edit_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
             \Response::redirect(\Uri::create('admin/account-level'));
@@ -197,8 +196,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
         $level_group_id = (int) $level_group_id;
 
         // load language
-        \Lang::load('account', 'account');
-        \Lang::load('accountlv', 'accountlv');
+        \Lang::load('account');
 
         // read flash message for display errors.
         $form_status = \Session::get_flash('form_status');
@@ -232,12 +230,12 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 
             // validate form.
             $validate = \Validation::forge();
-            $validate->add('level_name', \Lang::get('accountlv.accountlv_role'), array(), array('required'));
+            $validate->add('level_name', \Lang::get('accountlv_role'), array(), array('required'));
 
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -252,7 +250,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
                             'form_status',
                             array(
                                 'form_status' => 'success',
-                                'form_status_message' => \Lang::get('admin.admin_saved')
+                                'form_status_message' => \Lang::get('admin_saved')
                             )
                         );
                     }
@@ -270,7 +268,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
         }
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('accountlv.accountlv_role'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('accountlv_role'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/accountlevel/accountlevel_form_v', $output, false);
@@ -280,20 +278,19 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
     public function action_index()
     {
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_viewlevels_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_viewlevels_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
             \Response::redirect(\Uri::create('admin'));
         }
 
         // load language
-        \Lang::load('account', 'account');
-        \Lang::load('accountlv', 'accountlv');
+        \Lang::load('account');
 
         // read flash message for display errors.
         $form_status = \Session::get_flash('form_status');
@@ -313,7 +310,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
         $output['list_levels'] = \Model_AccountLevelGroup::listLevels();
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('accountlv.accountlv_role'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('accountlv_role'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/accountlevel/accountlevel_v', $output, false);
@@ -328,7 +325,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
         if (\Extension\NoCsrf::check()) {
             if ($act == 'del') {
                 // check permission.
-                if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account-level'));}
+                if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account-level'));}
 
                 if (is_array($ids)) {
                     foreach ($ids as $id) {

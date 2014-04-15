@@ -16,7 +16,7 @@ class Controller_Account_Login extends \Controller_BaseController
     public function action_index()
     {
         // load language
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         // load config from db.
         $cfg_values = array('member_max_login_fail', 'member_login_fail_wait_time');
@@ -68,13 +68,13 @@ class Controller_Account_Login extends \Controller_BaseController
             // validate form.
             $validate = \Validation::forge();
             // check username or email required
-            $validate->add('account_identity', \Lang::get('account.account_username_or_email'), array(), array('required'));
-            $validate->add('account_password', \Lang::get('account.account_password'), array(), array('required'));
+            $validate->add('account_identity', \Lang::get('account_username_or_email'), array(), array('required'));
+            $validate->add('account_password', \Lang::get('account_password'), array(), array('required'));
 
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -99,7 +99,7 @@ class Controller_Account_Login extends \Controller_BaseController
                     (time()-\Session::get('login_all_fail_time', time()))/60 <= $config['member_login_fail_wait_time']['value']
                 ) {
                     // continuous login failed over max fail limit.
-                    $result = Lang::get('account.account_login_failed_too_many', array('wait_minute' => $config['member_login_fail_wait_time']['value'], 'wait_til_time' => date('d F Y H:i:s', time()+($config['member_login_fail_wait_time']['value']*60))));
+                    $result = Lang::get('account_login_failed_too_many', array('wait_minute' => $config['member_login_fail_wait_time']['value'], 'wait_til_time' => date('d F Y H:i:s', time()+($config['member_login_fail_wait_time']['value']*60))));
                 } else {
                     // not reach maximum limit
                     // check if show captcha
@@ -107,7 +107,7 @@ class Controller_Account_Login extends \Controller_BaseController
                         include APPPATH . 'vendor' . DS . 'securimage' . DS . 'securimage.php';
                         $securimage = new \Securimage();
                         if ($securimage->check(\Input::post('captcha')) == false) {
-                            $result = \Lang::get('account.account_wrong_captcha_code');
+                            $result = \Lang::get('account_wrong_captcha_code');
                         }
                     }
 
@@ -130,7 +130,7 @@ class Controller_Account_Login extends \Controller_BaseController
 
                         $output['login_status'] = true;
                         $output['form_status'] = 'success';
-                        $output['form_status_message'] = \Lang::get('account.account_login_success');
+                        $output['form_status_message'] = \Lang::get('account_login_success');
 
                         if (!isset($output['go_to'])) {
                             $output['go_to'] = \Uri::base();
@@ -180,7 +180,7 @@ class Controller_Account_Login extends \Controller_BaseController
         }
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_login'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_login'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('front/templates/account/login_v', $output, false);

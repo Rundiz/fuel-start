@@ -14,7 +14,7 @@ class Controller_Account_Register extends \Controller_BaseController
     public function action_index()
     {
         // load language
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         // load config from db.
         $cfg_values = array('member_allow_register', 'member_verification');
@@ -39,15 +39,15 @@ class Controller_Account_Register extends \Controller_BaseController
             // validate form.
             $validate = \Validation::forge();
             $validate->add_callable(new \Extension\FsValidate());
-            $validate->add('account_username', \Lang::get('account.account_username'), array(), array('required', 'noSpaceBetweenText'));
-            $validate->add('account_email', \Lang::get('account.account_email'), array(), array('required', 'valid_email'));
-            $validate->add('account_password', \Lang::get('account.account_password'), array(), array('required'));
-            $validate->add('account_confirm_password', \Lang::get('account.account_confirm_password'), array(), array('required'))->add_rule('match_field', 'account_password');
+            $validate->add('account_username', \Lang::get('account_username'), array(), array('required', 'noSpaceBetweenText'));
+            $validate->add('account_email', \Lang::get('account_email'), array(), array('required', 'valid_email'));
+            $validate->add('account_password', \Lang::get('account_password'), array(), array('required'));
+            $validate->add('account_confirm_password', \Lang::get('account_confirm_password'), array(), array('required'))->add_rule('match_field', 'account_password');
 
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -58,7 +58,7 @@ class Controller_Account_Register extends \Controller_BaseController
                 $securimage = new \Securimage();
                 if ($securimage->check(\Input::post('captcha')) == false) {
                     $output['form_status'] = 'error';
-                    $output['form_status_message'] = \Lang::get('account.account_wrong_captcha_code');
+                    $output['form_status_message'] = \Lang::get('account_wrong_captcha_code');
                 } else {
                     $continue_register = true;
                 }
@@ -74,13 +74,13 @@ class Controller_Account_Register extends \Controller_BaseController
                         // if member verification is need, show those message. if no need, just show success message.
                         if ($config['member_verification']['value'] == '0') {
                             $output['form_status'] = 'success';
-                            $output['form_status_message'] = \Lang::get('account.account_registration_complted');
+                            $output['form_status_message'] = \Lang::get('account_registration_complted');
                         } elseif ($config['member_verification']['value'] == '1') {
                             $output['form_status'] = 'success';
-                            $output['form_status_message'] = \Lang::get('account.account_registration_completed_need_confirm');
+                            $output['form_status_message'] = \Lang::get('account_registration_completed_need_confirm');
                         } elseif ($config['member_verification']['value'] == '2') {
                             $output['form_status'] = 'success';
-                            $output['form_status_message'] = \Lang::get('account.account_registration_completed_need_admin_verify');
+                            $output['form_status_message'] = \Lang::get('account_registration_completed_need_admin_verify');
                         }
                     } else {
                         $output['form_status'] = 'error';
@@ -98,7 +98,7 @@ class Controller_Account_Register extends \Controller_BaseController
         }
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_register'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_register'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('front/templates/account/register_v', $output, false);

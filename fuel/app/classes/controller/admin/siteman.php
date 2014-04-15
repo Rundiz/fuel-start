@@ -33,7 +33,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
             \Response::redirect(\Uri::create('admin'));
@@ -65,7 +65,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -80,7 +80,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                             'form_status',
                             array(
                                 'form_status' => 'success',
-                                'form_status_message' => \Lang::get('admin.admin_saved')
+                                'form_status_message' => \Lang::get('admin_saved')
                             )
                         );
                     }
@@ -114,7 +114,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
             \Response::redirect(\Uri::create('admin'));
@@ -159,7 +159,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -174,7 +174,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                             'form_status',
                             array(
                                 'form_status' => 'success',
-                                'form_status_message' => \Lang::get('admin.admin_saved')
+                                'form_status_message' => \Lang::get('admin_saved')
                             )
                         );
                     }
@@ -208,7 +208,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
             \Response::redirect(\Uri::create('admin'));
@@ -283,7 +283,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                         'form_status',
                         array(
                             'form_status' => 'error',
-                            'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                            'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                         )
                     );
                     \Response::redirect(\Uri::create('admin/siteman'));
@@ -301,7 +301,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                         'form_status',
                         array(
                             'form_status' => 'error',
-                            'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                            'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                         )
                     );
                     \Response::redirect(\Uri::create('admin/siteman'));
@@ -327,7 +327,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                         'form_status',
                         array(
                             'form_status' => 'error',
-                            'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                            'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                         )
                     );
                     \Response::redirect(\Uri::create('admin/siteman'));

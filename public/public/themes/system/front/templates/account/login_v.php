@@ -1,5 +1,5 @@
 <article class="general-page-container">
-	<h1><?php echo \Lang::get('account.account_login'); ?></h1>
+	<h1><?php echo \Lang::get('account_login'); ?></h1>
 	
 	<?php echo \Form::open(array('action' => \Uri::main() . (isset($go_to) ? '?rdr=' . $go_to : ''), 'class' => 'form-horizontal', 'role' => 'form')); ?> 
 		<div class="form-status-placeholder">
@@ -10,34 +10,34 @@
 		<?php echo \Extension\NoCsrf::generate(); ?> 
 	
 		<div class="form-group">
-			<label for="account_username" class="col-sm-2 control-label"><?php echo __('account.account_username_or_email'); ?>: <span class="txt_require">*</span></label>
+			<label for="account_username" class="col-sm-2 control-label"><?php echo __('account_username_or_email'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-4">
 				<?php echo \Form::input('account_identity', (isset($account_identity) ? $account_identity : ''), array('id' => 'account_username', 'maxlength' => '255', 'class' => 'form-control login-page-input-username', 'autocomplete' => 'off')); ?> 
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="account_password" class="col-sm-2 control-label"><?php echo __('account.account_password'); ?>: <span class="txt_require">*</span></label>
+			<label for="account_password" class="col-sm-2 control-label"><?php echo __('account_password'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-4">
 				<?php echo \Form::password('account_password', (isset($account_password) ? $account_password : ''), array('id' => 'account_password', 'maxlength' => '70', 'class' => 'form-control')); ?> 
 			</div>
 		</div>
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<label class="bootstrap-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="<?php echo \Lang::get('account.account_remember_me_tooltip'); ?>">
+				<label class="bootstrap-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="<?php echo \Lang::get('account_remember_me_tooltip'); ?>">
 					<?php echo \Form::checkbox('remember', 'yes', (isset($remember) ? $remember : false)); ?> 
-					<?php echo \Lang::get('account.account_remember_me'); ?> 
+					<?php echo \Lang::get('account_remember_me'); ?> 
 				</label>
 			</div>
 		</div>
 	
 		<?php if (isset($show_captcha) && $show_captcha == true) { ?> 
 		<div class="form-group">
-			<label for="account_captcha" class="col-sm-2 control-label"><?php echo __('account.account_captcha'); ?>: <span class="txt_require">*</span></label>
+			<label for="account_captcha" class="col-sm-2 control-label"><?php echo __('account_captcha'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-5">
 				<?php echo \Asset::img('securimage_show.php', array('class' => 'captcha')); ?>
 				<a href="#" onclick="$('.captcha').attr('src', '<?php echo \Asset::get_file('securimage_show.php', 'img'); ?>?' + Math.random()); this.blur(); return false;" tabindex="-1"><?php echo \Asset::img('reload.gif'); ?></a>
 				<div>
-					<?php echo \Form::input('captcha', (isset($captcha) ? $captcha : null), array('id' => 'account_captcha', 'class' => 'form-control input-captcha', 'placeholder' => __('account.account_captcha_enter_text_you_see_in_image'))); ?> 
+					<?php echo \Form::input('captcha', (isset($captcha) ? $captcha : null), array('id' => 'account_captcha', 'class' => 'form-control input-captcha', 'placeholder' => __('account_captcha_enter_text_you_see_in_image'))); ?> 
 				</div>
 			</div>
 		</div>
@@ -45,8 +45,8 @@
 	
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<button type="submit" class="btn btn-primary"><?php echo __('account.account_login'); ?></button>
-				<a href="<?php echo \Uri::create('account/forgotpw'); ?>" class="btn btn-default btn-sm"><?php echo \Lang::get('account.account_forgot_username_or_password'); ?></a>
+				<button type="submit" class="btn btn-primary"><?php echo __('account_login'); ?></button>
+				<a href="<?php echo \Uri::create('account/forgotpw'); ?>" class="btn btn-default btn-sm"><?php echo \Lang::get('account_forgot_username_or_password'); ?></a>
 			</div>
 		</div>
 	<?php echo \Form::close(); ?> 
@@ -63,40 +63,40 @@
 		<?php echo \Extension\NoCsrf::generate(); ?> 
 	
 		<div class="form-group">
-			<label for="account_username2" class="col-sm-2 control-label"><?php echo __('account.account_username_or_email'); ?>: <span class="txt_require">*</span></label>
+			<label for="account_username2" class="col-sm-2 control-label"><?php echo __('account_username_or_email'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-4">
 				<?php echo \Form::input('account_identity', (isset($account_identity) ? $account_identity : ''), array('id' => 'account_username2', 'maxlength' => '255', 'class' => 'form-control', 'autocomplete' => 'off')); ?> 
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="account_password2" class="col-sm-2 control-label"><?php echo __('account.account_password'); ?>: <span class="txt_require">*</span></label>
+			<label for="account_password2" class="col-sm-2 control-label"><?php echo __('account_password'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-4">
 				<?php echo \Form::password('account_password', (isset($account_password) ? $account_password : ''), array('id' => 'account_password2', 'maxlength' => '70', 'class' => 'form-control')); ?> 
 			</div>
 		</div>
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<label class="bootstrap-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="<?php echo \Lang::get('account.account_remember_me_tooltip'); ?>">
+				<label class="bootstrap-tooltip" data-placement="top" data-toggle="tooltip" data-original-title="<?php echo \Lang::get('account_remember_me_tooltip'); ?>">
 					<?php echo \Form::checkbox('remember', 'yes', (isset($remember) ? $remember : false), array('class' => 'remember')); ?> 
-					<?php echo \Lang::get('account.account_remember_me'); ?> 
+					<?php echo \Lang::get('account_remember_me'); ?> 
 				</label>
 			</div>
 		</div>
 	
 		<div class="form-group show_captcha hide_captcha">
-			<label for="account_captcha2" class="col-sm-2 control-label"><?php echo __('account.account_captcha'); ?>: <span class="txt_require">*</span></label>
+			<label for="account_captcha2" class="col-sm-2 control-label"><?php echo __('account_captcha'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-5">
 				<?php echo \Asset::img('securimage_show.php', array('class' => 'captcha')); ?>
 				<a href="#" onclick="$('.captcha').attr('src', '<?php echo \Asset::get_file('securimage_show.php', 'img'); ?>?' + Math.random()); this.blur(); return false;" tabindex="-1"><?php echo \Asset::img('reload.gif'); ?></a>
 				<div>
-					<?php echo \Form::input('captcha', (isset($captcha) ? $captcha : null), array('id' => 'account_captcha2', 'class' => 'form-control input-captcha', 'placeholder' => __('account.account_captcha_enter_text_you_see_in_image'))); ?> 
+					<?php echo \Form::input('captcha', (isset($captcha) ? $captcha : null), array('id' => 'account_captcha2', 'class' => 'form-control input-captcha', 'placeholder' => __('account_captcha_enter_text_you_see_in_image'))); ?> 
 				</div>
 			</div>
 		</div>
 	
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<button type="button" class="btn btn-primary" onclick="ajax_member_login();"><?php echo __('account.account_login'); ?></button>
+				<button type="button" class="btn btn-primary" onclick="ajax_member_login();"><?php echo __('account_login'); ?></button>
 			</div>
 		</div>
 	<?php echo \Form::close(); ?> 

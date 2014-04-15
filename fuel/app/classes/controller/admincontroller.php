@@ -20,7 +20,7 @@ class Controller_AdminController extends \Controller_BaseController
         }
 
         // load global admin language
-        \Lang::load('admin', 'admin');
+        \Lang::load('admin');
     }// __construct
 
 

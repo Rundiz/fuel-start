@@ -15,7 +15,7 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
         parent::__construct();
 
         // load language
-        \Lang::load('acperm', 'acperm');
+        \Lang::load('acperm');
     }// __construct
 
 
@@ -27,27 +27,26 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
     public function _define_permission()
     {
         // return array('controller page name' => array('action 1', 'action 2', 'action 3', 'a lot more action. up to you...'));
-        return array('acperm.acperm_perm' => array('acperm.acperm_manage_perm'));
+        return array('acperm_perm' => array('acperm_manage_perm'));
     }// _define_permission
 
 
     public function action_index()
     {
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('acperm.acperm_perm', 'acperm.acperm_manage_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
             \Response::redirect(\Uri::create('admin'));
         }
 
         // load language
-        \Lang::load('account', 'account');
-        \Lang::load('acperm', 'acperm');
+        \Lang::load('account');
 
         // read flash message for display errors.
         $form_status = \Session::get_flash('form_status');
@@ -69,7 +68,7 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
         $output['list_levels'] = \Model_AccountLevelGroup::listLevels();
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('acperm.acperm_permission'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('acperm_permission'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/accountpermission/accountpermission_v', $output, false);
@@ -79,12 +78,12 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
     public function action_module($module_system_name = '')
     {
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('acperm.acperm_perm', 'acperm.acperm_manage_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
             \Response::redirect(\Uri::create('admin'));
@@ -96,8 +95,7 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
         }
 
         // load language
-        \Lang::load('account', 'account');
-        \Lang::load('acperm', 'acperm');
+        \Lang::load('account');
 
         // read flash message for display errors.
         $form_status = \Session::get_flash('form_status');
@@ -120,7 +118,7 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
         $output['module'] = \Library\Modules::forge()->readModuleMetadataFromModuleName($module_system_name);
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('acperm.acperm_permission'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('acperm_permission'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/accountpermission/accountpermission_module_v', $output, false);
@@ -130,12 +128,12 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
     public function action_reset()
     {
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('acperm.acperm_perm', 'acperm.acperm_manage_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
             \Response::redirect(\Uri::create('admin'));
@@ -168,12 +166,12 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
     public function action_save()
     {
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('acperm.acperm_perm', 'acperm.acperm_manage_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
             \Response::redirect(\Uri::create('admin'));
@@ -200,7 +198,7 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
             'form_status',
             array(
                 'form_status' => 'success',
-                'form_status_message' => \Lang::get('admin.admin_saved')
+                'form_status_message' => \Lang::get('admin_saved')
             )
         );
 

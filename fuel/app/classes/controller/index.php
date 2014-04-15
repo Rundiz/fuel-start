@@ -17,7 +17,7 @@ class Controller_Index extends \Controller_BaseController
     public function action_index()
     {
         // load language
-        \Lang::load('fslang', 'fslang');
+        \Lang::load('fslang');
 
         // <head> output ----------------------------------------------------------------------------------------------
         $output['page_title'] = \Model_Config::getval('site_name');

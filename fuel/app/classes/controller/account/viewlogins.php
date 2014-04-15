@@ -18,8 +18,8 @@ class Controller_Account_ViewLogins extends \Controller_BaseController
         }
 
         // load language
-        \Lang::load('account', 'account');
-        \Lang::load('accountlogins', 'accountlogins');
+        \Lang::load('account');
+        \Lang::load('accountlogins');
 
         // get account id
         $cookie_account = \Model_Accounts::forge()->getAccountCookie();
@@ -78,7 +78,7 @@ class Controller_Account_ViewLogins extends \Controller_BaseController
         unset($config, $data, $list_logins, $option, $pagination);
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_login_history'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_login_history'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('front/templates/account/viewlogins_v', $output, false);

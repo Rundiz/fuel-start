@@ -1,4 +1,4 @@
-<h1><?php echo \Lang::get('account.account_view_login_history_of', array('name' => \Security::htmlentities($account->account_username))); ?> <small><?php echo \Extension\Html::anchor('admin/account/edit/' . $account_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin.admin_edit'), array('class' => 'btn btn-default btn-xs')); ?></small></h1>
+<h1><?php echo \Lang::get('account_view_login_history_of', array('name' => \Security::htmlentities($account->account_username))); ?> <small><?php echo \Extension\Html::anchor('admin/account/edit/' . $account_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin_edit'), array('class' => 'btn btn-default btn-xs')); ?></small></h1>
 
 <?php echo \Form::open(array('action' => 'admin/account/delete_log/' . $account_id, 'class' => 'form-horizontal', 'role' => 'form')); ?> 
 	<div class="form-status-placeholder">
@@ -16,22 +16,22 @@
 			?> 
 			<thead>
 				<tr>
-					<th><?php echo \Lang::get('accountlogins.account_logins_website'); ?></th>
-					<th style="width: 50%;"><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ua', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_user_agent')); ?></th>
-					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_browser', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_browser')); ?></th>
-					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ip', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_ip')); ?></th>
-					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_timezone', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_date_time')); ?></th>
-					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_attempt', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_result')); ?></th>
+					<th><?php echo \Lang::get('accountlogins_website'); ?></th>
+					<th style="width: 50%;"><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ua', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_user_agent')); ?></th>
+					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_browser', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_browser')); ?></th>
+					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ip', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_ip')); ?></th>
+					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_timezone', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_date_time')); ?></th>
+					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_attempt', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_result')); ?></th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
-					<th><?php echo \Lang::get('accountlogins.account_logins_website'); ?></th>
-					<th style="width: 50%;"><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ua', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_user_agent')); ?></th>
-					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_browser', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_browser')); ?></th>
-					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ip', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_ip')); ?></th>
-					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_timezone', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_date_time')); ?></th>
-					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_attempt', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_result')); ?></th>
+					<th><?php echo \Lang::get('accountlogins_website'); ?></th>
+					<th style="width: 50%;"><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ua', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_user_agent')); ?></th>
+					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_browser', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_browser')); ?></th>
+					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ip', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_ip')); ?></th>
+					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_timezone', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_date_time')); ?></th>
+					<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_attempt', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_result')); ?></th>
 				</tr>
 			</tfoot>
 			<tbody>
@@ -52,7 +52,7 @@
 				<?php } // endofreach; ?> 
 				<?php } else { ?> 
 				<tr>
-					<td colspan="5"><?php echo \Lang::get('fslang.fslang_no_data'); ?></td>
+					<td colspan="5"><?php echo \Lang::get('fslang_no_data'); ?></td>
 				</tr>
 				<?php } // endif; ?> 
 				<?php unset($site_path, $site_protocol); ?> 
@@ -62,14 +62,14 @@
 
 	<div class="row cmds">
 		<div class="col-sm-6">
-			<?php if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_deletelogin_log_perm')) { ?> 
+			<?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_deletelogin_log_perm')) { ?> 
 			<select name="act" class="form-control select-inline chosen-select">
 				<option value="" selected="selected"></option>
-				<option value="del"><?php echo \Lang::get('admin.admin_delete'); ?></option>
-				<option value="truncate"><?php echo \Lang::get('account.account_delete_all_user_logins'); ?></option>
+				<option value="del"><?php echo \Lang::get('admin_delete'); ?></option>
+				<option value="truncate"><?php echo \Lang::get('account_delete_all_user_logins'); ?></option>
 			</select>
-			<button type="submit" class="bb-button btn btn-warning"><?php echo \Lang::get('admin.admin_submit'); ?></button>
-			<?php echo \Extension\Html::anchor('admin/account', \Lang::get('admin.admin_cancel'), array('class' => 'btn btn-default')); ?> 
+			<button type="submit" class="bb-button btn btn-warning"><?php echo \Lang::get('admin_submit'); ?></button>
+			<?php echo \Extension\Html::anchor('admin/account', \Lang::get('admin_cancel'), array('class' => 'btn btn-default')); ?> 
 			<?php } ?> 
 		</div>
 		<div class="col-sm-6">

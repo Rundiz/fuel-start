@@ -2,8 +2,8 @@
 
 <div class="row cmds">
 	<div class="col-sm-6">
-		<?php if (\Model_AccountLevelPermission::checkAdminPermission('siteman_perm', 'siteman_viewsites_perm')) {echo \Html::anchor('admin/siteman/add', \Lang::get('admin.admin_add'), array('class' => 'btn btn-default'));} ?> 
-		| <?php printf(\Lang::get('admin.admin_total', array('total' => (isset($list_sites['total']) ? $list_sites['total'] : '0')))); ?>
+		<?php if (\Model_AccountLevelPermission::checkAdminPermission('siteman_perm', 'siteman_viewsites_perm')) {echo \Html::anchor('admin/siteman/add', \Lang::get('admin_add'), array('class' => 'btn btn-default'));} ?> 
+		| <?php printf(\Lang::get('admin_total', array('total' => (isset($list_sites['total']) ? $list_sites['total'] : '0')))); ?>
 	</div>
 </div>
 
@@ -58,14 +58,14 @@
 					<td><?php echo \Extension\Date::gmtDate('', $row->site_update); ?></td>
 					<td>
 						<ul class="actions-inline">
-							<?php if (\Model_AccountLevelPermission::checkAdminPermission('siteman_perm', 'siteman_edit_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/siteman/edit/' . $row->site_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin.admin_edit'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
+							<?php if (\Model_AccountLevelPermission::checkAdminPermission('siteman_perm', 'siteman_edit_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/siteman/edit/' . $row->site_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin_edit'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
 						</ul>
 					</td>
 				</tr>
 				<?php } // endofreach; ?> 
 				<?php } else { ?> 
 				<tr>
-					<td colspan="8"><?php echo \Lang::get('fslang.fslang_no_data'); ?></td>
+					<td colspan="8"><?php echo \Lang::get('fslang_no_data'); ?></td>
 				</tr>
 				<?php } // endif; ?> 
 			</tbody>
@@ -77,12 +77,12 @@
 			 
 			<select name="act" class="form-control select-inline chosen-select">
 				<option value="" selected="selected"></option>
-				<?php if (\Model_AccountLevelPermission::checkAdminPermission('siteman_perm', 'siteman_edit_perm')) { ?><option value="enable"><?php echo \Lang::get('admin.admin_enable'); ?></option><?php } ?> 
-				<?php if (\Model_AccountLevelPermission::checkAdminPermission('siteman_perm', 'siteman_edit_perm')) { ?><option value="disable"><?php echo \Lang::get('admin.admin_disable'); ?></option><?php } ?> 
-				<?php if (\Model_AccountLevelPermission::checkAdminPermission('siteman_perm', 'siteman_delete_perm')) { ?><option value="del"><?php echo \Lang::get('admin.admin_delete'); ?></option><?php } ?> 
+				<?php if (\Model_AccountLevelPermission::checkAdminPermission('siteman_perm', 'siteman_edit_perm')) { ?><option value="enable"><?php echo \Lang::get('admin_enable'); ?></option><?php } ?> 
+				<?php if (\Model_AccountLevelPermission::checkAdminPermission('siteman_perm', 'siteman_edit_perm')) { ?><option value="disable"><?php echo \Lang::get('admin_disable'); ?></option><?php } ?> 
+				<?php if (\Model_AccountLevelPermission::checkAdminPermission('siteman_perm', 'siteman_delete_perm')) { ?><option value="del"><?php echo \Lang::get('admin_delete'); ?></option><?php } ?> 
 			</select>
-			<button type="submit" class="bb-button btn btn-warning"><?php echo \Lang::get('admin.admin_submit'); ?></button>
-			<?php echo \Extension\Html::anchor('admin', \Lang::get('admin.admin_cancel'), array('class' => 'btn btn-default')); ?> 
+			<button type="submit" class="bb-button btn btn-warning"><?php echo \Lang::get('admin_submit'); ?></button>
+			<?php echo \Extension\Html::anchor('admin', \Lang::get('admin_cancel'), array('class' => 'btn btn-default')); ?> 
 		</div>
 		<div class="col-sm-6">
 			<?php if (isset($pagination)) {echo $pagination->render();} ?> 

@@ -83,12 +83,12 @@ $theme = \Theme::instance();
 				</main>
 				<aside class="col-sm-3 sidebar">
 					<div class="sidebar-block">
-						<h3><?php echo \Lang::get('fslang.fslang_languages'); ?></h3>
+						<h3><?php echo \Lang::get('fslang_languages'); ?></h3>
 						<?php echo languageSwitchDropdown(); ?> 
 					</div>
 					
 					<div class="sidebar-block">
-						<h3><?php echo \Lang::get('fslang.fslang_navigation'); ?></h3>
+						<h3><?php echo \Lang::get('fslang_navigation'); ?></h3>
 						<ul>
 							<li><a href="<?php echo Uri::create('admin'); ?>">Go to Admin dashboard</a></li>
 							<li><a href="<?php echo Uri::create('account/register'); ?>">Register account</a></li>

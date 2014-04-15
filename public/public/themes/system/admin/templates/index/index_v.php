@@ -1,4 +1,4 @@
-<h1><?php echo \Lang::get('admin.admin_administrator_dashbord'); ?></h1>
+<h1><?php echo \Lang::get('admin_administrator_dashbord'); ?></h1>
 
 <div class="form-status-placeholder">
 	<?php if (isset($form_status) && isset($form_status_message)) { ?> 
@@ -13,6 +13,6 @@
 	<p>The controller of this page is located at <?php echo APPPATH . 'classes' . DS . 'controller' . DS . 'admin' . DS . 'index.php'; ?></p>
 </div>
 <div class="dashboard-block dashboard-block-account">
-	<h2><?php echo \Html::anchor('admin/account', \Lang::get('index.index_account')); ?></h2>
-	<p><?php echo \Lang::get('index.index_total_accounts', array('total_accounts' => $total_accounts)); ?></p>
+	<h2><?php echo \Html::anchor('admin/account', \Lang::get('index_account')); ?></h2>
+	<p><?php echo \Lang::get('index_total_accounts', array('total_accounts' => $total_accounts)); ?></p>
 </div>

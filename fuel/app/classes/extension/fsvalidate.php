@@ -21,7 +21,7 @@ class FsValidate
      */
     public function _validation_noSpaceBetweenText($val)
     {
-        \Validation::active()->set_message('noSpaceBetweenText', __('account.account_invalid_space_between_text'));
+        \Validation::active()->set_message('noSpaceBetweenText', __('account_invalid_space_between_text'));
 
         if (preg_match('/\s/', $val) == false) {
             // not found space, return true.

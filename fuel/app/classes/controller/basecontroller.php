@@ -28,7 +28,7 @@ abstract class Controller_BaseController extends \Controller
         }
 
         // fix changed current language but autoload not reload
-        \Lang::load('fslang', 'fslang');
+        \Lang::load('fslang');
 
         // call web cron to run tasks (including purge old login history)
         \Library\WebCron::forge()->init();

@@ -59,14 +59,14 @@ class Model_Accounts extends \Orm\Model
 
         // check permission that can i add or edit this account
         if (static::instance()->canIAddEditAccount($data_level['level_group_id']) == false) {
-            return \Lang::get('account.account_you_cannot_add_account_that_contain_role_higher_than_yours');
+            return \Lang::get('account_you_cannot_add_account_that_contain_role_higher_than_yours');
         }
 
         // check for duplicate account (username)
         $query = static::query()->where('account_username', $data['account_username']);
         if ($query->count() > 0) {
             unset($query);
-            return \Lang::get('account.account_username_already_exists');
+            return \Lang::get('account_username_already_exists');
         }
         unset($query);
 
@@ -161,7 +161,7 @@ class Model_Accounts extends \Orm\Model
             return false;
         }
 
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         // set required var.
         if (!isset($data['account_username'])) {
@@ -185,7 +185,7 @@ class Model_Accounts extends \Orm\Model
                 // check password
                 if (static::instance()->checkPassword($data['account_password'], $row->account_password) === true) {
                     // check password passed
-                    if (\Model_AccountLevelPermission::checkAdminPermission('account.account_admin_login', 'account.account_admin_login', $row->account_id) === true) {
+                    if (\Model_AccountLevelPermission::checkAdminPermission('account_admin_login', 'account_admin_login', $row->account_id) === true) {
                         // generate session id for check simultaneous login
                         $session_id = \Session::key('session_id');
 
@@ -255,7 +255,7 @@ class Model_Accounts extends \Orm\Model
                         // record failed login
                         \Model_AccountLogins::forge()->recordLogin($row->account_id, 0, 'account_not_allow_to_login_to_admin_page');
 
-                        return \Lang::get('admin.admin_you_have_no_permission_to_access_this_page');
+                        return \Lang::get('admin_you_have_no_permission_to_access_this_page');
                     }
                 } else {
                     // check password failed, wrong password
@@ -264,7 +264,7 @@ class Model_Accounts extends \Orm\Model
 
                     unset($query, $row);
 
-                    return \Lang::get('account.account_wrong_username_or_password');
+                    return \Lang::get('account_wrong_username_or_password');
                 }
             } else {
                 // account disabled
@@ -273,14 +273,14 @@ class Model_Accounts extends \Orm\Model
 
                 unset($query);
 
-                return \Lang::get('account.account_was_disabled') . ' : ' . $row->account_status_text;
+                return \Lang::get('account_was_disabled') . ' : ' . $row->account_status_text;
             }
         }
 
         // not found account. login failed
         unset($query);
 
-        return \Lang::get('account.account_wrong_username_or_password');
+        return \Lang::get('account_wrong_username_or_password');
     }// adminLogin
 
 
@@ -371,14 +371,14 @@ class Model_Accounts extends \Orm\Model
                     static::logout(array('remove_online_code' => false));
 
                     // load langauge for set error msg.
-                    \Lang::load('account', 'account');
+                    \Lang::load('account');
 
                     // set error message.
                     \Session::set_flash(
                         'form_status',
                         array(
                             'form_status' => 'error',
-                            'form_status_message' => \Lang::get('account.account_simultaneous_login_detected')
+                            'form_status_message' => \Lang::get('account_simultaneous_login_detected')
                         )
                     );
 
@@ -437,7 +437,7 @@ class Model_Accounts extends \Orm\Model
         if ($query->count() <= 0) {
             // not found.
             unset($query);
-            return \Lang::get('account.account_your_confirm_register_code_is_invalid');
+            return \Lang::get('account_your_confirm_register_code_is_invalid');
         } else {
             $row = $query->get_one();
             unset($query);
@@ -559,14 +559,14 @@ class Model_Accounts extends \Orm\Model
 
         // check permission that can i add or edit this account
         if (static::instance()->canIAddEditAccount($data_level['level_group_id']) == false) {
-            return \Lang::get('account.account_you_cannot_edit_account_that_contain_role_higher_than_yours');
+            return \Lang::get('account_you_cannot_edit_account_that_contain_role_higher_than_yours');
         }
 
         // check for duplicate account (username)
         $query = static::query()->where('account_id', '!=', $data['account_id'])->where('account_username', $data['account_username']);
         if ($query->count() > 0) {
             unset($query);
-            return \Lang::get('account.account_username_already_exists');
+            return \Lang::get('account_username_already_exists');
         }
         unset($query);
 
@@ -578,7 +578,7 @@ class Model_Accounts extends \Orm\Model
             $query = static::query()->where('account_id', '!=', $data['account_id'])->where('account_email', $data['account_email']);
             if ($query->count() > 0) {
                 unset($query);
-                return \Lang::get('account.account_email_already_exists');
+                return \Lang::get('account_email_already_exists');
             }
             unset($query);
         } else {
@@ -606,7 +606,7 @@ class Model_Accounts extends \Orm\Model
                             'form_status',
                             array(
                                 'form_status' => 'success',
-                                'form_status_message' => \Lang::get('account.account_your_password_changed_please_login_again')
+                                'form_status_message' => \Lang::get('account_your_password_changed_please_login_again')
                             )
                         );
 
@@ -614,17 +614,17 @@ class Model_Accounts extends \Orm\Model
                     } else {
                         unset($config, $query, $row);
 
-                        return \Lang::get('account.account_wrong_password');
+                        return \Lang::get('account_wrong_password');
                     }
                 } else {
                     unset($config, $query);
 
-                    return \Lang::get('account.account_not_found_account_in_db');
+                    return \Lang::get('account_not_found_account_in_db');
                 }
             } else {
                 unset($config);
 
-                return \Lang::get('account.account_please_enter_your_new_password');
+                return \Lang::get('account_please_enter_your_new_password');
             }
         } else {
             // no password change
@@ -969,7 +969,7 @@ class Model_Accounts extends \Orm\Model
                 // found email already in use.
                 unset($config, $email_change, $query);
 
-                return \Lang::get('account.account_email_already_exists');
+                return \Lang::get('account_email_already_exists');
             } else {
                 $data['account_new_email'] = $data['account_email'];
             }
@@ -997,7 +997,7 @@ class Model_Accounts extends \Orm\Model
                             'form_status',
                             array(
                                 'form_status' => 'success',
-                                'form_status_message' => \Lang::get('account.account_your_password_changed_please_login_again')
+                                'form_status_message' => \Lang::get('account_your_password_changed_please_login_again')
                             )
                         );
 
@@ -1005,17 +1005,17 @@ class Model_Accounts extends \Orm\Model
                     } else {
                         unset($config, $query, $row);
 
-                        return \Lang::get('account.account_wrong_password');
+                        return \Lang::get('account_wrong_password');
                     }
                 } else {
                     unset($config, $query);
 
-                    return \Lang::get('account.account_not_found_account_in_db');
+                    return \Lang::get('account_not_found_account_in_db');
                 }
             } else {
                 unset($config);
 
-                return \Lang::get('account.account_please_enter_your_new_password');
+                return \Lang::get('account_please_enter_your_new_password');
             }
         } else {
             // no password change
@@ -1181,7 +1181,7 @@ class Model_Accounts extends \Orm\Model
 
                     unset($query, $row);
 
-                    return \Lang::get('account.account_wrong_username_or_password');
+                    return \Lang::get('account_wrong_username_or_password');
                 }
             } else {
                 // account disabled
@@ -1190,14 +1190,14 @@ class Model_Accounts extends \Orm\Model
 
                 unset($query);
 
-                return \Lang::get('account.account_was_disabled') . ' : ' . $row->account_status_text;
+                return \Lang::get('account_was_disabled') . ' : ' . $row->account_status_text;
             }
         }
 
         // not found account. login failed
         unset($query);
 
-        return \Lang::get('account.account_wrong_username_or_password');
+        return \Lang::get('account_wrong_username_or_password');
     }// memberLogin
 
 
@@ -1223,7 +1223,7 @@ class Model_Accounts extends \Orm\Model
             foreach ($disallow_usernames as $disallow_username) {
                 if ($data['account_username'] == trim($disallow_username)) {
                     unset($cfg, $disallow_username, $disallow_usernames);
-                    return \Lang::get('account.account_username_disallowed');
+                    return \Lang::get('account_username_disallowed');
                 }
             }
         }
@@ -1232,7 +1232,7 @@ class Model_Accounts extends \Orm\Model
         $query = static::query()->select('account_username')->where('account_username', $data['account_username']);
         if ($query->count() > 0) {
             unset($query);
-            return \Lang::get('account.account_username_already_exists');
+            return \Lang::get('account_username_already_exists');
         }
         unset($query);
 
@@ -1240,7 +1240,7 @@ class Model_Accounts extends \Orm\Model
         $query = static::query()->select('account_email')->where('account_email', $data['account_email']);
         if ($query->count() > 0) {
             unset($query);
-            return \Lang::get('account.account_email_already_exists');
+            return \Lang::get('account_email_already_exists');
         }
         unset($query);
 
@@ -1266,9 +1266,9 @@ class Model_Accounts extends \Orm\Model
         } else {
             $data['account_status'] = '0';
             if ($cfg['member_verification']['value'] == '2') {
-                $data['account_status_text'] = \Lang::get('account.account_waiting_for_admin_verification');
+                $data['account_status_text'] = \Lang::get('account_waiting_for_admin_verification');
             } else {
-                $data['account_status_text'] = \Lang::get('account.account_please_confirm_registration_from_your_email');
+                $data['account_status_text'] = \Lang::get('account_please_confirm_registration_from_your_email');
             }
         }
 
@@ -1359,12 +1359,12 @@ class Model_Accounts extends \Orm\Model
         $email = \Email::forge($config);
         $email->from(\Model_Config::getval('mail_sender_email'));
         $email->to($data['account_old_email']);
-        $email->subject(\Lang::get('account.account_please_confirm_change_email'));
+        $email->subject(\Lang::get('account_please_confirm_change_email'));
         $email->html_body($email_content);
         $email->alt_body(str_replace("\t", '', strip_tags($email_content)));
         if ($email->send() == false) {
             unset($cfg_member_confirm_wait_time, $config, $email, $email_content);
-            return \Lang::get('account.account_email_could_not_send');
+            return \Lang::get('account_email_could_not_send');
         }
 
         unset($cfg_member_confirm_wait_time, $config, $email, $email_content);
@@ -1402,7 +1402,7 @@ class Model_Accounts extends \Orm\Model
             $email_content = str_replace("%username%", \Security::htmlentities($data['account_username']), $email_content);
             $email_content = str_replace('%register_confirm_link%', \Uri::create('account/confirm-register/'.urlencode($data['account_username']).'/'.urlencode($data['account_confirm_code'])), $email_content);
         } elseif (isset($email_content) && $email_content == null) {
-            return \Lang::get('account.account_unable_to_load_email_template');
+            return \Lang::get('account_unable_to_load_email_template');
         }
 
         // if need to send verify register
@@ -1414,16 +1414,16 @@ class Model_Accounts extends \Orm\Model
             $email->from($cfg['mail_sender_email']['value']);
             $email->to($data['account_email']);
             if ($member_verification == '1') {
-                $email->subject(\Lang::get('account.account_please_confirm_your_account'));
+                $email->subject(\Lang::get('account_please_confirm_your_account'));
             } elseif ($member_verification == '2') {
-                $email->subject(\Lang::get('account.account_please_verify_user_registration'));
+                $email->subject(\Lang::get('account_please_verify_user_registration'));
             }
             $email->html_body($email_content);
             $email->alt_body(str_replace("\t", '', strip_tags($email_content)));
             if ($email->send() == false) {
                 // email could not sent.
                 unset($cfg, $config, $email, $email_content, $member_verification, $not_verify_register);
-                return \Lang::get('account.account_email_could_not_send');
+                return \Lang::get('account_email_could_not_send');
             }
             unset($email, $email_content, $not_verify_register);
         }
@@ -1439,13 +1439,13 @@ class Model_Accounts extends \Orm\Model
             $email = \Email::forge($config);
             $email->from($cfg['mail_sender_email']['value']);
             $email->to(\Extension\Email::setEmails($cfg['member_admin_verify_emails']['value']));
-            $email->subject(\Lang::get('account.account_notify_admin_new_register_account', array('username' => $data['account_username'])));
+            $email->subject(\Lang::get('account_notify_admin_new_register_account', array('username' => $data['account_username'])));
             $email->html_body($email_content);
             $email->alt_body(str_replace("\t", '', strip_tags($email_content)));
             if ($email->send() == false) {
                 // email could not sent.
                 unset($cfg, $config, $email, $email_content, $member_verification, $not_verify_register);
-                return \Lang::get('account.account_email_could_not_send');
+                return \Lang::get('account_email_could_not_send');
             }
         }
 
@@ -1474,14 +1474,14 @@ class Model_Accounts extends \Orm\Model
             unset($query);
 
             if ($row->account_status == '0') {
-                return \Lang::get('account.account_was_disabled') . ' : ' . $row->account_status_text;
+                return \Lang::get('account_was_disabled') . ' : ' . $row->account_status_text;
             }
 
             $cfg_member_confirm_wait_time = \Model_Config::getval('member_confirm_wait_time')*60;
 
             // check confirm wait time. you need to wait until 'wait time' passed to send reset password request again.
             if ($row->account_confirm_code != null && time()-$row->account_confirm_code_since <= $cfg_member_confirm_wait_time) {
-                return \Lang::get('account.account_reset_password_please_wait_until', array('wait_til_time' => date('d F Y H:i:s', ($row->account_confirm_code_since+(\Model_Config::getval('member_confirm_wait_time')*60)))));
+                return \Lang::get('account_reset_password_please_wait_until', array('wait_til_time' => date('d F Y H:i:s', ($row->account_confirm_code_since+(\Model_Config::getval('member_confirm_wait_time')*60)))));
             }
 
             $account_new_password = \Str::random('alnum', 10);
@@ -1499,12 +1499,12 @@ class Model_Accounts extends \Orm\Model
             $email = \Email::forge($config);
             $email->from(\Model_Config::getval('mail_sender_email'));
             $email->to($data['account_email']);
-            $email->subject(\Lang::get('account.account_email_reset_password_request'));
+            $email->subject(\Lang::get('account_email_reset_password_request'));
             $email->html_body($email_content);
             $email->alt_body(str_replace("\t", '', strip_tags($email_content)));
             if ($email->send() == false) {
                 unset($account_confirm_code, $account_confirm_code_since, $account_new_password, $cfg_member_confirm_wait_time, $config, $email, $email_content, $query, $row);
-                return \Lang::get('account.account_email_could_not_send');
+                return \Lang::get('account_email_could_not_send');
             }
 
             unset($cfg_member_confirm_wait_time, $config, $email, $email_content);
@@ -1521,7 +1521,7 @@ class Model_Accounts extends \Orm\Model
         }
 
         // account not found.
-        return \Lang::get('account.account_didnot_found_entered_email');
+        return \Lang::get('account_didnot_found_entered_email');
     }// sendResetPasswordEmail
 
 
@@ -1546,7 +1546,7 @@ class Model_Accounts extends \Orm\Model
         unset($cfg_values);
 
         if ($config['allow_avatar']['value'] != '1') {
-            return \Lang::get('account.account_didnot_allow_avatar');
+            return \Lang::get('account_didnot_allow_avatar');
         }
 
         $upload = new \Extension\Upload();
@@ -1592,7 +1592,7 @@ class Model_Accounts extends \Orm\Model
                 // not enough memory to resize image.
                 unset($config, $upload, $upload_data);
 
-                return \Lang::get('account.account_not_enough_memory_to_resize_image');
+                return \Lang::get('account_not_enough_memory_to_resize_image');
             }
 
             // done.

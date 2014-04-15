@@ -21,7 +21,7 @@ class Controller_Account_Edit extends \Controller_BaseController
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
                 $output['result'] = false;
             } else {
                 if (!isset($cookie['account_id']) || \Model_Accounts::isMemberLogin() == false) {
@@ -57,7 +57,7 @@ class Controller_Account_Edit extends \Controller_BaseController
     public function action_index()
     {
         // load language
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         // is user logged in?
         if (\Model_Accounts::isMemberLogin() == false) {
@@ -166,16 +166,16 @@ class Controller_Account_Edit extends \Controller_BaseController
             // validate form.
             $validate = \Validation::forge();
             $validate->add_callable(new \Extension\FsValidate());
-            //$validate->add('account_username', \Lang::get('account.account_username'), array(), array('required', 'noSpaceBetweenText'));//no, do not edit username.
-            $validate->add('account_email', \Lang::get('account.account_email'), array(), array('required', 'valid_email'));
-            $validate->add('account_display_name', \Lang::get('account.account_display_name'), array(), array('required'));
-            $validate->add('account_birthdate', \Lang::get('account.account_birthdate'))->add_rule('valid_date', 'Y-m-d');
-            $validate->add('account_timezone', \Lang::get('account.account_timezone'), array(), array('required'));
+            //$validate->add('account_username', \Lang::get('account_username'), array(), array('required', 'noSpaceBetweenText'));//no, do not edit username.
+            $validate->add('account_email', \Lang::get('account_email'), array(), array('required', 'valid_email'));
+            $validate->add('account_display_name', \Lang::get('account_display_name'), array(), array('required'));
+            $validate->add('account_birthdate', \Lang::get('account_birthdate'))->add_rule('valid_date', 'Y-m-d');
+            $validate->add('account_timezone', \Lang::get('account_timezone'), array(), array('required'));
 
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -190,7 +190,7 @@ class Controller_Account_Edit extends \Controller_BaseController
                             'form_status',
                             array(
                                 'form_status' => 'success',
-                                'form_status_message' => \Lang::get('account.account_saved')
+                                'form_status_message' => \Lang::get('account_saved')
                             )
                         );
                     }
@@ -229,7 +229,7 @@ class Controller_Account_Edit extends \Controller_BaseController
         unset($cookie_account, $data, $result);
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_edit'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_edit'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('front/templates/account/edit_v', $output, false);

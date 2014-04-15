@@ -1,5 +1,5 @@
 <article class="general-page-container page-edit-account">
-	<h1><?php echo \Lang::get('account.account_edit'); ?></h1>
+	<h1><?php echo \Lang::get('account_edit'); ?></h1>
 	
 	<?php echo \Extension\Form::openMultipart(array('class' => 'form-horizontal', 'role' => 'form')); ?> 
 		<div class="form-status-placeholder">
@@ -14,28 +14,28 @@
 		<?php if (!isset($hide_form) || (isset($hide_form) && $hide_form === false)) { ?> 
 	
 		<div class="form-group">
-			<label for="account_username" class="col-sm-2 control-label"><?php echo __('account.account_username'); ?>: <span class="txt_require">*</span></label>
+			<label for="account_username" class="col-sm-2 control-label"><?php echo __('account_username'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-10">
 				<p class="form-control-static"><?php if (isset($account_username)) {echo \Security::htmlentities($account_username);} ?></p> 
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="account_email" class="col-sm-2 control-label"><?php echo __('account.account_email'); ?>: <span class="txt_require">*</span></label>
+			<label for="account_email" class="col-sm-2 control-label"><?php echo __('account_email'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-10">
 				<?php echo \Extension\Form::email('account_email', $account_email, array('id' => 'account_email', 'maxlength' => '255', 'class' => 'form-control')); ?> 
 			</div>
 		</div>
 	
 		<fieldset>
-			<legend><?php echo \Lang::get('account.account_password'); ?> <small><?php echo \Lang::get('account.account_enter_only_when_you_want_to_change'); ?></small></legend>
+			<legend><?php echo \Lang::get('account_password'); ?> <small><?php echo \Lang::get('account_enter_only_when_you_want_to_change'); ?></small></legend>
 			<div class="form-group">
-				<label for="account_password" class="col-sm-2 control-label"><?php echo __('account.account_current_password'); ?>:</label>
+				<label for="account_password" class="col-sm-2 control-label"><?php echo __('account_current_password'); ?>:</label>
 				<div class="col-sm-7">
 					<?php echo \Form::password('account_password', '', array('id' => 'account_password', 'maxlength' => '70', 'class' => 'form-control')); ?> 
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="account_new_password" class="col-sm-2 control-label"><?php echo __('account.account_new_password'); ?>:</label>
+				<label for="account_new_password" class="col-sm-2 control-label"><?php echo __('account_new_password'); ?>:</label>
 				<div class="col-sm-7">
 					<?php echo \Form::password('account_new_password', '', array('id' => 'account_new_password', 'maxlength' => '70', 'class' => 'form-control')); ?> 
 				</div>
@@ -43,35 +43,35 @@
 		</fieldset>
 	
 		<fieldset>
-			<legend><?php echo \Lang::get('account.account_display'); ?></legend>
+			<legend><?php echo \Lang::get('account_display'); ?></legend>
 			<div class="form-group">
-				<label for="account_display_name" class="col-sm-2 control-label"><?php echo __('account.account_display_name'); ?>: <span class="txt_require">*</span></label>
+				<label for="account_display_name" class="col-sm-2 control-label"><?php echo __('account_display_name'); ?>: <span class="txt_require">*</span></label>
 				<div class="col-sm-7">
 					<?php echo \Extension\Form::input('account_display_name', (isset($account_display_name) ? $account_display_name : ''), array('id' => 'account_display_name', 'maxlength' => '255', 'class' => 'form-control')); ?> 
-					<div class="help-block"><?php echo \Lang::get('account.account_display_name_use_for_prevent_showing_username'); ?></div>
+					<div class="help-block"><?php echo \Lang::get('account_display_name_use_for_prevent_showing_username'); ?></div>
 				</div>
 			</div>
 			<?php if (isset($allow_avatar) && $allow_avatar == '1') { ?> 
 			<div class="form-group">
-				<label for="account_avatar" class="col-sm-2 control-label"><?php echo __('account.account_avatar'); ?>:</label>
+				<label for="account_avatar" class="col-sm-2 control-label"><?php echo __('account_avatar'); ?>:</label>
 				<div class="col-sm-7">
 					<?php if (isset($account_avatar) && $account_avatar != null) { ?> 
 					<div class="current-avatar">
-						<a href="#" class="btn btn-danger btn-xs" onclick="return ajaxDeleteAvatar();"><span class="glyphicon glyphicon-remove"></span> <?php echo \Lang::get('account.account_delete_avatar'); ?></a>
+						<a href="#" class="btn btn-danger btn-xs" onclick="return ajaxDeleteAvatar();"><span class="glyphicon glyphicon-remove"></span> <?php echo \Lang::get('account_delete_avatar'); ?></a>
 						<span class="remove-avatar-status"></span>
 						<img src="<?php echo \Uri::createNL($account_avatar); ?>" alt="" class="img-responsive" />
 					</div>
 					<?php } // endif $account_avatar; ?> 
 					<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $avatar_size*1024; // KB to Bytes ?>" />
 					<?php echo \Form::file('account_avatar', array('id' => 'account_avatar')); ?> 
-					<div class="help-block"><?php echo \Lang::get('account.account_file_size_less_than_or_equal_to', array('file_size' => $avatar_size)); ?> 
-						<?php echo \Lang::get('account.account_file_type_allowed', array('file_types' => str_replace('|', ', ', $avatar_allowed_types))); ?>
+					<div class="help-block"><?php echo \Lang::get('account_file_size_less_than_or_equal_to', array('file_size' => $avatar_size)); ?> 
+						<?php echo \Lang::get('account_file_type_allowed', array('file_types' => str_replace('|', ', ', $avatar_allowed_types))); ?>
 					</div>
 				</div>
 			</div>
 			<?php } // endif; ?> 
 			<div class="form-group">
-				<label for="account_timezone" class="col-sm-2 control-label"><?php echo __('account.account_timezone'); ?>: <span class="txt_require">*</span></label>
+				<label for="account_timezone" class="col-sm-2 control-label"><?php echo __('account_timezone'); ?>: <span class="txt_require">*</span></label>
 				<div class="col-sm-5">
 					<select name="account_timezone" id="account_timezone" class="form-control">
 						<option value=""></option>
@@ -87,34 +87,34 @@
 						unset($key, $timezone_list, $val);
 						?> 
 					</select>
-					<div class="help-block"><?php echo \Lang::get('account.account_current_date_time_example', array('time' => \Extension\Date::gmtDate('%Y-%m-%d %H:%M:%S', (string)time(), $row->account_timezone))); ?></div>
+					<div class="help-block"><?php echo \Lang::get('account_current_date_time_example', array('time' => \Extension\Date::gmtDate('%Y-%m-%d %H:%M:%S', (string)time(), $row->account_timezone))); ?></div>
 				</div>
 			</div>
 		</fieldset>
 	
 		<fieldset>
-			<legend><?php echo \Lang::get('account.account_personal_info'); ?></legend>
+			<legend><?php echo \Lang::get('account_personal_info'); ?></legend>
 			<div class="form-group">
-				<label for="account_firstname" class="col-sm-2 control-label"><?php echo __('account.account_firstname'); ?>: </label>
+				<label for="account_firstname" class="col-sm-2 control-label"><?php echo __('account_firstname'); ?>: </label>
 				<div class="col-sm-5">
 					<?php echo \Extension\Form::input('account_firstname', (isset($account_firstname) ? $account_firstname : ''), array('id' => 'account_firstname', 'maxlength' => '255', 'class' => 'form-control')); ?> 
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="account_lastname" class="col-sm-2 control-label"><?php echo __('account.account_lastname'); ?>: </label>
+				<label for="account_lastname" class="col-sm-2 control-label"><?php echo __('account_lastname'); ?>: </label>
 				<div class="col-sm-5">
 					<?php echo \Extension\Form::input('account_lastname', (isset($account_lastname) ? $account_lastname : ''), array('id' => 'account_lastname', 'maxlength' => '255', 'class' => 'form-control')); ?> 
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="account_birthdate" class="col-sm-2 control-label"><?php echo __('account.account_birthdate'); ?>: </label>
+				<label for="account_birthdate" class="col-sm-2 control-label"><?php echo __('account_birthdate'); ?>: </label>
 				<div class="col-sm-10">
 					<div class="row">
 						<div class="col-sm-6">
 							<?php echo \Extension\Form::date('account_birthdate', (isset($account_birthdate) ? $account_birthdate : ''), array('id' => 'account_birthdate', 'maxlength' => '10', 'class' => 'form-control')); ?> 
 						</div>
 					</div>
-					<div class="help-block"><?php echo \Lang::get('account.account_birthdate_format_should_be'); ?></div>
+					<div class="help-block"><?php echo \Lang::get('account_birthdate_format_should_be'); ?></div>
 				</div>
 			</div>
 		</fieldset>
@@ -145,8 +145,8 @@
 		
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
-				<button type="submit" class="btn btn-primary"><?php echo __('account.account_submit'); ?></button>
-				<a href="<?php echo \Uri::create('account/view-logins'); ?>" class="btn btn-default btn-sm"><?php echo \Lang::get('account.account_login_history'); ?></a>
+				<button type="submit" class="btn btn-primary"><?php echo __('account_submit'); ?></button>
+				<a href="<?php echo \Uri::create('account/view-logins'); ?>" class="btn btn-default btn-sm"><?php echo \Lang::get('account_login_history'); ?></a>
 			</div>
 		</div>
 		<?php } // endif; ?> 
@@ -156,7 +156,7 @@
 
 <script type="text/javascript">
 	function ajaxDeleteAvatar() {
-		$confirm = confirm('<?php echo \Lang::get('account.account_are_you_sure_delete_avatar'); ?>');
+		$confirm = confirm('<?php echo \Lang::get('account_are_you_sure_delete_avatar'); ?>');
 		
 		if ($confirm == true) {
 			$('.remove-avatar-status').html('<i class="fa fa-spinner fa-spin"></i>');

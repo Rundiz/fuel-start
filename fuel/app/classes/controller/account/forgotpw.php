@@ -13,7 +13,7 @@ class Controller_Account_Forgotpw extends \Controller_BaseController
     public function action_index()
     {
         // load language
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         // form submitted
         if (\Input::method() == 'POST') {
@@ -21,12 +21,12 @@ class Controller_Account_Forgotpw extends \Controller_BaseController
 
             // validate form.
             $validate = \Validation::forge();
-            $validate->add('account_email', \Lang::get('account.account_email'), array(), array('required', 'valid_email'));
+            $validate->add('account_email', \Lang::get('account_email'), array(), array('required', 'valid_email'));
 
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -37,7 +37,7 @@ class Controller_Account_Forgotpw extends \Controller_BaseController
                 $securimage = new \Securimage();
                 if ($securimage->check(\Input::post('captcha')) == false) {
                     $output['form_status'] = 'error';
-                    $output['form_status_message'] = \Lang::get('account.account_wrong_captcha_code');
+                    $output['form_status_message'] = \Lang::get('account_wrong_captcha_code');
                 } else {
                     $continue_form = true;
                 }
@@ -49,7 +49,7 @@ class Controller_Account_Forgotpw extends \Controller_BaseController
                     if ($result === true) {
                         $output['hide_form'] = true;
                         $output['form_status'] = 'success';
-                        $output['form_status_message'] = \Lang::get('account.account_please_check_your_email_to_confirm_reset_password');
+                        $output['form_status_message'] = \Lang::get('account_please_check_your_email_to_confirm_reset_password');
                     } else {
                         if (is_string($result)) {
                             $output['form_status'] = 'error';
@@ -64,7 +64,7 @@ class Controller_Account_Forgotpw extends \Controller_BaseController
         }
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_forgot_username_or_password'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_forgot_username_or_password'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('front/templates/account/forgotpw_v', $output, false);

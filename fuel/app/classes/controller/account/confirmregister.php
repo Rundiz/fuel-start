@@ -26,7 +26,7 @@ class Controller_Account_ConfirmRegister extends \Controller_BaseController
     public function action_index($account_username = '', $confirm_code = '')
     {
         // load language
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         // store username and confirm code from url to form and require the form to submit.
         $output['account_username'] = $account_username;
@@ -39,13 +39,13 @@ class Controller_Account_ConfirmRegister extends \Controller_BaseController
 
             // validate form.
             $validate = \Validation::forge();
-            $validate->add('account_username', \Lang::get('account.account_username'), array(), array('required'));
-            $validate->add('confirm_code', \Lang::get('account.account_confirm_code'), array(), array('required'));
+            $validate->add('account_username', \Lang::get('account_username'), array(), array('required'));
+            $validate->add('confirm_code', \Lang::get('account_confirm_code'), array(), array('required'));
 
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -57,7 +57,7 @@ class Controller_Account_ConfirmRegister extends \Controller_BaseController
                 if ($result === true) {
                     $output['hide_register_form'] = true;
                     $output['form_status'] = 'success';
-                    $output['form_status_message'] = \Lang::get('account.account_confirm_register_completed');
+                    $output['form_status_message'] = \Lang::get('account_confirm_register_completed');
 
                     // @todo [api] confirm register passed should be here.
                 } else {
@@ -72,7 +72,7 @@ class Controller_Account_ConfirmRegister extends \Controller_BaseController
         }
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_confirm_register'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_confirm_register'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('front/templates/account/confirmregister_v', $output, false);
