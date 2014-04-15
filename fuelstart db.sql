@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `ws_accounts` (
   `account_confirm_code` varchar(255) DEFAULT NULL COMMENT 'confirmation code. use for confirm register, change email, reset password',
   `account_confirm_code_since` bigint(20) DEFAULT NULL COMMENT 'confirm code generated since',
   PRIMARY KEY (`account_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='contain user account' AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='contain user account' AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `ws_accounts`
@@ -59,8 +59,7 @@ CREATE TABLE IF NOT EXISTS `ws_accounts` (
 
 INSERT INTO `ws_accounts` (`account_id`, `account_username`, `account_email`, `account_salt`, `account_password`, `account_display_name`, `account_firstname`, `account_middlename`, `account_lastname`, `account_birthdate`, `account_avatar`, `account_signature`, `account_timezone`, `account_language`, `account_create`, `account_create_gmt`, `account_last_login`, `account_last_login_gmt`, `account_status`, `account_status_text`, `account_new_email`, `account_new_password`, `account_confirm_code`, `account_confirm_code_since`) VALUES
 (0, 'Guest', 'none@localhost', NULL, NULL, 'Guest', NULL, NULL, NULL, NULL, NULL, NULL, 'Asia/Bangkok', NULL, 1387121127, 1387095927, NULL, NULL, 0, 'This account is for guest actions.', NULL, NULL, NULL, NULL),
-(1, 'admin', 'admin@localhost.com', NULL, '$2a$12$mPxupqGhPePgQAPvCpVUqekNfh.cAVusmgQyz1ZTfkcVLN0GBT7am', 'admin', NULL, NULL, NULL, NULL, NULL, NULL, 'Asia/Bangkok', NULL, 1387121127, 1387095927, 1390635993, 1390610793, 1, NULL, NULL, NULL, NULL, NULL),
-(2, '<div>', 'user@localhost.com', NULL, '$2a$12$5PcKjHhfevh8/v2fy1yVQ.b5FKe7pwhJbZExpo7qVT2SDwgZl1Jq2', '&lt;div&gt;', NULL, NULL, NULL, NULL, NULL, NULL, 'Asia/Bangkok', NULL, 1387946399, 1387921199, 1389092275, 1389067075, 1, NULL, NULL, NULL, NULL, NULL);
+(1, 'admin', 'admin@test.dev', NULL, '$2a$12$mPxupqGhPePgQAPvCpVUqekNfh.cAVusmgQyz1ZTfkcVLN0GBT7am', 'admin', NULL, NULL, NULL, NULL, NULL, NULL, 'Asia/Bangkok', NULL, 1387121127, 1387095927, 1390635993, 1390610793, 1, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -93,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `ws_account_level` (
   PRIMARY KEY (`level_id`),
   KEY `level_group_id` (`level_group_id`),
   KEY `account_id` (`account_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `ws_account_level`
@@ -101,8 +100,7 @@ CREATE TABLE IF NOT EXISTS `ws_account_level` (
 
 INSERT INTO `ws_account_level` (`level_id`, `level_group_id`, `account_id`) VALUES
 (1, 4, 0),
-(2, 1, 1),
-(3, 3, 2);
+(2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -191,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `ws_account_sites` (
   `account_last_login_gmt` bigint(20) DEFAULT NULL COMMENT 'last login date time in gmt 0',
   `account_online_code` varchar(255) DEFAULT NULL COMMENT 'store session code for check dubplicate log in if enabled.',
   PRIMARY KEY (`account_site_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='contain account online code for each site (if use multisite)' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='contain account online code for each site (if use multisite)' AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `ws_account_sites`
@@ -199,8 +197,7 @@ CREATE TABLE IF NOT EXISTS `ws_account_sites` (
 
 INSERT INTO `ws_account_sites` (`account_site_id`, `account_id`, `site_id`, `account_last_login`, `account_last_login_gmt`, `account_online_code`) VALUES
 (1, 0, 1, NULL, NULL, NULL),
-(2, 1, 1, 1390635993, 1390610793, '2e94ab61d11b654913d64a4a21149667'),
-(3, 2, 1, 1389092275, 1389067075, '152d06e5f69191a2da5664ca96fbdb02');
+(2, 1, 1, 1390635993, 1390610793, '2e94ab61d11b654913d64a4a21149667');
 
 -- --------------------------------------------------------
 
