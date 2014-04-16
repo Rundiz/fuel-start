@@ -33,6 +33,9 @@ class Controller_Admin_Account extends \Controller_AdminController
 
     public function action_add()
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_add_perm') == false) {
             \Session::set_flash(
@@ -42,7 +45,7 @@ class Controller_Admin_Account extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // load language
@@ -155,7 +158,7 @@ class Controller_Admin_Account extends \Controller_AdminController
                         );
                     }
 
-                    \Response::redirect(\Uri::create('admin/account'));
+                    \Response::redirect($redirect);
                 } else {
                     $output['form_status'] = 'error';
                     $output['form_status_message'] = $result;
@@ -256,6 +259,9 @@ class Controller_Admin_Account extends \Controller_AdminController
 
     public function action_delete_log($account_id = '')
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_deletelogin_log_perm') == false) {
             \Session::set_flash(
@@ -265,11 +271,11 @@ class Controller_Admin_Account extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         if (!is_numeric($account_id)) {
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // load language
@@ -288,16 +294,15 @@ class Controller_Admin_Account extends \Controller_AdminController
         }
 
         // go back
-        if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
-            \Response::redirect(\Input::referrer());
-        } else {
-            \Response::redirect('admin/account');
-        }
+        \Response::redirect($redirect);
     }// action_delete_log
 
 
     public function action_edit($account_id = '')
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm') == false) {
             \Session::set_flash(
@@ -307,12 +312,12 @@ class Controller_Admin_Account extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // if editing guest.
         if ($account_id == '0') {
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // if no account id, get current user's' account id
@@ -323,7 +328,7 @@ class Controller_Admin_Account extends \Controller_AdminController
             } else {
                 unset($cookie);
 
-                \Response::redirect(\Uri::create('admin/account'));
+                \Response::redirect($redirect);
             }
             unset($cookie);
         }
@@ -362,9 +367,10 @@ class Controller_Admin_Account extends \Controller_AdminController
         $output['account_id'] = $account_id;
 
         if ($row == null) {
+            // not found selected user.
             unset($config, $output, $row);
 
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // loop set form field.
@@ -384,7 +390,7 @@ class Controller_Admin_Account extends \Controller_AdminController
                     'form_status_message' => \Lang::get('account_you_cannot_edit_account_that_contain_role_higher_than_yours')
                 )
             );
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // if form submitted --------------------------------------------------------------------------------------------
@@ -466,7 +472,7 @@ class Controller_Admin_Account extends \Controller_AdminController
                         );
                     }
 
-                    \Response::redirect(\Uri::create('admin/account'));
+                    \Response::redirect($redirect);
                 } else {
                     $output['form_status'] = 'error';
                     $output['form_status_message'] = $result;
@@ -510,6 +516,9 @@ class Controller_Admin_Account extends \Controller_AdminController
 
     public function action_index()
     {
+        // clear redirect referrer
+        \Session::delete('submitted_redirect');
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_viewusers_perm') == false) {
             \Session::set_flash(
@@ -587,12 +596,13 @@ class Controller_Admin_Account extends \Controller_AdminController
     {
         $ids = \Input::post('id');
         $act = trim(\Input::post('act'));
+        $redirect = $this->getAndSetSubmitRedirection();
 
         if (\Extension\NoCsrf::check()) {
             // if action is delete.
             if ($act == 'del') {
                 // check permission.
-                if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
+                if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect($redirect);}
 
                 if (is_array($ids)) {
                     foreach ($ids as $id) {
@@ -618,7 +628,7 @@ class Controller_Admin_Account extends \Controller_AdminController
                 }
             } elseif ($act == 'enable') {
                 // check permission.
-                if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
+                if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect($redirect);}
 
                 if (is_array($ids)) {
                     foreach ($ids as $id) {
@@ -652,7 +662,7 @@ class Controller_Admin_Account extends \Controller_AdminController
                 }
             } elseif ($act == 'disable') {
                 // check permission.
-                if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
+                if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect($redirect);}
 
                 if (is_array($ids)) {
                     foreach ($ids as $id) {
@@ -688,16 +698,15 @@ class Controller_Admin_Account extends \Controller_AdminController
         }
 
         // go back
-        if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
-            \Response::redirect(\Input::referrer());
-        } else {
-            \Response::redirect('admin/account');
-        }
+        \Response::redirect($redirect);
     }// action_multiple
 
 
     public function action_viewlogins($account_id = '')
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_viewlogin_log_perm') == false) {
             \Session::set_flash(
@@ -707,12 +716,12 @@ class Controller_Admin_Account extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // viewing guest logins?
         if ($account_id == '0') {
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // load language
@@ -730,7 +739,8 @@ class Controller_Admin_Account extends \Controller_AdminController
         // get accounts data for this account.
         $account = \Model_Accounts::find($account_id);
         if ($account == null) {
-            \Response::redirect(\Uri::create('admin/account'));
+            // not found account.
+            \Response::redirect($redirect);
         }
         $output['account'] = $account;
         $output['account_id'] = $account_id;
@@ -781,6 +791,30 @@ class Controller_Admin_Account extends \Controller_AdminController
 
         return $this->generatePage('admin/templates/account/account_viewlogins_v', $output, false);
     }// action_viewlogins
+    
+    
+    /**
+     * get and set submit redirection url
+     * 
+     * @return string
+     */
+    private function getAndSetSubmitRedirection()
+    {
+        $session = \Session::forge();
+        
+        if ($session->get('submitted_redirect') == null) {
+            if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
+                $session->set('submitted_redirect', \Input::referrer());
+                return \Input::referrer();
+            } else {
+                $redirect_uri = 'admin/account';
+                $session->set('submitted_redirect', $redirect_uri);
+                return $redirect_uri;
+            }
+        } else {
+            return $session->get('submitted_redirect');
+        }
+    }// getAndSetRedirection
 
 
 }

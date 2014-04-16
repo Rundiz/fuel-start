@@ -33,6 +33,11 @@ class Controller_Admin_Config extends \Controller_AdminController
 
     public function action_ajax_test_ftp()
     {
+        // is ajax
+        if (! \Input::is_ajax()) {
+            \Response::redirect(\Uri::create('admin'));
+        }
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('config_global', 'config_global') == false) {
             \Session::set_flash(
@@ -42,12 +47,7 @@ class Controller_Admin_Config extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin'));
-        }
-
-        // is ajax
-        if (! \Input::is_ajax()) {
-            \Response::redirect(\Uri::create('admin'));
+            return null;
         }
 
         if (\Input::method() == 'POST') {

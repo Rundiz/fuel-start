@@ -33,6 +33,9 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
 
     public function action_index()
     {
+        // clear redirect referrer
+        \Session::delete('submitted_redirect');
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_perm') == false) {
             \Session::set_flash(
@@ -77,6 +80,9 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
 
     public function action_module($module_system_name = '')
     {
+        // clear redirect referrer
+        \Session::delete('submitted_redirect');
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_perm') == false) {
             \Session::set_flash(
@@ -127,6 +133,14 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
 
     public function action_reset()
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+
+        // ajax request only
+        if (!\Input::is_ajax()) {
+            \Response::redirect($redirect);
+        }
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_perm') == false) {
             \Session::set_flash(
@@ -136,17 +150,12 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin'));
+            return null;
         }
 
         // method post only
         if (\Input::method() != 'POST') {
-            \Response::redirect(\Uri::create('admin/account-permission'));
-        }
-
-        // ajax request only
-        if (!\Input::is_ajax()) {
-            \Response::redirect(\Uri::create('admin/account-permission'));
+            return null;
         }
 
         if (!\Extension\NoCsrf::check()) {
@@ -165,6 +174,9 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
 
     public function action_save()
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_perm') == false) {
             \Session::set_flash(
@@ -174,7 +186,7 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin'));
+            \Response::redirect($redirect);
         }
 
         // if form submitted
@@ -203,12 +215,32 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
         );
 
         // go back
-        if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
-            \Response::redirect(\Input::referrer());
-        } else {
-            \Response::redirect('admin/account-permission');
-        }
+        \Response::redirect($redirect);
     }// action_save
+    
+    
+    /**
+     * get and set submit redirection url
+     * 
+     * @return string
+     */
+    private function getAndSetSubmitRedirection()
+    {
+        $session = \Session::forge();
+        
+        if ($session->get('submitted_redirect') == null) {
+            if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
+                $session->set('submitted_redirect', \Input::referrer());
+                return \Input::referrer();
+            } else {
+                $redirect_uri = 'admin/account-permission';
+                $session->set('submitted_redirect', $redirect_uri);
+                return $redirect_uri;
+            }
+        } else {
+            return $session->get('submitted_redirect');
+        }
+    }// getAndSetRedirection
 
 
 }

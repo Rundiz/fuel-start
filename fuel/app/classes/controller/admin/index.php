@@ -12,6 +12,9 @@ class Controller_Admin_Index extends \Controller_AdminController
 
     public function action_index()
     {
+        // clear redirect referrer
+        \Session::delete('submitted_redirect');
+        
         // load language
         \Lang::load('index');
 

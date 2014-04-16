@@ -44,6 +44,9 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 
     public function action_add()
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_add_perm') == false) {
             \Session::set_flash(
@@ -53,7 +56,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin/account-level'));
+            \Response::redirect($redirect);
         }
 
         // load language
@@ -100,7 +103,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
                         );
                     }
 
-                    \Response::redirect(\Uri::create('admin/account-level'));
+                    \Response::redirect($redirect);
                 } else {
                     $output['form_status'] = 'error';
                     $output['form_status_message'] = $result;
@@ -122,6 +125,14 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 
     public function action_ajaxsort()
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+
+        // if not ajax
+        if (!\Input::is_ajax()) {
+            \Response::redirect($redirect);
+        }
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_sort_perm') == false) {
             \Session::set_flash(
@@ -131,12 +142,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin/account-level'));
-        }
-
-        // if not ajax
-        if (!\Input::is_ajax()) {
-            \Response::redirect(\Uri::create('admin/account-level'));
+            return null;
         }
 
         $output['result'] = false;
@@ -180,6 +186,9 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 
     public function action_edit($level_group_id = '')
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_edit_perm') == false) {
             \Session::set_flash(
@@ -189,7 +198,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin/account-level'));
+            \Response::redirect($redirect);
         }
 
         // force $level_group_id to be integer
@@ -211,7 +220,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 
         // if not found
         if ($alg == null) {
-            \Response::redirect(\Uri::create('admin/account-level'));
+            \Response::redirect($redirect);
         }
 
         // set output data for form
@@ -255,7 +264,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
                         );
                     }
 
-                    \Response::redirect(\Uri::create('admin/account-level'));
+                    \Response::redirect($redirect);
                 } else {
                     $output['form_status'] = 'error';
                     $output['form_status_message'] = $result;
@@ -277,6 +286,9 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
 
     public function action_index()
     {
+        // clear redirect referrer
+        \Session::delete('submitted_redirect');
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_viewlevels_perm') == false) {
             \Session::set_flash(
@@ -321,11 +333,13 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
     {
         $ids = \Input::post('id');
         $act = trim(\Input::post('act'));
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
 
         if (\Extension\NoCsrf::check()) {
             if ($act == 'del') {
                 // check permission.
-                if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account-level'));}
+                if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_delete_perm') == false) {\Response::redirect($redirect);}
 
                 if (is_array($ids)) {
                     foreach ($ids as $id) {
@@ -340,12 +354,32 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
         }
 
         // go back
-        if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
-            \Response::redirect(\Input::referrer());
-        } else {
-            \Response::redirect('admin/account-level');
-        }
+        \Response::redirect($redirect);
     }// action_multiple
+    
+    
+    /**
+     * get and set submit redirection url
+     * 
+     * @return string
+     */
+    private function getAndSetSubmitRedirection()
+    {
+        $session = \Session::forge();
+        
+        if ($session->get('submitted_redirect') == null) {
+            if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
+                $session->set('submitted_redirect', \Input::referrer());
+                return \Input::referrer();
+            } else {
+                $redirect_uri = 'admin/account-level';
+                $session->set('submitted_redirect', $redirect_uri);
+                return $redirect_uri;
+            }
+        } else {
+            return $session->get('submitted_redirect');
+        }
+    }// getAndSetRedirection
 
 
 }

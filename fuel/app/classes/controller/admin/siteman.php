@@ -27,6 +27,9 @@ class Controller_Admin_Siteman extends \Controller_AdminController
 
     public function action_add()
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('siteman_perm', 'siteman_add_perm') == false) {
             \Session::set_flash(
@@ -36,7 +39,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin/siteman'));
+            \Response::redirect($redirect);
         }
 
         // read flash message for display errors.
@@ -85,7 +88,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                         );
                     }
 
-                    \Response::redirect(\Uri::create('admin/siteman'));
+                    \Response::redirect($redirect);
                 } else {
                     $output['form_status'] = 'error';
                     $output['form_status_message'] = $result;
@@ -108,6 +111,9 @@ class Controller_Admin_Siteman extends \Controller_AdminController
 
     public function action_edit($site_id = '')
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('siteman_perm', 'siteman_edit_perm') == false) {
             \Session::set_flash(
@@ -117,7 +123,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin/siteman'));
+            \Response::redirect($redirect);
         }
 
         // read flash message for display errors.
@@ -133,9 +139,10 @@ class Controller_Admin_Siteman extends \Controller_AdminController
         $output['site_id'] = $site_id;
 
         if ($row == null) {
+            // not found selected site data.
             unset($output, $row);
 
-            \Response::redirect(\Uri::create('admin/siteman'));
+            \Response::redirect($redirect);
         }
 
         // loop set form field.
@@ -179,7 +186,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                         );
                     }
 
-                    \Response::redirect(\Uri::create('admin/siteman'));
+                    \Response::redirect($redirect);
                 } else {
                     $output['form_status'] = 'error';
                     $output['form_status_message'] = $result;
@@ -202,6 +209,9 @@ class Controller_Admin_Siteman extends \Controller_AdminController
 
     public function action_index()
     {
+        // clear redirect referrer
+        \Session::delete('submitted_redirect');
+        
         // check permission
         if (\Model_AccountLevelPermission::checkAdminPermission('siteman_perm', 'siteman_viewsites_perm') == false) {
             \Session::set_flash(
@@ -274,6 +284,8 @@ class Controller_Admin_Siteman extends \Controller_AdminController
     {
         $ids = \Input::post('id');
         $act = trim(\Input::post('act'));
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
 
         if (\Extension\NoCsrf::check()) {
             if ($act == 'del') {
@@ -286,7 +298,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                             'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                         )
                     );
-                    \Response::redirect(\Uri::create('admin/siteman'));
+                    \Response::redirect($redirect);
                 }
 
                 if (is_array($ids)) {
@@ -304,7 +316,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                             'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                         )
                     );
-                    \Response::redirect(\Uri::create('admin/siteman'));
+                    \Response::redirect($redirect);
                 }
 
                 if (is_array($ids)) {
@@ -330,7 +342,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                             'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                         )
                     );
-                    \Response::redirect(\Uri::create('admin/siteman'));
+                    \Response::redirect($redirect);
                 }
 
                 if (is_array($ids)) {
@@ -350,12 +362,32 @@ class Controller_Admin_Siteman extends \Controller_AdminController
         }
 
         // go back
-        if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
-            \Response::redirect(\Input::referrer());
-        } else {
-            \Response::redirect('admin/siteman');
-        }
+        \Response::redirect($redirect);
     }// action_multiple
+    
+    
+    /**
+     * get and set submit redirection url
+     * 
+     * @return string
+     */
+    private function getAndSetSubmitRedirection()
+    {
+        $session = \Session::forge();
+        
+        if ($session->get('submitted_redirect') == null) {
+            if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
+                $session->set('submitted_redirect', \Input::referrer());
+                return \Input::referrer();
+            } else {
+                $redirect_uri = 'admin/siteman';
+                $session->set('submitted_redirect', $redirect_uri);
+                return $redirect_uri;
+            }
+        } else {
+            return $session->get('submitted_redirect');
+        }
+    }// getAndSetRedirection
 
 
 }
