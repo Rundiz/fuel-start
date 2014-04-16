@@ -259,6 +259,9 @@ class Controller_Admin_Account extends \Controller_AdminController
 
     public function action_delete_log($account_id = '')
     {
+        // clear redirect referrer
+        \Session::delete('submitted_redirect');
+        
         // set redirect url
         $redirect = $this->getAndSetSubmitRedirection();
         
