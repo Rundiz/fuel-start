@@ -17,5 +17,5 @@
 	},
 	"config": {
         "vendor-dir": "fuel/vendor"
-    },
+    }
 }
