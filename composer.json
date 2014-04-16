@@ -13,8 +13,15 @@
     ],
 	"require": {
 		"php": ">=5.3.3",
-		"fuel/fuel": "dev-master"
+        "monolog/monolog": "1.5.*",
+    	"fuelphp/upload": "2.0.1"
 	},
+    "suggest": {
+        "mustache/mustache": "Allow Mustache templating with the Parser package",
+        "smarty/smarty": "Allow Smarty templating with the Parser package",
+        "twig/twig": "Allow Twig templating with the Parser package",
+        "mthaml/mthaml": "Allow Haml templating with Twig supports with the Parser package"
+    },
 	"config": {
         "vendor-dir": "fuel/vendor"
     }
