@@ -38,11 +38,25 @@ class Controller_AdminController extends \Controller_BaseController
             $output = array();
         }
         
-        // list sites to display links in admin page
-        $list_sites_option['list_for'] = 'admin';
-        $list_sites_option['unlimit'] = true;
-        $list_sites = \Model_Sites::listSites($list_sites_option);
-        
+        // list sites to display links in admin page ------------------------------------------
+        $cache_name = 'controller.AdminController-generatePage-fs_list_sites';
+        $cached = \Extension\Cache::getSilence($cache_name);
+
+        if (false === $cached) {
+            $list_sites_option['list_for'] = 'admin';
+            $list_sites_option['unlimit'] = true;
+            $list_sites = \Model_Sites::listSites($list_sites_option);
+            
+            \Cache::set($cache_name, $list_sites, 2592000);
+        } else {
+            if (isset($cached['items']) && isset($cached['total'])) {
+                $list_sites = $cached;
+            } else {
+                $list_sites = array('total' => 0, 'items' => array());
+            }
+        }
+        unset($cache_name, $cached);
+
         if (isset($list_sites['total']) && $list_sites['total'] > 1) {
             if (isset($list_sites['items']) && is_array($list_sites['items']) && !empty($list_sites['items'])) {
                 $output['fs_list_sites'] = $list_sites['items'];
@@ -51,6 +65,7 @@ class Controller_AdminController extends \Controller_BaseController
             }
         }
         unset($list_sites, $list_sites_option);
+        // end list sites ------------------------------------------------------------------------
 
         // start theme class
         $theme = \Theme::instance();

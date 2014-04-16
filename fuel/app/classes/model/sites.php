@@ -114,6 +114,11 @@ class Model_Sites extends \Orm\Model
                     ->execute();
         }
         unset($cfg_data, $cfg_name, $cfg_value);
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.sites-getSiteId');
+        \Extension\Cache::deleteCache('model.sites-isSiteEnabled');
+        \Extension\Cache::deleteCache('controller.AdminController-generatePage-fs_list_sites');
 
         // done.
         return true;
@@ -207,6 +212,7 @@ class Model_Sites extends \Orm\Model
         // clear cache
         \Extension\Cache::deleteCache('model.sites-getSiteId');
         \Extension\Cache::deleteCache('model.sites-isSiteEnabled');
+        \Extension\Cache::deleteCache('controller.AdminController-generatePage-fs_list_sites');
 
         // done
         return true;
@@ -268,6 +274,7 @@ class Model_Sites extends \Orm\Model
         // clear cache
         \Extension\Cache::deleteCache('model.sites-getSiteId');
         \Extension\Cache::deleteCache('model.sites-isSiteEnabled');
+        \Extension\Cache::deleteCache('controller.AdminController-generatePage-fs_list_sites');
 
         // done
         return true;
