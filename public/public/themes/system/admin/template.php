@@ -61,6 +61,14 @@ include __DIR__ . DS . 'inc_html_head.php';
 											<?php }// endif; ?> 
 										</li>
 										<?php if (checkAdminPermission('config_global', 'config_global')) { ?><li><?php echo \Html::anchor('admin/config', \Lang::get('admin_global_configuration')); ?></li><?php } ?> 
+										<?php if (checkAdminPermission('cacheman_perm', 'cacheman_clearcache_perm')) { ?> 
+										<li>
+											<a href="#" onclick="return false;"><?php echo \Lang::get('admin_nav_tools'); ?></a>
+											<ul>
+												<?php if (checkAdminPermission('cacheman_perm', 'cacheman_clearcache_perm')) { ?><li><?php echo \Html::anchor('admin/cacheman', \Lang::get('admin_nav_cacheman')); ?></li><?php } ?> 
+											</ul>
+										</li>
+										<?php } ?> 
 									</ul>
 								</li>
 								<li>

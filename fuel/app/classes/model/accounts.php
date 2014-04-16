@@ -350,55 +350,71 @@ class Model_Accounts extends \Orm\Model
         }
 
         $site_id = \Model_Sites::getSiteId(false);
+        
+        $cache_name = 'model.accounts-checkAccount-'
+                . $site_id . '-'
+                . $account_id . '-'
+                . \Extension\Security::formatString($account_username, 
+                    'alphanum_dash_underscore') . '-'
+                . \Extension\Security::formatString($account_email, 
+                    'alphanum_dash_underscore') . '-'
+                . \Extension\Security::formatString($account_online_code, 
+                    'alphanum_dash_underscore');
+        $cached = \Extension\Cache::getSilence($cache_name);
 
-        // check for matches id username and email. ---------------------------------------------------------------
-        $query = static::query()
-                ->where('account_id', $account_id)
-                ->where('account_username', $account_username)
-                ->where('account_email', $account_email)
-                ->where('account_status', 1);
+        if (false === $cached) {
+            // check for matches id username and email. ---------------------------------------------------------------
+            $query = static::query()
+                    ->where('account_id', $account_id)
+                    ->where('account_username', $account_username)
+                    ->where('account_email', $account_email)
+                    ->where('account_status', 1);
 
-        if ($query->count() > 0) {
-            $row = $query->get_one();
-            unset($query);
+            if ($query->count() > 0) {
+                $row = $query->get_one();
+                unset($query);
 
-            // if not allow simultaneous login. (if not allow login from many places)
-            if (\Model_Config::getval('simultaneous_login') == '0') {
-                if ($this->isSimultaneousLogin($account_id, $account_online_code, $site_id) == true) {
-                    unset($row);
+                // if not allow simultaneous login. (if not allow login from many places)
+                if (\Model_Config::getval('simultaneous_login') == '0') {
+                    if ($this->isSimultaneousLogin($account_id, $account_online_code, $site_id) == true) {
+                        unset($row);
 
-                    // log out
-                    static::logout(array('remove_online_code' => false));
+                        // log out
+                        static::logout(array('remove_online_code' => false));
 
-                    // load langauge for set error msg.
-                    \Lang::load('account');
+                        // load langauge for set error msg.
+                        \Lang::load('account');
 
-                    // set error message.
-                    \Session::set_flash(
-                        'form_status',
-                        array(
-                            'form_status' => 'error',
-                            'form_status_message' => \Lang::get('account_simultaneous_login_detected')
-                        )
-                    );
+                        // set error message.
+                        \Session::set_flash(
+                            'form_status',
+                            array(
+                                'form_status' => 'error',
+                                'form_status_message' => \Lang::get('account_simultaneous_login_detected')
+                            )
+                        );
 
-                    return false;
+                        return false;
+                    }
                 }
+
+                // check account passed! with or without simultaneous login check.
+                unset($row);
+                
+                \Cache::set($cache_name, true, 2592000);
+                return true;
             }
 
-            // check account passed! with or without simultaneous login check.
-            unset($row);
+            // not found account in db. or found but disabled
+            unset($query);
 
-            return true;
+            // log out
+            static::logout();
+
+            return false;
         }
-
-        // not found account in db. or found but disabled
-        unset($query);
-
-        // log out
-        static::logout();
-
-        return false;
+        
+        return $cached;
     }// checkAccount
 
 
@@ -496,10 +512,13 @@ class Model_Accounts extends \Orm\Model
                 }
             }
         }
-        unset($list_site_option, $site, $sites, $site_id, $table_siteid_prefix);
+        unset($list_site_option, $site, $sites, $table_siteid_prefix);
 
         // delete account now.
         static::find($account_id)->delete();// needs to use ::find() to delete in related table
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.accounts-checkAccount-'.$site_id.'-'.$account_id);
 
         return true;
     }// deleteAccount
@@ -690,7 +709,7 @@ class Model_Accounts extends \Orm\Model
         // if set data_field to null means not update account fields
         if (is_array($data_fields) && !empty($data_fields)) {
             $af = new \Model_AccountFields();
-            $af->updateAccountFields($data['account_id'], $data_fields);
+            $af->updateAccountFields($account_id, $data_fields);
             unset($af);
         }
 
@@ -702,6 +721,9 @@ class Model_Accounts extends \Orm\Model
         }
 
         unset($config);
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.accounts-checkAccount-'.\Model_Sites::getSiteId().'-'.$account_id);
 
         return true;
     }// editAccount
@@ -934,6 +956,9 @@ class Model_Accounts extends \Orm\Model
 
             unset($account_sites, $row);
         }
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.accounts-checkAccount-'.$data['site_id'] .'-'.$data['account_id']);
 
         return true;
     }// logout
@@ -1091,6 +1116,9 @@ class Model_Accounts extends \Orm\Model
         }
 
         unset($config);
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.accounts-checkAccount-'.\Model_Sites::getSiteId().'-'.$data['account_id']);
 
         return true;
     }// memberEditProfile

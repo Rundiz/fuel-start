@@ -203,6 +203,10 @@ class Model_Sites extends \Orm\Model
 
         // delete this site from sites table
         static::find($site_id)->delete();
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.sites-getSiteId');
+        \Extension\Cache::deleteCache('model.sites-isSiteEnabled');
 
         // done
         return true;
@@ -260,6 +264,10 @@ class Model_Sites extends \Orm\Model
                     ->execute();
         }
         unset($cfg_data, $cfg_name, $cfg_value);
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.sites-getSiteId');
+        \Extension\Cache::deleteCache('model.sites-isSiteEnabled');
 
         // done
         return true;
@@ -270,9 +278,10 @@ class Model_Sites extends \Orm\Model
      * get current site id
      *
      * @param boolean $enabled_only
-     * @return int
+     * @param boolean $real_id_only set true to return real site id only, if not found then return false.
+     * @return integer
      */
-    public static function getSiteId($enabled_only = true)
+    public static function getSiteId($enabled_only = true, $real_id_only = false)
     {
         // get domain
         if (isset($_SERVER['HTTP_HOST'])) {
@@ -282,21 +291,47 @@ class Model_Sites extends \Orm\Model
         } else {
             $site_domain = 'localhost';
         }
+        
+        $cache_name = 'model.sites-getSiteId-' 
+                . ($enabled_only == true ? 'true' : 'false') . '-'
+                . ($real_id_only == true ? 'true' : 'false') . '-'
+                . \Extension\Security::formatString($site_domain, 
+                    'alphanum_dash_underscore');
+        $cached = \Extension\Cache::getSilence($cache_name);
 
-        $query = static::query();
-        $query->where('site_domain', $site_domain);
-        if ($enabled_only === true) {
-            $query->where('site_status', 1);
+        if (false === $cached) {
+            $query = static::query();
+            $query->where('site_domain', $site_domain);
+            if ($enabled_only === true) {
+                $query->where('site_status', 1);
+            }
+
+            if ($query->count() > 0) {
+                // found.
+                $row = $query->get_one();
+
+                unset($query, $site_domain);
+
+                \Cache::set($cache_name, $row->site_id, 2592000);
+                return $row->site_id;
+            }
+            // not found, always return 1.
+            unset($query, $site_domain);
+
+            if ($real_id_only == false) {
+                \Cache::set($cache_name, 1, 2592000);
+                return 1;
+            } else {
+                \Cache::set($cache_name, 'false', 2592000);
+                return false;
+            }
         }
-        $row = $query->get_one();
-
-        unset($query, $site_domain);
-
-        if ($row != null) {
-            return $row->site_id;
+        
+        if ('false' === $cached) {
+            return false;
+        } else {
+            return $cached;
         }
-
-        return 1;
     }// getSiteId
     
     
@@ -325,6 +360,12 @@ class Model_Sites extends \Orm\Model
      */
     public static function isSiteEnabled()
     {
+        // always return true if it is main site. (site id 1).
+        $site_id = static::getSiteId(false);
+        if (1 == $site_id) {
+            return true;
+        }
+        
         // get domain
         if (isset($_SERVER['HTTP_HOST'])) {
             $site_domain = $_SERVER['HTTP_HOST'];
@@ -334,18 +375,33 @@ class Model_Sites extends \Orm\Model
             $site_domain = 'localhost';
         }
         
-        $query = static::query();
-        $query->where('site_domain', $site_domain);
-        $query->where('site_status', 1);
-        $total = $query->count();
-
-        unset($query, $site_domain);
+        $cache_name = 'model.sites-isSiteEnabled-' 
+                . \Extension\Security::formatString($site_domain, 
+                    'alphanum_dash_underscore');
+        $cached = \Extension\Cache::getSilence($cache_name);
         
-        if ($total > 0) {
-            return true;
+        if (false === $cached) {
+            $query = static::query();
+            $query->where('site_domain', $site_domain);
+            $query->where('site_status', 1);
+            $total = $query->count();
+
+            unset($query, $site_domain);
+
+            if ($total > 0) {
+                \Cache::set($cache_name, true, 2592000);
+                return true;
+            }
+
+            \Cache::set($cache_name, 'false', 2592000);
+            return false;
         }
         
-        return false;
+        if ('false' === $cached) {
+            return false;
+        } else {
+            return $cached;
+        }
     }// isSiteEnabled
 
 

@@ -53,13 +53,27 @@ class Model_Config extends \Orm\Model
             return null;
         }
 
-        $query = static::query()->where('config_name', '=', $config_name)->get_one();
+        $cache_name = 'model.config-getval-'
+                . \Model_Sites::getSiteId(false) . '-'
+                . \Extension\Security::formatString($config_name, 
+                    'alphanum_dash_underscore')
+                . '-'
+                . $return_field;
+        $cache_cfg = \Extension\Cache::getSilence($cache_name);
 
-        if ($return_field == null) {
-            return $query;
-        } else {
-            return $query->$return_field;
+        if (false === $cache_cfg) {
+            $query = static::query()->where('config_name', '=', $config_name)->get_one();
+
+            if ($return_field == null) {
+                \Cache::set($cache_name, $query, 2592000);
+                return $query;
+            } else {
+                \Cache::set($cache_name, $query->$return_field, 2592000);
+                return $query->$return_field;
+            }
         }
+        
+        return $cache_cfg;
     }// getval
 
 
@@ -85,23 +99,34 @@ class Model_Config extends \Orm\Model
         if (!is_array($config_name) || (is_array($config_name) && empty($config_name))) {
             return null;
         }
+        
+        $cache_name = 'model.config-getvalues-'
+                . \Model_Sites::getSiteId(false) . '-'
+                . \Extension\Security::formatString(md5(json_encode($config_name)), 
+                    'alphanum_dash_underscore');
+        $cached = \Extension\Cache::getSilence($cache_name);
 
-        // because FuelPHP ORM cannot get multiple results if that table has no primary key.
-        // we will use DB class
-        $output = array();
+        if (false === $cached) {
+            // because FuelPHP ORM cannot get multiple results if that table has no primary key.
+            // we will use DB class
+            $output = array();
 
-        $result = \DB::select('*')->from(static::$_table_name)->as_object()->where('config_name', 'IN', $config_name)->execute();
-        if ((is_array($result) || is_object($result)) && !empty($result)) {
-            foreach ($result as $row) {
-                $output[$row->config_name]['value'] = $row->config_value;
-                $output[$row->config_name]['core'] = $row->config_core;
-                $output[$row->config_name]['description'] = $row->config_description;
-            }// endforeach;
-        }// endif;
-        unset($result, $row);
+            $result = \DB::select('*')->from(static::$_table_name)->as_object()->where('config_name', 'IN', $config_name)->execute();
+            if ((is_array($result) || is_object($result)) && !empty($result)) {
+                foreach ($result as $row) {
+                    $output[$row->config_name]['value'] = $row->config_value;
+                    $output[$row->config_name]['core'] = $row->config_core;
+                    $output[$row->config_name]['description'] = $row->config_description;
+                }// endforeach;
+            }// endif;
+            unset($result, $row);
 
-        return $output;
-        // end get values by array loop.
+            \Cache::set($cache_name, $output, 2592000);
+            return $output;
+            // end get values by array loop.
+        }
+        
+        return $cached;
     }// getvalues
 
 
@@ -121,6 +146,10 @@ class Model_Config extends \Orm\Model
                 ->where('config_name', $key)
                 ->execute();
         }
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.config-getval-'.\Model_Sites::getSiteId(false));
+        \Extension\Cache::deleteCache('model.config-getvalues-'.\Model_Sites::getSiteId(false));
 
         return true;
     }// saveData
