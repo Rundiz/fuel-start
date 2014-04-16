@@ -14,5 +14,6 @@ return array(
 		),
 		'table_prefix' => 'ws_',
 		'charset' => 'utf8',
+		'profiling'  => true,
 	),
 );
