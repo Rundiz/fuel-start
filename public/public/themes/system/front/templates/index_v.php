@@ -72,6 +72,7 @@ $theme = \Theme::instance();
 								<li>Administrator base controller - To automatically verify logged in access and send to login page if not login.</li>
 								<li>Configuration page - Config site name, account registration and more.</li>
 								<li>Multilingual.</li>
+								<li>Multi-site support.</li>
 							</ul>
 						</div>
 						<aside class="col-sm-3 sidebar">
