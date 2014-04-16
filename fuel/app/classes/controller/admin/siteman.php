@@ -36,7 +36,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin'));
+            \Response::redirect(\Uri::create('admin/siteman'));
         }
 
         // read flash message for display errors.
@@ -117,7 +117,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                     'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin'));
+            \Response::redirect(\Uri::create('admin/siteman'));
         }
 
         // read flash message for display errors.
