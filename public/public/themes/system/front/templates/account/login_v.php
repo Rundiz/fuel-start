@@ -12,7 +12,7 @@
 		<div class="form-group">
 			<label for="account_username" class="col-sm-2 control-label"><?php echo __('account_username_or_email'); ?>: <span class="txt_require">*</span></label>
 			<div class="col-sm-4">
-				<?php echo \Form::input('account_identity', (isset($account_identity) ? $account_identity : ''), array('id' => 'account_username', 'maxlength' => '255', 'class' => 'form-control login-page-input-username', 'autocomplete' => 'off')); ?> 
+				<?php echo \Form::input('account_identity', (isset($account_identity) ? $account_identity : ''), array('id' => 'account_username', 'maxlength' => '255', 'class' => 'form-control login-page-input-username', 'autocomplete' => 'off', 'autofocus' => '')); ?> 
 			</div>
 		</div>
 		<div class="form-group">

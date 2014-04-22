@@ -36,7 +36,7 @@ include dirname(dirname(__DIR__)) . DS . 'inc_html_head.php';
 						<div class="form-group">
 							<label for="account_username" class="sr-only"><?php echo __('account_username_or_email'); ?>: <span class="txt_require">*</span></label>
 							<div class="col-sm-12">
-								<?php echo \Form::input('account_identity', (isset($account_identity) ? $account_identity : ''), array('placeholder' => __('account_username_or_email'), 'id' => 'account_username', 'maxlength' => '255', 'class' => 'form-control login-page-input-username', 'autocomplete' => 'off')); ?> 
+								<?php echo \Form::input('account_identity', (isset($account_identity) ? $account_identity : ''), array('placeholder' => __('account_username_or_email'), 'id' => 'account_username', 'maxlength' => '255', 'class' => 'form-control login-page-input-username', 'autocomplete' => 'off', 'autofocus' => '')); ?> 
 							</div>
 						</div>
 						<div class="form-group">
