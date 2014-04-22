@@ -508,6 +508,9 @@ class Model_Accounts extends \Orm\Model
                     // delete from account_fields table
                     \DB::delete($table_siteid_prefix . 'account_fields')->where('account_id', $account_id)->execute();
                     
+                    // delete from account_permission table
+                    \DB::delete($table_siteid_prefix . 'account_permission')->where('account_id', $account_id)->execute();
+                    
                     // @todo [multisite] more multi-site tables that has account_id related should be delete here.
                 }
             }
