@@ -41,6 +41,7 @@ class Model_Sites extends \Orm\Model
         'account_level',// this table require data.
         'account_level_group', // this table require base level data.
         'account_level_permission',
+        'account_permission',
 
         'config', // this table must copy "core" config data
     );
