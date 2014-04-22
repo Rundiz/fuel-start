@@ -3,6 +3,8 @@
 $lang['acperm_are_you_sure_to_reset'] = 'Are you sure to reset permission?\nThis action will reset all permission including modules permissions.';
 $lang['acperm_failed_to_reset_permission'] = 'Failed to reset permission.';
 $lang['acperm_go_back_to_system_permission'] = 'Go back to system permission';
+$lang['acperm_level_permission'] = 'Role\'s permission';
+$lang['acperm_level_permission_of_module'] = 'Role\'s permission of module: :module_name';
 $lang['acperm_module_permissison'] = 'Modules permission';
 $lang['acperm_permission'] = 'Permission';
 $lang['acperm_permission_action'] = 'Action';

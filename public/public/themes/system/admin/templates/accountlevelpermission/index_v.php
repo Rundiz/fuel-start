@@ -1,4 +1,4 @@
-<h1><?php echo \Lang::get('acperm_permission'); ?></h1>
+<h1><?php echo \Lang::get('acperm_level_permission'); ?></h1>
 
 <div class="row cmds">
 	<div class="col-sm-6">

@@ -1,4 +1,4 @@
-<h1><?php echo \Lang::get('acperm_permission_of_module', array('module_name' => $module['name'])); ?></h1>
+<h1><?php echo \Lang::get('acperm_level_permission_of_module', array('module_name' => $module['name'])); ?></h1>
 
 <div class="row cmds">
 	<div class="col-sm-6">

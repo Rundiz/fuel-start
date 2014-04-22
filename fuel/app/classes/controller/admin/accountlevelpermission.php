@@ -71,7 +71,7 @@ class Controller_Admin_AccountLevelPermission extends \Controller_AdminControlle
         $output['list_levels'] = \Model_AccountLevelGroup::listLevels();
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('acperm_permission'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('acperm_level_permission'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/accountlevelpermission/index_v', $output, false);
@@ -124,7 +124,7 @@ class Controller_Admin_AccountLevelPermission extends \Controller_AdminControlle
         $output['module'] = \Library\Modules::forge()->readModuleMetadataFromModuleName($module_system_name);
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('acperm_permission'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('acperm_level_permission'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/accountlevelpermission/module_v', $output, false);

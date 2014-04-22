@@ -3,6 +3,8 @@
 $lang['acperm_are_you_sure_to_reset'] = 'คุณแน่ใจหรือไม่ที่จะล้างการตั้งค่า?\nการกระทำนี้จะล้างค่าทั้งหมดรวมถึงการตั้งค่าสิทธิสำหรับโมดูลต่างๆด้วย.';
 $lang['acperm_failed_to_reset_permission'] = 'ล้มเหลวในการล้างการตั้งค่า.';
 $lang['acperm_go_back_to_system_permission'] = 'กลับไปหน้าตั้งค่าสิทธิของระบบ';
+$lang['acperm_level_permission'] = 'สิทธิสำหรับหน้าที่';
+$lang['acperm_level_permission_of_module'] = 'สิทธิสำหรับหน้าที่ของโมดูล: :module_name';
 $lang['acperm_module_permissison'] = 'สิทธิสำหรับโมดูลต่างๆ';
 $lang['acperm_permission'] = 'สิทธิ';
 $lang['acperm_permission_action'] = 'การทำงาน';
