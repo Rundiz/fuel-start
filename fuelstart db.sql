@@ -134,14 +134,14 @@ INSERT INTO `ws_account_level_group` (`level_group_id`, `level_name`, `level_des
 
 CREATE TABLE IF NOT EXISTS `ws_account_level_permission` (
   `permission_id` int(11) NOT NULL AUTO_INCREMENT,
-  `level_group_id` int(11) NOT NULL,
+  `level_group_id` int(11) NOT NULL COMMENT 'refer to account_level_group.level_group_id',
   `permission_core` int(1) NOT NULL DEFAULT '0' COMMENT '1=core permission, 0=modules permission',
   `module_system_name` varchar(255) DEFAULT NULL COMMENT 'module system name',
   `permission_page` varchar(255) NOT NULL,
   `permission_action` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`permission_id`),
   KEY `level_group_id` (`level_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='contain permission for each admin page and action' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='contain level''s permission for each admin page and action' AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `ws_account_level_permission`
@@ -172,6 +172,27 @@ CREATE TABLE IF NOT EXISTS `ws_account_logins` (
 
 --
 -- Dumping data for table `ws_account_logins`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ws_account_permission`
+--
+
+CREATE TABLE IF NOT EXISTS `ws_account_permission` (
+  `permission_id` int(11) NOT NULL AUTO_INCREMENT,
+  `account_id` int(11) NOT NULL COMMENT 'refer to accounts.account_id',
+  `permission_core` int(1) NOT NULL DEFAULT '0' COMMENT '1=core permission, 0=modules permission',
+  `module_system_name` varchar(255) DEFAULT NULL COMMENT 'module system name',
+  `permission_page` varchar(255) NOT NULL,
+  `permission_action` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`permission_id`),
+  KEY `account_id` (`account_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='contain user''s permission for each admin page and action.' AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `ws_account_permission`
 --
 
 
