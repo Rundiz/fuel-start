@@ -27,7 +27,7 @@ class Controller_Admin_AccountLevelPermission extends \Controller_AdminControlle
     public function _define_permission()
     {
         // return array('controller page name' => array('action 1', 'action 2', 'action 3', 'a lot more action. up to you...'));
-        return array('acperm_perm' => array('acperm_manage_perm'));
+        return array('acperm_perm' => array('acperm_manage_level_perm', 'acperm_manage_user_perm'));
     }// _define_permission
 
 

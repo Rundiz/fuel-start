@@ -15,6 +15,7 @@ $lang['acperm_reset_permission'] = 'ล้างการตั้งค่า';
 
 // permissions
 $lang['acperm_perm'] = 'สิทธิ';
-$lang['acperm_manage_perm'] = 'จัดการสิทธิ';
+$lang['acperm_manage_level_perm'] = 'จัดการสิทธิสำหรับหน้าที่';
+$lang['acperm_manage_user_perm'] = 'จัดการสิทธิสำหรับผู้ใช้';
 
 return $lang;

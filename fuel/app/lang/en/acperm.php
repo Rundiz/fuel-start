@@ -15,6 +15,7 @@ $lang['acperm_reset_permission'] = 'Reset permission';
 
 // permissions
 $lang['acperm_perm'] = 'Permissions';
-$lang['acperm_manage_perm'] = 'Manage permission';
+$lang['acperm_manage_level_perm'] = 'Manage role\'s permission';
+$lang['acperm_manage_user_perm'] = 'Manage user\'s permission';
 
 return $lang;
