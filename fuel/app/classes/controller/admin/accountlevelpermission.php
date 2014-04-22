@@ -6,7 +6,7 @@
  *
  */
 
-class Controller_Admin_AccountPermission extends \Controller_AdminController
+class Controller_Admin_AccountLevelPermission extends \Controller_AdminController
 {
 
 
@@ -74,7 +74,7 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
         $output['page_title'] = $this->generateTitle(\Lang::get('acperm_permission'));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/accountpermission/accountpermission_v', $output, false);
+        return $this->generatePage('admin/templates/accountlevelpermission/index_v', $output, false);
     }// action_index
 
 
@@ -97,7 +97,7 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
 
         // check if this module really has permission.
         if (\Library\Modules::forge()->hasPermission($module_system_name) == false) {
-            \Response::redirect(\Uri::create('admin/account-permission'));
+            \Response::redirect(\Uri::create('admin/account-level-permission'));
         }
 
         // load language
@@ -127,7 +127,7 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
         $output['page_title'] = $this->generateTitle(\Lang::get('acperm_permission'));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/accountpermission/accountpermission_module_v', $output, false);
+        return $this->generatePage('admin/templates/accountlevelpermission/module_v', $output, false);
     }// action_module
 
 
@@ -233,7 +233,7 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
                 $session->set('submitted_redirect', \Input::referrer());
                 return \Input::referrer();
             } else {
-                $redirect_uri = 'admin/account-permission';
+                $redirect_uri = 'admin/account-level-permission';
                 $session->set('submitted_redirect', $redirect_uri);
                 return $redirect_uri;
             }

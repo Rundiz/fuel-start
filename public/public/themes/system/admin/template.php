@@ -82,7 +82,8 @@ include __DIR__ . DS . 'inc_html_head.php';
 											<a href="#" onclick="return false;"><?php echo \Lang::get('admin_roles_permissions'); ?></a>
 											<ul>
 												<?php if (checkAdminPermission('accountlv_perm', 'accountlv_viewlevels_perm')) { ?><li><?php echo \Html::anchor('admin/account-level', \Lang::get('admin_roles')); ?></li><?php } ?> 
-												<?php if (checkAdminPermission('acperm_perm', 'acperm_manage_perm')) { ?><li><?php echo \Html::anchor('admin/account-permission', \Lang::get('admin_permissions')); ?></li><?php } ?> 
+												<?php if (checkAdminPermission('acperm_perm', 'acperm_manage_perm')) { ?><li><?php echo \Html::anchor('admin/account-level-permission', \Lang::get('admin_permissions_for_roles')); ?></li><?php } ?> 
+												<?php if (checkAdminPermission('acperm_perm', 'acperm_manage_perm')) { ?><li><?php echo \Html::anchor('admin/account-permission', \Lang::get('admin_permissions_for_users')); ?></li><?php } ?> 
 											</ul>
 										</li>
 										<?php } ?> 

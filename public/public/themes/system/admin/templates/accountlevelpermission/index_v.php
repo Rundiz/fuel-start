@@ -8,7 +8,7 @@
 			<ul class="dropdown-menu" role="menu">
 				<?php if (isset($list_modules_perm) && is_array($list_modules_perm) && !empty($list_modules_perm)) { ?> 
 				<?php foreach ($list_modules_perm as $module) { ?> 
-				<li><?php echo \Extension\Html::anchor('admin/account-permission/module/' . $module['module_system_name'], $module['module_name']); ?></li>
+				<li><?php echo \Extension\Html::anchor('admin/account-level-permission/module/' . $module['module_system_name'], $module['module_name']); ?></li>
 				<?php } // endforeach; ?> 
 				<?php } else { ?> 
 				<li><a href="#" onclick="return false;">&mdash;</a></li>
@@ -18,7 +18,7 @@
 	</div>
 </div>
 
-<?php include_once __DIR__ . DS . 'accountpermission_partial_v.php'; ?> 
+<?php include_once __DIR__ . DS . 'permission_table.php'; ?> 
 
 <script type="text/javascript">
 	function ajaxResetPermission() 

@@ -1,4 +1,4 @@
-<?php echo \Form::open(array('action' => 'admin/account-permission/save', 'class' => 'form-horizontal', 'role' => 'form')); ?> 
+<?php echo \Form::open(array('action' => 'admin/account-level-permission/save', 'class' => 'form-horizontal', 'role' => 'form')); ?> 
 	<div class="form-status-placeholder">
 		<?php if (isset($form_status) && isset($form_status_message)) { ?> 
 		<div class="alert alert-<?php echo str_replace('error', 'danger', $form_status); ?>"><button type="button" class="close" data-dismiss="alert">&times;</button><?php echo $form_status_message; ?></div>
