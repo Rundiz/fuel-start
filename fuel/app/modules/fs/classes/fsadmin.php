@@ -20,14 +20,4 @@ class Fsadmin
     }// __construct
 
 
-    /**
-     * define permission for administrators actions.
-     * @return array
-     */
-    public function _define_permission()
-    {
-        //return array('fsupdater_perm' => array('fs_update_perm'));
-    }// _define_permission
-
-
 }
