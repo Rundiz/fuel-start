@@ -10,10 +10,19 @@
 		<?php echo \Extension\NoCsrf::generate(); ?> 
 	</div>
 
-	<p><?php echo __('cacheman_please_select_action'); ?>:</p>
-	<select name="act" class="chosen-select">
-		<option value=""></option>
-		<option value="clear"><?php echo __('cacheman_clear_cache'); ?></option>
-	</select>
-	<button type="submit" class="btn btn-warning"><?php echo __('admin_submit'); ?></button>
+	<div class="form-group">
+		<label for="act" class="col-sm-2 control-label"><?php echo __('cacheman_please_select_action'); ?>:</label>
+		<div class="col-sm-4">
+			<select name="act" class="chosen-select form-control">
+				<option value=""></option>
+				<option value="clear"><?php echo __('cacheman_clear_cache'); ?></option>
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button type="submit" class="btn btn-warning"><?php echo __('admin_submit'); ?></button>
+		</div>
+	</div>
 <?php echo \Form::close(); ?>

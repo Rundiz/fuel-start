@@ -71,7 +71,7 @@ class Controller_Admin_Cacheman extends \Controller_AdminController
         $output['page_title'] = $this->generateTitle(\Lang::get('cacheman'));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/cache/index_v', $output, false);
+        return $this->generatePage('admin/templates/cacheman/index_v', $output, false);
     }// action_index
 	
 	
