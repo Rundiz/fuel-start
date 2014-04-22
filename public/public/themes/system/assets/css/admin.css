@@ -223,6 +223,12 @@ html, body {
 }
 
 
+.tableFloatingHeader {
+	background: #eee;
+	z-index: 1;
+}
+
+
 
 .the-page-container {
 	height: auto;

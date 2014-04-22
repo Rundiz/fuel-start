@@ -77,6 +77,6 @@
 
 <script type="text/javascript">
 	$(function() {
-		
+		tableWithFloatingheader();
 	});// jquery start
 </script>
