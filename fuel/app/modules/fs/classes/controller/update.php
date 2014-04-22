@@ -31,6 +31,8 @@ class Controller_Update extends \Controller
             } else {
                 // update to 1.5 first time
                 $result = \Fs\update0001::run();
+                // update to 1.5.4
+                $result = \Fs\update0002::run();
 
                 if ($result === true) {
                     $output['hide_form'] = true;
