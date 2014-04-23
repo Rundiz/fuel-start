@@ -3,26 +3,26 @@
 	"description": "The backoffice system built on FuelPHP framework for developers.",
 	"type": "metapackage",
 	"keywords": ["back office", "backoffice", "backend", "FuelPHP ACL", "FuelPHP account permission system"],
-	"homepage": "http://okvee.net",
+	"homepage": "http://okvee.net/th/web-resources/download/fuel-start",
 	"license": "MIT",
 	"authors": [
-        {
-            "name": "Vee W.",
-            "email": "kawewong@gmail.com"
-        }
-    ],
+		{
+			"name": "Vee W.",
+			"email": "kawewong@gmail.com"
+		}
+	],
 	"require": {
 		"php": ">=5.3.3",
-        "monolog/monolog": "1.5.*",
-    	"fuelphp/upload": "2.0.1"
+		"monolog/monolog": "1.5.*",
+		"fuelphp/upload": "2.0.1"
 	},
-    "suggest": {
-        "mustache/mustache": "Allow Mustache templating with the Parser package",
-        "smarty/smarty": "Allow Smarty templating with the Parser package",
-        "twig/twig": "Allow Twig templating with the Parser package",
-        "mthaml/mthaml": "Allow Haml templating with Twig supports with the Parser package"
-    },
+	"suggest": {
+		"mustache/mustache": "Allow Mustache templating with the Parser package",
+		"smarty/smarty": "Allow Smarty templating with the Parser package",
+		"twig/twig": "Allow Twig templating with the Parser package",
+		"mthaml/mthaml": "Allow Haml templating with Twig supports with the Parser package"
+	},
 	"config": {
-        "vendor-dir": "fuel/vendor"
-    }
+		"vendor-dir": "fuel/vendor"
+	}
 }
