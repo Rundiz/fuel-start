@@ -124,7 +124,7 @@ include __DIR__ . DS . 'inc_html_head.php';
 			</div><!--.the-page-inner-container-->
 		</div><!--.the-page-container-->
 		<div class="the-page-footer">
-			<?php echo \Lang::get('fslang_credit'); ?> 
+			<?php echo \Lang::get('fslang_credit'); // you can remove credit or change it. ?> 
 		</div>
 		
 		
