@@ -33,7 +33,7 @@ class Model_AccountLogins extends \Orm\Model
      * list login history.
      *
      * @param array $data
-     * @param array $option
+     * @param array $option available options: [orders], [sort], [offset], [limit], [list_for]
      * @return mixed
      */
     public static function listLogins(array $data = array(), array $option = array())
