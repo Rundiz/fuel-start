@@ -79,6 +79,7 @@ $lang['account_role'] = 'หน้าที่';
 $lang['account_role_and_status'] = 'หน้าที่และสถานะ';
 $lang['account_saved'] = 'ข้อมูลของคุณถูกบันทึกแล้ว.';
 $lang['account_send'] = 'ส่ง';
+$lang['account_set_permission'] = 'กำหนดสิทธิ';
 $lang['account_simultaneous_login_detected'] = 'มีการเข้าสู่ระบบในบัญชีผู้ใช้ของคุณซ้อนเข้ามา หากไม่ใช่คุณ กรุณาเข้าสู่ระบบอีกครั้งแล้วรีบทำการเปลี่ยนรหัสผ่าน.';
 $lang['account_status'] = 'สถานะ';
 $lang['account_status_text'] = 'เหตุผลการปิดใช้งาน';
