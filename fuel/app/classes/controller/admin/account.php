@@ -634,6 +634,9 @@ class Controller_Admin_Account extends \Controller_AdminController
                         if (\Model_Accounts::forge()->canIAddEditAccount($level_group) == true) {
                             // delete account.
                             \Model_Accounts::deleteAccount($id);
+                            
+                            // clear cache
+                            \Extension\Cache::deleteCache('model.accounts-checkAccount-'.\Model_Sites::getSiteId().'-'.$id);
                         }
                     }
                 }
@@ -669,6 +672,9 @@ class Controller_Admin_Account extends \Controller_AdminController
 
                             unset($entry);
                         }
+
+                        // clear cache
+                        \Extension\Cache::deleteCache('model.accounts-checkAccount-'.\Model_Sites::getSiteId().'-'.$id);
                     }
                 }
             } elseif ($act == 'disable') {
@@ -703,6 +709,9 @@ class Controller_Admin_Account extends \Controller_AdminController
 
                             unset($entry);
                         }
+
+                        // clear cache
+                        \Extension\Cache::deleteCache('model.accounts-checkAccount-'.\Model_Sites::getSiteId().'-'.$id);
                     }
                 }
             }

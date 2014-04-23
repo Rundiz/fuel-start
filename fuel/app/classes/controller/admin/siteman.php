@@ -310,6 +310,11 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                     foreach ($ids as $id) {
                         \Model_Sites::deleteSite($id);
                     }
+                    
+                    // clear cache
+                    \Extension\Cache::deleteCache('model.sites-getSiteId');
+                    \Extension\Cache::deleteCache('model.sites-isSiteEnabled');
+                    \Extension\Cache::deleteCache('controller.AdminController-generatePage-fs_list_sites');
                 }
             } elseif ($act == 'enable') {
                 // check permission.
@@ -334,6 +339,11 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                         $entry->site_status = 1;
                         $entry->save();
                     }
+                    
+                    // clear cache
+                    \Extension\Cache::deleteCache('model.sites-getSiteId');
+                    \Extension\Cache::deleteCache('model.sites-isSiteEnabled');
+                    \Extension\Cache::deleteCache('controller.AdminController-generatePage-fs_list_sites');
 
                     unset($entry);
                 }
@@ -360,6 +370,11 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                         $entry->site_status = 0;
                         $entry->save();
                     }
+                    
+                    // clear cache
+                    \Extension\Cache::deleteCache('model.sites-getSiteId');
+                    \Extension\Cache::deleteCache('model.sites-isSiteEnabled');
+                    \Extension\Cache::deleteCache('controller.AdminController-generatePage-fs_list_sites');
 
                     unset($entry);
                 }
