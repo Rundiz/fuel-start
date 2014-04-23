@@ -53,15 +53,13 @@ class Model_AccountLogins extends \Orm\Model
         $output['total'] = $query->count();
 
         // sort and order
-        $orders = \Security::strip_tags(trim(\Input::get('orders')));
         $allowed_orders = array('account_login_id', 'site_id', 'login_ua', 'login_os', 'login_browser', 'login_ip', 'login_time', 'login_time_gmt', 'login_attempt', 'login_attempt_text');
-        if ($orders == null || !in_array($orders, $allowed_orders)) {
-            $orders = 'account_login_id';
+        if (!isset($option['orders']) || (isset($option['orders']) && !in_array($option['orders'], $allowed_orders))) {
+            $option['orders'] = 'account_login_id';
         }
         unset($allowed_orders);
-        $sort = \Security::strip_tags(trim(\Input::get('sort')));
-        if ($sort == null) {
-            $sort = 'DESC';
+        if (!isset($option['sort'])) {
+            $option['sort'] = 'DESC';
         }
 
         // offset and limit
@@ -77,7 +75,7 @@ class Model_AccountLogins extends \Orm\Model
         }
 
         // get the results from sort, order, offset, limit.
-        $output['items'] = $query->order_by($orders, $sort)->offset($option['offset'])->limit($option['limit'])->get();
+        $output['items'] = $query->order_by($option['orders'], $option['sort'])->offset($option['offset'])->limit($option['limit'])->get();
 
         unset($orders, $query, $sort);
 

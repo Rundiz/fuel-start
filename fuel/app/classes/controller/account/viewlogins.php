@@ -49,9 +49,14 @@ class Controller_Account_ViewLogins extends \Controller_BaseController
         // list logins -----------------------------------------------------------------------------------------------------
         $option['limit'] = \Model_Config::getval('content_items_perpage');
         $option['offset'] = (trim(\Input::get('page')) != null ? ((int)\Input::get('page')-1)*$option['limit'] : 0);
+        if (\Security::strip_tags(trim(\Input::get('orders'))) != null) {
+            $option['orders'] = \Security::strip_tags(trim(\Input::get('orders')));
+        }
+        if (\Security::strip_tags(trim(\Input::get('sort'))) != null) {
+            $option['sort'] = \Security::strip_tags(trim(\Input::get('sort')));
+        }
         $data['account_id'] = $cookie_account['account_id'];
         $data['site_id'] = \Model_Sites::getSiteId();
-
         $list_logins = \Model_AccountLogins::listLogins($data, $option);
 
         // pagination config

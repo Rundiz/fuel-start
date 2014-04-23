@@ -770,7 +770,12 @@ class Controller_Admin_Account extends \Controller_AdminController
         // list logins -----------------------------------------------------------------------------------------------------
         $option['limit'] = \Model_Config::getval('content_admin_items_perpage');
         $option['offset'] = (trim(\Input::get('page')) != null ? ((int)\Input::get('page')-1)*$option['limit'] : 0);
-
+        if (\Security::strip_tags(trim(\Input::get('orders'))) != null) {
+            $option['orders'] = \Security::strip_tags(trim(\Input::get('orders')));
+        }
+        if (\Security::strip_tags(trim(\Input::get('sort'))) != null) {
+            $option['sort'] = \Security::strip_tags(trim(\Input::get('sort')));
+        }
         $list_logins = \Model_AccountLogins::listLogins(array('account_id' => $account_id), $option);
 
         // pagination config
