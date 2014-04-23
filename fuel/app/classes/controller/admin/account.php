@@ -546,14 +546,14 @@ class Controller_Admin_Account extends \Controller_AdminController
         unset($form_status);
 
         // set sort variable for sortable in views.
-        $next_sort = \Security::strip_tags(trim(\Input::get('sort')));
-        if ($next_sort == null || $next_sort == 'ASC') {
+        $sort = \Security::strip_tags(trim(\Input::get('sort')));
+        if ($sort == null || $sort == 'ASC') {
             $next_sort = 'DESC';
         } else {
             $next_sort = 'ASC';
         }
         $output['next_sort'] = $next_sort;
-        unset($next_sort);
+        unset($next_sort, $sort);
 
         // search query
         $output['q'] = trim(\Input::get('q'));
@@ -561,7 +561,15 @@ class Controller_Admin_Account extends \Controller_AdminController
         // list accounts --------------------------------------------------------------------------------------------------
         $option['limit'] = \Model_Config::getval('content_admin_items_perpage');
         $option['offset'] = (trim(\Input::get('page')) != null ? ((int)\Input::get('page')-1)*$option['limit'] : 0);
-
+        if (trim(\Input::get('q')) != null) {
+            $option['search'] = trim(\Input::get('q'));
+        }
+        if (\Security::strip_tags(trim(\Input::get('orders'))) != null) {
+            $option['orders'] = \Security::strip_tags(trim(\Input::get('orders')));
+        }
+        if (\Security::strip_tags(trim(\Input::get('sort'))) != null) {
+            $option['sort'] = \Security::strip_tags(trim(\Input::get('sort')));
+        }
         $list_accounts = \Model_Accounts::listAccounts($option);
 
         // pagination config

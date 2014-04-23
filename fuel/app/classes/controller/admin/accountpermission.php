@@ -33,11 +33,12 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
             return null;
         }
         
-        $term = trim(\Input::get('term'));
-        $_GET['q'] = $term;
         $output = array();
         
         // list account with search
+        if (trim(\Input::get('term')) != null) {
+            $option['search'] = trim(\Input::get('term'));
+        }
         $option['list_for'] = 'admin';
         $list_account = \Model_Accounts::listAccounts($option);
         unset($option);

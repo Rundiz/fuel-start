@@ -863,8 +863,7 @@ class Model_Accounts extends \Orm\Model
     /**
      * list accounts
      *
-     * @todo change get orders and sort from \Input::get directly to get it from $option array.
-     * @param array $option
+     * @param array $option available options: [search], [orders], [sort], [offset], [limit], [list_for]
      * @return mixed
      */
     public static function listAccounts($option = array())
@@ -873,8 +872,8 @@ class Model_Accounts extends \Orm\Model
         $query = static::query();
 
         // search
-        if (trim(\Input::get('q')) != null) {
-            $search = trim(\Input::get('q'));
+        if (isset($option['search']) && $option['search'] != null) {
+            $search = $option['search'];
 
             $query->where_open()
                 ->where('account_id', 'LIKE', '%' . $search . '%')
@@ -896,15 +895,13 @@ class Model_Accounts extends \Orm\Model
         $output['total'] = $query->count();
 
         // sort and order
-        $orders = \Security::strip_tags(trim(\Input::get('orders')));
         $allowed_orders = array('account_id', 'account_username', 'account_email', 'account_display_name', 'account_firstname', 'account_middlename', 'account_lastname', 'account_birthdate', 'account_signature', 'account_timezone', 'account_language', 'account_create', 'account_create_gmt', 'account_last_login', 'account_last_login_gmt', 'account_status', 'account_status_text');
-        if ($orders == null || !in_array($orders, $allowed_orders)) {
-            $orders = 'account_id';
+        if (!isset($option['orders']) || (isset($option['orders']) && !in_array($option['orders'], $allowed_orders))) {
+            $option['orders'] = 'account_id';
         }
         unset($allowed_orders);
-        $sort = \Security::strip_tags(trim(\Input::get('sort')));
-        if ($sort == null || $sort != 'DESC') {
-            $sort = 'ASC';
+        if (!isset($option['sort'])) {
+            $option['sort'] = 'ASC';
         }
 
         // offset and limit
@@ -920,7 +917,7 @@ class Model_Accounts extends \Orm\Model
         }
 
         // get the results from sort, order, offset, limit.
-        $output['items'] = $query->order_by($orders, $sort)->offset($option['offset'])->limit($option['limit'])->get();
+        $output['items'] = $query->order_by($option['orders'], $option['sort'])->offset($option['offset'])->limit($option['limit'])->get();
 
         unset($orders, $query, $sort);
 
