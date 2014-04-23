@@ -34,6 +34,12 @@ class Model_Accounts extends \Orm\Model
             'key_to' => 'account_id',
             'cascade_delete' => true,
         ),
+        'account_permission' => array(
+            'model_to' => 'Model_AccountPermission',
+            'key_from' => 'account_id',
+            'key_to' => 'account_id',
+            'cascade_delete' => true,
+        ),
         'account_sites' => array(
             'key_from' => 'account_id',
             'model_to' => 'Model_AccountSites',
@@ -287,7 +293,7 @@ class Model_Accounts extends \Orm\Model
     /**
      * can i add or edit account
      *
-     * @param array $level_groups
+     * @param array $level_groups target level groups
      * @return boolean
      */
     public function canIAddEditAccount($level_groups)

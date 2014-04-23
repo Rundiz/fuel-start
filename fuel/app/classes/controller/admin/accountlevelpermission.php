@@ -37,7 +37,7 @@ class Controller_Admin_AccountLevelPermission extends \Controller_AdminControlle
         \Session::delete('submitted_redirect');
         
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_level_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
@@ -47,9 +47,6 @@ class Controller_Admin_AccountLevelPermission extends \Controller_AdminControlle
             );
             \Response::redirect(\Uri::create('admin'));
         }
-
-        // load language
-        \Lang::load('account');
 
         // read flash message for display errors.
         $form_status = \Session::get_flash('form_status');
@@ -84,7 +81,7 @@ class Controller_Admin_AccountLevelPermission extends \Controller_AdminControlle
         \Session::delete('submitted_redirect');
         
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_level_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
@@ -99,9 +96,6 @@ class Controller_Admin_AccountLevelPermission extends \Controller_AdminControlle
         if (\Library\Modules::forge()->hasPermission($module_system_name) == false) {
             \Response::redirect(\Uri::create('admin/account-level-permission'));
         }
-
-        // load language
-        \Lang::load('account');
 
         // read flash message for display errors.
         $form_status = \Session::get_flash('form_status');
@@ -142,7 +136,7 @@ class Controller_Admin_AccountLevelPermission extends \Controller_AdminControlle
         }
         
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_level_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
@@ -178,7 +172,7 @@ class Controller_Admin_AccountLevelPermission extends \Controller_AdminControlle
         $redirect = $this->getAndSetSubmitRedirection();
         
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_level_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
@@ -202,17 +196,28 @@ class Controller_Admin_AccountLevelPermission extends \Controller_AdminControlle
                 $data['permission_action'] = \Input::post('permission_action');
 
                 \Model_AccountLevelPermission::savePermissions($data);
+                
+                // set success message
+                \Session::set_flash(
+                    'form_status',
+                    array(
+                        'form_status' => 'success',
+                        'form_status_message' => \Lang::get('admin_saved')
+                    )
+                );
+            } else {
+                // nocsrf error, set error msg.
+                \Session::set_flash(
+                    'form_status',
+                    array(
+                        'form_status' => 'error',
+                        'form_status_message' => \Lang::get('fslang_invalid_csrf_token')
+                    )
+                );
             }
         }
 
-        // set success message
-        \Session::set_flash(
-            'form_status',
-            array(
-                'form_status' => 'success',
-                'form_status_message' => \Lang::get('admin_saved')
-            )
-        );
+        
 
         // go back
         \Response::redirect($redirect);

@@ -11,6 +11,7 @@ class update0002
     
     public static function run()
     {
+        // create permission table. (user's permission)
         $sql = "CREATE TABLE IF NOT EXISTS `" . \DB::table_prefix('account_permission') . "` (
             `permission_id` int(11) NOT NULL AUTO_INCREMENT,
             `account_id` int(11) NOT NULL COMMENT 'refer to accounts.account_id',
@@ -24,6 +25,23 @@ class update0002
         \DB::query($sql)->execute();
         
         unset($sql);
+        
+        // loop sites to create permission table.
+        $sites = \Model_Sites::find('all');
+        foreach($sites as $row) {
+            $table_name = 'account_permission';
+            if ($row->site_id != '1') {
+                $table_name = $row->site_id . '_' . $table_name;
+            }
+ 
+            if(!\DBUtil::table_exists($table_name)) {
+                $sql = 'CREATE TABLE IF NOT EXISTS ' . \DB::table_prefix($table_name) . ' LIKE ' . \DB::table_prefix('account_permission');
+                \DB::query($sql)->execute();
+                
+                unset($sql);
+            }
+        }
+        unset($row, $sites);
         
         return true;
     }// run
