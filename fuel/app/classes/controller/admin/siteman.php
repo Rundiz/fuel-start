@@ -246,7 +246,12 @@ class Controller_Admin_Siteman extends \Controller_AdminController
         $option['list_for'] = 'admin';
         $option['limit'] = \Model_Config::getval('content_admin_items_perpage');
         $option['offset'] = (trim(\Input::get('page')) != null ? ((int)\Input::get('page')-1)*$option['limit'] : 0);
-
+        if (\Security::strip_tags(trim(\Input::get('orders'))) != null) {
+            $option['orders'] = \Security::strip_tags(trim(\Input::get('orders')));
+        }
+        if (\Security::strip_tags(trim(\Input::get('sort'))) != null) {
+            $option['sort'] = \Security::strip_tags(trim(\Input::get('sort')));
+        }
         $list_sites = \Model_Sites::listSites($option);
 
         // pagination config

@@ -416,7 +416,7 @@ class Model_Sites extends \Orm\Model
     /**
      * list websites from db
      *
-     * @param array $option
+     * @param array $option available options: [list_for], [orders], [sort], [offset], [limit], [list_for], [unlimit]
      * @return array
      */
     public static function listSites($option = array())
@@ -431,15 +431,13 @@ class Model_Sites extends \Orm\Model
         $output['total'] = $query->count();
 
         // sort and order
-        $orders = \Security::strip_tags(trim(\Input::get('orders')));
         $allowed_orders = array('site_id', 'site_name', 'site_domain', 'site_status', 'site_create', 'site_update');
-        if ($orders == null || !in_array($orders, $allowed_orders)) {
-            $orders = 'site_id';
+        if (!isset($option['orders']) || (isset($option['orders']) && !in_array($option['orders'], $allowed_orders))) {
+            $option['orders'] = 'site_id';
         }
         unset($allowed_orders);
-        $sort = \Security::strip_tags(trim(\Input::get('sort')));
-        if ($sort == null || $sort != 'DESC') {
-            $sort = 'ASC';
+        if (!isset($option['sort'])) {
+            $option['sort'] = 'ASC';
         }
 
         // offset and limit
@@ -455,13 +453,13 @@ class Model_Sites extends \Orm\Model
         }
 
         // get the results from sort, order, offset, limit.
-        $query->order_by($orders, $sort);
+        $query->order_by($option['orders'], $option['sort']);
         if (!isset($option['unlimit']) || (isset($option['unlimit']) && $option['unlimit'] == false)) {
             $query->offset($option['offset'])->limit($option['limit']);
         }
         $output['items'] = $query->get();
 
-        unset($orders, $query, $sort);
+        unset($query);
 
         return $output;
     }// listSites

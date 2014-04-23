@@ -919,7 +919,7 @@ class Model_Accounts extends \Orm\Model
         // get the results from sort, order, offset, limit.
         $output['items'] = $query->order_by($option['orders'], $option['sort'])->offset($option['offset'])->limit($option['limit'])->get();
 
-        unset($orders, $query, $sort);
+        unset($query);
 
         return $output;
     }// listAccounts
