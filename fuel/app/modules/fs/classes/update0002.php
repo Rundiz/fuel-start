@@ -28,17 +28,19 @@ class update0002
         
         // loop sites to create permission table.
         $sites = \Model_Sites::find('all');
-        foreach($sites as $row) {
-            $table_name = 'account_permission';
-            if ($row->site_id != '1') {
-                $table_name = $row->site_id . '_' . $table_name;
-            }
- 
-            if(!\DBUtil::table_exists($table_name)) {
-                $sql = 'CREATE TABLE IF NOT EXISTS ' . \DB::table_prefix($table_name) . ' LIKE ' . \DB::table_prefix('account_permission');
-                \DB::query($sql)->execute();
-                
-                unset($sql);
+        if ($sites != null) {
+            foreach($sites as $row) {
+                $table_name = 'account_permission';
+                if ($row->site_id != '1') {
+                    $table_name = $row->site_id . '_' . $table_name;
+                }
+
+                if(!\DBUtil::table_exists($table_name)) {
+                    $sql = 'CREATE TABLE IF NOT EXISTS ' . \DB::table_prefix($table_name) . ' LIKE ' . \DB::table_prefix('account_permission');
+                    \DB::query($sql)->execute();
+
+                    unset($sql);
+                }
             }
         }
         unset($row, $sites);
