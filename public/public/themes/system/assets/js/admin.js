@@ -98,7 +98,7 @@ $(function() {
 	});
 	
 	// activate SmartMenus
-	$('#admin-nav-menu').smartmenus({
+	$('.navbar-smart-menu').smartmenus({
 		mainMenuSubOffsetY: 1,
 		subMenusSubOffsetX: 1,
 		subMenusSubOffsetY: -2

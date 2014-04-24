@@ -23,7 +23,7 @@ function checkAdminPermission($page_name = '', $action = '', $account_id = '')
 
 
 /**
- * language switch for admin page.
+ * language switch for admin page based on Bootstrap navbar.
  * 
  * @return string
  */
@@ -59,6 +59,45 @@ function languageSwitchAdminBootstrapNavbar()
 	
 	return $output;
 }// languageSwitchAdminBootstrapNavbar
+
+
+/**
+ * language switch for admin page based on generic navbar.
+ * 
+ * @return string
+ */
+function languageSwitchAdminNavbar()
+{
+    $languages = \Config::get('locales');
+	
+	ksort($languages);
+	
+	$current_lang = \Lang::get_lang();
+	$output = '<a href="#" onclick="return false;"><span class="glyphicon glyphicon-globe"></span> ' . $languages[$current_lang]['name'] . '</a>';
+	
+	if (is_array($languages) && !empty($languages)) {
+		$lang_options = '';
+		foreach ($languages as $language => $item) {
+			if ($language != $current_lang) {
+				$lang_options .= "\t" . '<li>' . \Html::anchor(\Uri::createNL($language . '/admin'), $item['name']) . '</li>' . "\n";
+			}
+		}
+	}
+	
+	if (isset($lang_options) && $lang_options != null) {
+		$lang_options = "\n" . '<ul>' . "\n"
+			. $lang_options
+			. '</ul>' . "\n\t\t\t\t\t\t\t\t";
+		
+		$output .= $lang_options;
+		
+		unset($lang_options);
+	}
+	
+	unset($current_lang, $item, $languages, $language);
+	
+	return $output;
+}// languageSwitchAdminNavbar
 
 
 /**

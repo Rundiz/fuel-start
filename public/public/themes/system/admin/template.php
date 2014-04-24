@@ -28,7 +28,7 @@ include __DIR__ . DS . 'inc_html_head.php';
 
 						<!-- Collect the nav links, forms, and other content for toggling -->
 						<div class="collapse navbar-collapse" id="fs-admin-navbar-collapse">
-							<ul id="admin-nav-menu" class="nav navbar-nav sm sm-bsblack">
+							<ul id="admin-nav-menu" class="nav navbar-nav sm sm-bsblack navbar-smart-menu">
 								<li>
 									<a href="#" onclick="return false;"><?php echo \Lang::get('admin_website'); ?></a>
 									<ul>
@@ -98,10 +98,19 @@ include __DIR__ . DS . 'inc_html_head.php';
 									</ul>
 								</li>
 							</ul>
-							<ul class="nav navbar-nav navbar-right">
-								<li><a href="#" onclick="return false;" class="non-link-navbar"><span class="glyphicon glyphicon-user"></span> <?php echo \Lang::get('admin_hello_admin', array('displayname' => $cookie_admin['account_display_name'])); ?></a></li>
-								<li class="dropdown<?php echo $pc_class; ?>"><?php echo languageSwitchAdminBootstrapNavbar(); ?></li>
-								<li><?php echo \Html::anchor('admin/logout', '<span class="glyphicon glyphicon-log-out"></span> ' . \Lang::get('admin_logout')); ?></li>
+							<ul class="nav navbar-nav navbar-right sm sm-bsblack navbar-smart-menu">
+								<li><?php echo languageSwitchAdminNavbar(); ?></li>
+								<li>
+ 									<a href="#" onclick="return false;">
+ 										<span class="glyphicon glyphicon-user"></span> 
+ 										<?php echo \Lang::get('admin_hello_admin', array('displayname' => $cookie_admin['account_display_name'])); ?>
+ 									</a>
+ 									<ul>
+ 										<?php if (checkAdminPermission('account_perm', 'account_edit_perm')) { ?><li><?php echo \Html::anchor('admin/account/edit', \Lang::get('admin_edit_my_account')); ?></li><?php } ?> 
+ 										<li><?php echo \Html::anchor('admin/logout', \Lang::get('admin_logout')); ?></li>
+ 									</ul>
+								</li>
+								
 							</ul>
 						</div><!-- /.navbar-collapse -->
 					</div>
