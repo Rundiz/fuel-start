@@ -223,9 +223,11 @@ html, body {
 }
 
 
-.tableFloatingHeader {
-	background: #eee;
+.tableWithFloatingHeader.floatThead-table {
 	z-index: 1;
+}
+.tableWithFloatingHeader thead th {
+	background: #fff;
 }
 
 
