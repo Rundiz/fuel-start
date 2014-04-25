@@ -184,6 +184,8 @@ class Model_Accounts extends \Orm\Model
         if ($query->count() > 0) {
             // found
             $row = $query->get_one();
+            // clear cache
+            \Extension\Cache::deleteCache('model.accounts-checkAccount-' . \Model_Sites::getSiteId() . '-' . $row->account_id);
 
             // check enabled account.
             if ($row->account_status == '1') {
@@ -1156,6 +1158,8 @@ class Model_Accounts extends \Orm\Model
         if ($query->count() > 0) {
             // found
             $row = $query->get_one();
+            // clear cache
+            \Extension\Cache::deleteCache('model.accounts-checkAccount-' . \Model_Sites::getSiteId() . '-' . $row->account_id);
 
             // check enabled account.
             if ($row->account_status == '1') {
