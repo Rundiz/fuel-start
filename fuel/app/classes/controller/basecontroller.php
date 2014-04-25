@@ -1,9 +1,12 @@
 <?php
 /**
- * Base Controller
+ * Base Controller of Fuel Start
  *
+ * @package FuelStart
+ * @version 1.5.4
  * @author Vee W.
  * @license http://opensource.org/licenses/MIT
+ * @link http://okvee.net/th/web-resources/download/fuel-start
  *
  */
 
@@ -25,7 +28,7 @@ abstract class Controller_BaseController extends \Controller
         }
 
         // fix changed current language but autoload not reload
-        \Lang::load('fslang', 'fslang');
+        \Lang::load('fslang');
 
         // call web cron to run tasks (including purge old login history)
         \Library\WebCron::forge()->init();

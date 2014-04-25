@@ -15,7 +15,7 @@ class Controller_Admin_Account extends \Controller_AdminController
         parent::__construct();
 
         // load language
-        \Lang::load('account', 'account');
+        \Lang::load('account');
     }// __construct
 
 
@@ -27,26 +27,29 @@ class Controller_Admin_Account extends \Controller_AdminController
     public function _define_permission()
     {
         // return array('controller page name' => array('action 1', 'action 2', 'action 3', 'a lot more action. up to you...'));
-        return array('account.account_perm' => array('account.account_viewusers_perm', 'account.account_add_perm', 'account.account_edit_perm', 'account.account_delete_perm', 'account.account_viewlogin_log_perm', 'account.account_deletelogin_log_perm'));
+        return array('account_perm' => array('account_viewusers_perm', 'account_add_perm', 'account_edit_perm', 'account_delete_perm', 'account_viewlogin_log_perm', 'account_deletelogin_log_perm'));
     }// _define_permission
 
 
     public function action_add()
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+        
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_add_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_add_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // load language
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         // load config from db.
         $cfg_values = array('allow_avatar', 'avatar_size', 'avatar_allowed_types', 'site_timezone');
@@ -123,19 +126,19 @@ class Controller_Admin_Account extends \Controller_AdminController
             // validate form.
             $validate = \Validation::forge();
             $validate->add_callable(new \Extension\FsValidate());
-            $validate->add('account_username', \Lang::get('account.account_username'), array(), array('required', 'noSpaceBetweenText'));
-            $validate->add('account_email', \Lang::get('account.account_email'), array(), array('required', 'valid_email'))->add_rule('uniqueDB', 'accounts.account_email');
-            $validate->add('account_password', \Lang::get('account.account_password'), array(), array('required'));
-            $validate->add('account_display_name', \Lang::get('account.account_display_name'), array(), array('required'));
-            $validate->add('account_birthdate', \Lang::get('account.account_birthdate'))->add_rule('valid_date', 'Y-m-d');
-            $validate->add('account_timezone', \Lang::get('account.account_timezone'), array(), array('required'));
-            $validate->add('account_status', \Lang::get('account.account_status'), array(), array('required'));
-            $validate->add('level_group_id', \Lang::get('account.account_role'), array(), array('required'));
+            $validate->add('account_username', \Lang::get('account_username'), array(), array('required', 'noSpaceBetweenText'));
+            $validate->add('account_email', \Lang::get('account_email'), array(), array('required', 'valid_email'))->add_rule('uniqueDB', 'accounts.account_email');
+            $validate->add('account_password', \Lang::get('account_password'), array(), array('required'));
+            $validate->add('account_display_name', \Lang::get('account_display_name'), array(), array('required'));
+            $validate->add('account_birthdate', \Lang::get('account_birthdate'))->add_rule('valid_date', 'Y-m-d');
+            $validate->add('account_timezone', \Lang::get('account_timezone'), array(), array('required'));
+            $validate->add('account_status', \Lang::get('account_status'), array(), array('required'));
+            $validate->add('level_group_id', \Lang::get('account_role'), array(), array('required'));
 
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -150,12 +153,12 @@ class Controller_Admin_Account extends \Controller_AdminController
                             'form_status',
                             array(
                                 'form_status' => 'success',
-                                'form_status_message' => \Lang::get('account.account_created')
+                                'form_status_message' => \Lang::get('account_created')
                             )
                         );
                     }
 
-                    \Response::redirect(\Uri::create('admin/account'));
+                    \Response::redirect($redirect);
                 } else {
                     $output['form_status'] = 'error';
                     $output['form_status_message'] = $result;
@@ -189,7 +192,7 @@ class Controller_Admin_Account extends \Controller_AdminController
         }
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_accounts'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_accounts'));
         $output['page_link'][] = html_tag('link', array('rel' => 'stylesheet', 'href' => Uri::createNL(\Theme::instance()->asset_path('css/datepicker.css'))));
         // <head> output ----------------------------------------------------------------------------------------------
 
@@ -204,7 +207,7 @@ class Controller_Admin_Account extends \Controller_AdminController
         }
 
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_edit_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm') == false) {
             return false;
         }
 
@@ -216,7 +219,7 @@ class Controller_Admin_Account extends \Controller_AdminController
         }
 
         // load language
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         // get target user data
         $row = \Model_Accounts::find($account_id);
@@ -234,7 +237,7 @@ class Controller_Admin_Account extends \Controller_AdminController
             // no
             $output = array(
                 'form_status' => 'error',
-                'form_status_message' => \Lang::get('account.account_you_cannot_edit_account_that_contain_role_higher_than_yours')
+                'form_status_message' => \Lang::get('account_you_cannot_edit_account_that_contain_role_higher_than_yours')
             );
             $output['result'] = false;
         } else {
@@ -256,25 +259,31 @@ class Controller_Admin_Account extends \Controller_AdminController
 
     public function action_delete_log($account_id = '')
     {
+        // clear redirect referrer
+        \Session::delete('submitted_redirect');
+        
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+        
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_deletelogin_log_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_deletelogin_log_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         if (!is_numeric($account_id)) {
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // load language
-        \Lang::load('account', 'account');
-        \Lang::load('accountlogins', 'accountlogins');
+        \Lang::load('account');
+        \Lang::load('accountlogins');
 
         $act = trim(\Input::post('act'));
 
@@ -288,31 +297,30 @@ class Controller_Admin_Account extends \Controller_AdminController
         }
 
         // go back
-        if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
-            \Response::redirect(\Input::referrer());
-        } else {
-            \Response::redirect('admin/account');
-        }
+        \Response::redirect($redirect);
     }// action_delete_log
 
 
     public function action_edit($account_id = '')
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+        
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_edit_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // if editing guest.
         if ($account_id == '0') {
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // if no account id, get current user's' account id
@@ -323,13 +331,13 @@ class Controller_Admin_Account extends \Controller_AdminController
             } else {
                 unset($cookie);
 
-                \Response::redirect(\Uri::create('admin/account'));
+                \Response::redirect($redirect);
             }
             unset($cookie);
         }
 
         // load language
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         // load config from db.
         $cfg_values = array('allow_avatar', 'avatar_size', 'avatar_allowed_types', 'site_timezone');
@@ -362,9 +370,10 @@ class Controller_Admin_Account extends \Controller_AdminController
         $output['account_id'] = $account_id;
 
         if ($row == null) {
+            // not found selected user.
             unset($config, $output, $row);
 
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // loop set form field.
@@ -381,10 +390,10 @@ class Controller_Admin_Account extends \Controller_AdminController
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('account.account_you_cannot_edit_account_that_contain_role_higher_than_yours')
+                    'form_status_message' => \Lang::get('account_you_cannot_edit_account_that_contain_role_higher_than_yours')
                 )
             );
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // if form submitted --------------------------------------------------------------------------------------------
@@ -435,18 +444,18 @@ class Controller_Admin_Account extends \Controller_AdminController
             // validate form.
             $validate = \Validation::forge();
             $validate->add_callable(new \Extension\FsValidate());
-            $validate->add('account_username', \Lang::get('account.account_username'), array(), array('noSpaceBetweenText'));
-            $validate->add('account_email', \Lang::get('account.account_email'), array(), array('required', 'valid_email'));
-            $validate->add('account_display_name', \Lang::get('account.account_display_name'), array(), array('required'));
-            $validate->add('account_birthdate', \Lang::get('account.account_birthdate'))->add_rule('valid_date', 'Y-m-d');
-            $validate->add('account_timezone', \Lang::get('account.account_timezone'), array(), array('required'));
-            $validate->add('account_status', \Lang::get('account.account_status'), array(), array('required'));
-            $validate->add('level_group_id', \Lang::get('account.account_role'), array(), array('required'));
+            $validate->add('account_username', \Lang::get('account_username'), array(), array('noSpaceBetweenText'));
+            $validate->add('account_email', \Lang::get('account_email'), array(), array('required', 'valid_email'));
+            $validate->add('account_display_name', \Lang::get('account_display_name'), array(), array('required'));
+            $validate->add('account_birthdate', \Lang::get('account_birthdate'))->add_rule('valid_date', 'Y-m-d');
+            $validate->add('account_timezone', \Lang::get('account_timezone'), array(), array('required'));
+            $validate->add('account_status', \Lang::get('account_status'), array(), array('required'));
+            $validate->add('level_group_id', \Lang::get('account_role'), array(), array('required'));
 
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -461,12 +470,12 @@ class Controller_Admin_Account extends \Controller_AdminController
                             'form_status',
                             array(
                                 'form_status' => 'success',
-                                'form_status_message' => \Lang::get('admin.admin_saved')
+                                'form_status_message' => \Lang::get('admin_saved')
                             )
                         );
                     }
 
-                    \Response::redirect(\Uri::create('admin/account'));
+                    \Response::redirect($redirect);
                 } else {
                     $output['form_status'] = 'error';
                     $output['form_status_message'] = $result;
@@ -500,7 +509,7 @@ class Controller_Admin_Account extends \Controller_AdminController
         }
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_accounts'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_accounts'));
         $output['page_link'][] = html_tag('link', array('rel' => 'stylesheet', 'href' => Uri::createNL(\Theme::instance()->asset_path('css/datepicker.css'))));
         // <head> output ----------------------------------------------------------------------------------------------
 
@@ -510,20 +519,23 @@ class Controller_Admin_Account extends \Controller_AdminController
 
     public function action_index()
     {
+        // clear redirect referrer
+        \Session::delete('submitted_redirect');
+        
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_viewusers_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_viewusers_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
             \Response::redirect(\Uri::create('admin'));
         }
 
         // load language
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         // read flash message for display errors.
         $form_status = \Session::get_flash('form_status');
@@ -534,14 +546,14 @@ class Controller_Admin_Account extends \Controller_AdminController
         unset($form_status);
 
         // set sort variable for sortable in views.
-        $next_sort = \Security::strip_tags(trim(\Input::get('sort')));
-        if ($next_sort == null || $next_sort == 'ASC') {
+        $sort = \Security::strip_tags(trim(\Input::get('sort')));
+        if ($sort == null || $sort == 'ASC') {
             $next_sort = 'DESC';
         } else {
             $next_sort = 'ASC';
         }
         $output['next_sort'] = $next_sort;
-        unset($next_sort);
+        unset($next_sort, $sort);
 
         // search query
         $output['q'] = trim(\Input::get('q'));
@@ -549,7 +561,15 @@ class Controller_Admin_Account extends \Controller_AdminController
         // list accounts --------------------------------------------------------------------------------------------------
         $option['limit'] = \Model_Config::getval('content_admin_items_perpage');
         $option['offset'] = (trim(\Input::get('page')) != null ? ((int)\Input::get('page')-1)*$option['limit'] : 0);
-
+        if (trim(\Input::get('q')) != null) {
+            $option['search'] = trim(\Input::get('q'));
+        }
+        if (\Security::strip_tags(trim(\Input::get('orders'))) != null) {
+            $option['orders'] = \Security::strip_tags(trim(\Input::get('orders')));
+        }
+        if (\Security::strip_tags(trim(\Input::get('sort'))) != null) {
+            $option['sort'] = \Security::strip_tags(trim(\Input::get('sort')));
+        }
         $list_accounts = \Model_Accounts::listAccounts($option);
 
         // pagination config
@@ -576,7 +596,7 @@ class Controller_Admin_Account extends \Controller_AdminController
         unset($config, $list_accounts, $option, $pagination);
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_accounts'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_accounts'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/account/account_v', $output, false);
@@ -587,12 +607,13 @@ class Controller_Admin_Account extends \Controller_AdminController
     {
         $ids = \Input::post('id');
         $act = trim(\Input::post('act'));
+        $redirect = $this->getAndSetSubmitRedirection();
 
         if (\Extension\NoCsrf::check()) {
             // if action is delete.
             if ($act == 'del') {
                 // check permission.
-                if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
+                if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect($redirect);}
 
                 if (is_array($ids)) {
                     foreach ($ids as $id) {
@@ -613,12 +634,15 @@ class Controller_Admin_Account extends \Controller_AdminController
                         if (\Model_Accounts::forge()->canIAddEditAccount($level_group) == true) {
                             // delete account.
                             \Model_Accounts::deleteAccount($id);
+                            
+                            // clear cache
+                            \Extension\Cache::deleteCache('model.accounts-checkAccount-'.\Model_Sites::getSiteId().'-'.$id);
                         }
                     }
                 }
             } elseif ($act == 'enable') {
                 // check permission.
-                if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
+                if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect($redirect);}
 
                 if (is_array($ids)) {
                     foreach ($ids as $id) {
@@ -648,11 +672,14 @@ class Controller_Admin_Account extends \Controller_AdminController
 
                             unset($entry);
                         }
+
+                        // clear cache
+                        \Extension\Cache::deleteCache('model.accounts-checkAccount-'.\Model_Sites::getSiteId().'-'.$id);
                     }
                 }
             } elseif ($act == 'disable') {
                 // check permission.
-                if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_delete_perm') == false) {\Response::redirect(\Uri::create('admin/account'));}
+                if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm') == false) {\Response::redirect($redirect);}
 
                 if (is_array($ids)) {
                     foreach ($ids as $id) {
@@ -682,42 +709,44 @@ class Controller_Admin_Account extends \Controller_AdminController
 
                             unset($entry);
                         }
+
+                        // clear cache
+                        \Extension\Cache::deleteCache('model.accounts-checkAccount-'.\Model_Sites::getSiteId().'-'.$id);
                     }
                 }
             }
         }
 
         // go back
-        if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
-            \Response::redirect(\Input::referrer());
-        } else {
-            \Response::redirect('admin/account');
-        }
+        \Response::redirect($redirect);
     }// action_multiple
 
 
     public function action_viewlogins($account_id = '')
     {
+        // set redirect url
+        $redirect = $this->getAndSetSubmitRedirection();
+        
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('account.account_perm', 'account.account_viewlogin_log_perm') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_viewlogin_log_perm') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // viewing guest logins?
         if ($account_id == '0') {
-            \Response::redirect(\Uri::create('admin/account'));
+            \Response::redirect($redirect);
         }
 
         // load language
-        \Lang::load('account', 'account');
-        \Lang::load('accountlogins', 'accountlogins');
+        \Lang::load('account');
+        \Lang::load('accountlogins');
 
         // read flash message for display errors.
         $form_status = \Session::get_flash('form_status');
@@ -730,7 +759,8 @@ class Controller_Admin_Account extends \Controller_AdminController
         // get accounts data for this account.
         $account = \Model_Accounts::find($account_id);
         if ($account == null) {
-            \Response::redirect(\Uri::create('admin/account'));
+            // not found account.
+            \Response::redirect($redirect);
         }
         $output['account'] = $account;
         $output['account_id'] = $account_id;
@@ -749,7 +779,12 @@ class Controller_Admin_Account extends \Controller_AdminController
         // list logins -----------------------------------------------------------------------------------------------------
         $option['limit'] = \Model_Config::getval('content_admin_items_perpage');
         $option['offset'] = (trim(\Input::get('page')) != null ? ((int)\Input::get('page')-1)*$option['limit'] : 0);
-
+        if (\Security::strip_tags(trim(\Input::get('orders'))) != null) {
+            $option['orders'] = \Security::strip_tags(trim(\Input::get('orders')));
+        }
+        if (\Security::strip_tags(trim(\Input::get('sort'))) != null) {
+            $option['sort'] = \Security::strip_tags(trim(\Input::get('sort')));
+        }
         $list_logins = \Model_AccountLogins::listLogins(array('account_id' => $account_id), $option);
 
         // pagination config
@@ -776,11 +811,35 @@ class Controller_Admin_Account extends \Controller_AdminController
         unset($config, $list_logins, $option, $pagination);
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_view_login_history'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_view_login_history'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/account/account_viewlogins_v', $output, false);
     }// action_viewlogins
+    
+    
+    /**
+     * get and set submit redirection url
+     * 
+     * @return string
+     */
+    private function getAndSetSubmitRedirection()
+    {
+        $session = \Session::forge();
+        
+        if ($session->get('submitted_redirect') == null) {
+            if (\Input::referrer() != null && \Input::referrer() != \Uri::main()) {
+                $session->set('submitted_redirect', \Input::referrer());
+                return \Input::referrer();
+            } else {
+                $redirect_uri = 'admin/account';
+                $session->set('submitted_redirect', $redirect_uri);
+                return $redirect_uri;
+            }
+        } else {
+            return $session->get('submitted_redirect');
+        }
+    }// getAndSetRedirection
 
 
 }

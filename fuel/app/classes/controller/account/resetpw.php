@@ -30,7 +30,7 @@ class Controller_Account_Resetpw extends \Controller_BaseController
     public function action_index($account_id = '', $confirm_code = '', $action = '')
     {
         // load language
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         // get config
         $cfg_values = array('member_confirm_wait_time');
@@ -46,7 +46,7 @@ class Controller_Account_Resetpw extends \Controller_BaseController
             $output['hide_form'] = true;
 
             $output['form_status'] = 'error';
-            $output['form_status_message'] = \Lang::get('account.account_invalid_reset_password_request_code');
+            $output['form_status_message'] = \Lang::get('account_invalid_reset_password_request_code');
         }
 
         // if cancel reset password
@@ -61,7 +61,7 @@ class Controller_Account_Resetpw extends \Controller_BaseController
             $row->save();
 
             $output['form_status'] = 'success';
-            $output['form_status_message'] = \Lang::get('account.account_your_reset_password_request_was_cancelled');
+            $output['form_status_message'] = \Lang::get('account_your_reset_password_request_was_cancelled');
         }
 
         // form submitted
@@ -70,13 +70,13 @@ class Controller_Account_Resetpw extends \Controller_BaseController
 
             // validate form.
             $validate = \Validation::forge();
-            $validate->add('account_password', \Lang::get('account.account_password'), array(), array('required'));
-            $validate->add('account_confirm_password', \Lang::get('account.account_confirm_password'), array(), array('required'))->add_rule('match_field', 'account_password');
+            $validate->add('account_password', \Lang::get('account_password'), array(), array('required'));
+            $validate->add('account_confirm_password', \Lang::get('account_confirm_password'), array(), array('required'))->add_rule('match_field', 'account_password');
 
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -88,7 +88,7 @@ class Controller_Account_Resetpw extends \Controller_BaseController
                 if (time()-$row->account_confirm_code_since > $cfg_member_confirm_wait_time) {
                     // confirm wait time is too long than limit.
                     $output['form_status'] = 'error';
-                    $output['form_status_message'] = \Lang::get('account.account_reset_password_time_expired');
+                    $output['form_status_message'] = \Lang::get('account_reset_password_time_expired');
 
                     // empty confirm code.
                     $row->account_confirm_code = null;
@@ -103,7 +103,7 @@ class Controller_Account_Resetpw extends \Controller_BaseController
 
                     $output['hide_form'] = true;
                     $output['form_status'] = 'success';
-                    $output['form_status_message'] = \Lang::get('account.account_reset_password_successfully');
+                    $output['form_status_message'] = \Lang::get('account_reset_password_successfully');
                 }
             }
 
@@ -113,7 +113,7 @@ class Controller_Account_Resetpw extends \Controller_BaseController
         unset($config, $query, $row);
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_reset_password'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_reset_password'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('front/templates/account/resetpw_v', $output, false);

@@ -47,15 +47,14 @@ include_once __DIR__ . DS . 'functions.php';
 		}
 		?> 
 
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/smoothness/jquery-ui-1.10.4.custom.min.css')); ?>">
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap.min.css')); ?>">
-		<?php /*<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap-theme.min.css')); ?>">*/ ?> 
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/font-awesome.min.css')); ?>">
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/sm-core-css.css')); ?>">
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/sm-bsblack/sm-bsblack.css')); ?>">
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('js/chosen/chosen.min.css')); ?>">
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('js/icheck/skins/minimal/_all.css')); ?>">
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/admin.css')); ?>">
+		<?php echo \Asset::css('ui-smoothness/jquery-ui.min.css'); ?>
+		<?php echo \Asset::css('bootstrap.min.css'); ?>
+		<?php echo $theme->asset->css('font-awesome.min.css'); ?>
+		<?php echo $theme->asset->css('smartmenu/sm-core-css.css'); ?>
+		<?php echo $theme->asset->css('smartmenu/sm-bsblack/sm-bsblack.css'); ?>
+		<?php echo $theme->asset->css('chosen/chosen.min.css'); ?>
+		<?php echo $theme->asset->css('icheck/skins/minimal/_all.css'); ?>
+		<?php echo $theme->asset->css('admin.css'); ?>
 		<?php 
 		// render <link>
 		if (isset($page_link) && is_array($page_link)) {
@@ -66,9 +65,9 @@ include_once __DIR__ . DS . 'functions.php';
 		}
 		?> 
 
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/modernizr.min.js')); ?>"></script>
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/respond/respond.min.js')); ?>"></script>
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/jquery-1.11.0.min.js')); ?>"></script>
+		<?php echo \Asset::js('modernizr.min.js'); ?>
+		<?php echo \Asset::js('respond/respond.min.js'); ?>
+		<?php echo \Asset::js('jquery.min.js'); ?>
 		<?php 
 		// render <script>
 		if (isset($page_script) && is_array($page_script)) {
@@ -89,6 +88,7 @@ include_once __DIR__ . DS . 'functions.php';
 		<script type="text/javascript">
 			// required js variables for use in .js file.
 			var base_url = '<?php echo \Uri::base(); ?>';
+			var site_url = '<?php echo \Uri::create(); ?>/';
 			var theme_assets = '<?php echo Uri::createNL(\Theme::instance()->asset_path('')); ?>';
 			var csrf_name = '<?php echo \Config::get('security.csrf_token_key'); ?>';
 			var nocsrf_val = '<?php echo \Extension\NoCsrf::generate('', true); ?>';

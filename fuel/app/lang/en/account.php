@@ -79,6 +79,7 @@ $lang['account_role'] = 'Role';
 $lang['account_role_and_status'] = 'Role and status';
 $lang['account_saved'] = 'Your data has beed saved.';
 $lang['account_send'] = 'Send';
+$lang['account_set_permission'] = 'Set permission';
 $lang['account_simultaneous_login_detected'] = 'Simultaneous login detected. There is another logged in to your account. If this is not you, please login again and change your password immediately.';
 $lang['account_status'] = 'Status';
 $lang['account_status_text'] = 'Reason for disabled';

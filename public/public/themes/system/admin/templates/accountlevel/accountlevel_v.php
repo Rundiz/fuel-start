@@ -1,9 +1,9 @@
-<h1><?php echo \Lang::get('accountlv.accountlv_role'); ?></h1>
+<h1><?php echo \Lang::get('accountlv_role'); ?></h1>
 
 <div class="row cmds">
 	<div class="col-sm-6">
-		<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_add_perm')) {echo \Html::anchor('admin/account-level/add', \Lang::get('admin.admin_add'), array('class' => 'btn btn-default'));} ?> 
-		| <?php printf(\Lang::get('admin.admin_total', array('total' => (isset($list_levels['total']) ? $list_levels['total'] : '0')))); ?>
+		<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_add_perm')) {echo \Html::anchor('admin/account-level/add', \Lang::get('admin_add'), array('class' => 'btn btn-default'));} ?> 
+		| <?php printf(\Lang::get('admin_total', array('total' => (isset($list_levels['total']) ? $list_levels['total'] : '0')))); ?>
 	</div>
 </div>
 
@@ -21,9 +21,9 @@
 				<tr>
 					<th class="check-column"><input type="checkbox" name="id_all" value="" onclick="checkAll(this.form,'id[]',this.checked)" /></th>
 					<th style="width: 24px;"></th>
-					<th><?php echo \Lang::get('accountlv.accountlv_level_priority'); ?> <span class="glyphicon glyphicon-question-sign bootstrap-tooltip" data-toggle="tooltip" data-original-title="<?php echo \Lang::get('accountlv.accountlv_higher_priority_will_come_first'); ?>"></span></th>
-					<th><?php echo \Lang::get('accountlv.accountlv_role'); ?></th>
-					<th><?php echo \Lang::get('accountlv.accountlv_description'); ?></th>
+					<th><?php echo \Lang::get('accountlv_level_priority'); ?> <span class="glyphicon glyphicon-question-sign bootstrap-tooltip" data-toggle="tooltip" data-original-title="<?php echo \Lang::get('accountlv_higher_priority_will_come_first'); ?>"></span></th>
+					<th><?php echo \Lang::get('accountlv_role'); ?></th>
+					<th><?php echo \Lang::get('accountlv_description'); ?></th>
 					<th></th>
 				</tr>
 			</thead>
@@ -31,9 +31,9 @@
 				<tr>
 					<th class="check-column"><input type="checkbox" name="id_all" value="" onclick="checkAll(this.form,'id[]',this.checked)" /></th>
 					<th></th>
-					<th><?php echo \Lang::get('accountlv.accountlv_level_priority'); ?> <span class="glyphicon glyphicon-question-sign bootstrap-tooltip" data-toggle="tooltip" data-original-title="<?php echo \Lang::get('accountlv.accountlv_higher_priority_will_come_first'); ?>"></span></th>
-					<th><?php echo \Lang::get('accountlv.accountlv_role'); ?></th>
-					<th><?php echo \Lang::get('accountlv.accountlv_description'); ?></th>
+					<th><?php echo \Lang::get('accountlv_level_priority'); ?> <span class="glyphicon glyphicon-question-sign bootstrap-tooltip" data-toggle="tooltip" data-original-title="<?php echo \Lang::get('accountlv_higher_priority_will_come_first'); ?>"></span></th>
+					<th><?php echo \Lang::get('accountlv_role'); ?></th>
+					<th><?php echo \Lang::get('accountlv_description'); ?></th>
 					<th></th>
 				</tr>
 			</tfoot>
@@ -47,15 +47,15 @@
 					<td><?php echo $row->level_name; ?></td>
 					<td><?php echo $row->level_description; ?></td>
 					<td>
-						<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_edit_perm')) { ?> 
-						<?php echo \Extension\Html::anchor('admin/account-level/edit/' . $row->level_group_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin.admin_edit'), array('class' => 'btn btn-default btn-xs' . (in_array($row->level_group_id, $disallowed_edit_delete) ? ' disabled' : null))); ?> 
+						<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_edit_perm')) { ?> 
+						<?php echo \Extension\Html::anchor('admin/account-level/edit/' . $row->level_group_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin_edit'), array('class' => 'btn btn-default btn-xs' . (in_array($row->level_group_id, $disallowed_edit_delete) ? ' disabled' : null))); ?> 
 						<?php } ?> 
 					</td>
 				</tr>
 				<?php } // endforeach; ?> 
 				<?php } else { ?> 
 				<tr>
-					<td colspan="6"><?php echo \Lang::get('fslang.fslang_no_data'); ?></td>
+					<td colspan="6"><?php echo \Lang::get('fslang_no_data'); ?></td>
 				</tr>
 				<?php } // endif; ?> 
 			</tbody>
@@ -66,10 +66,10 @@
 		<div class="col-sm-6">
 			<select name="act" class="form-control select-inline chosen-select">
 				<option value="" selected="selected"></option>
-				<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv.accountlv_perm', 'accountlv.accountlv_delete_perm')) { ?><option value="del"><?php echo \Lang::get('admin.admin_delete'); ?></option><?php } ?> 
+				<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_delete_perm')) { ?><option value="del"><?php echo \Lang::get('admin_delete'); ?></option><?php } ?> 
 			</select>
-			<button type="submit" class="bb-button btn btn-warning"><?php echo \Lang::get('admin.admin_submit'); ?></button>
-			<?php echo \Extension\Html::anchor('admin', \Lang::get('admin.admin_cancel'), array('class' => 'btn btn-default')); ?> 
+			<button type="submit" class="bb-button btn btn-warning"><?php echo \Lang::get('admin_submit'); ?></button>
+			<?php echo \Extension\Html::anchor('admin', \Lang::get('admin_cancel'), array('class' => 'btn btn-default')); ?> 
 		</div>
 		<div class="col-sm-6">
 			

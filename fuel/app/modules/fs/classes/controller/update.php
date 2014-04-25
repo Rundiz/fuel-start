@@ -27,10 +27,12 @@ class Controller_Update extends \Controller
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } else {
                 // update to 1.5 first time
                 $result = \Fs\update0001::run();
+                // update to 1.5.4
+                $result = \Fs\update0002::run();
 
                 if ($result === true) {
                     $output['hide_form'] = true;

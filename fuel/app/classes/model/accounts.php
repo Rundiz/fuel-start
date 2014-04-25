@@ -34,6 +34,12 @@ class Model_Accounts extends \Orm\Model
             'key_to' => 'account_id',
             'cascade_delete' => true,
         ),
+        'account_permission' => array(
+            'model_to' => 'Model_AccountPermission',
+            'key_from' => 'account_id',
+            'key_to' => 'account_id',
+            'cascade_delete' => true,
+        ),
         'account_sites' => array(
             'key_from' => 'account_id',
             'model_to' => 'Model_AccountSites',
@@ -59,14 +65,14 @@ class Model_Accounts extends \Orm\Model
 
         // check permission that can i add or edit this account
         if (static::instance()->canIAddEditAccount($data_level['level_group_id']) == false) {
-            return \Lang::get('account.account_you_cannot_add_account_that_contain_role_higher_than_yours');
+            return \Lang::get('account_you_cannot_add_account_that_contain_role_higher_than_yours');
         }
 
         // check for duplicate account (username)
         $query = static::query()->where('account_username', $data['account_username']);
         if ($query->count() > 0) {
             unset($query);
-            return \Lang::get('account.account_username_already_exists');
+            return \Lang::get('account_username_already_exists');
         }
         unset($query);
 
@@ -161,7 +167,7 @@ class Model_Accounts extends \Orm\Model
             return false;
         }
 
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         // set required var.
         if (!isset($data['account_username'])) {
@@ -185,7 +191,7 @@ class Model_Accounts extends \Orm\Model
                 // check password
                 if (static::instance()->checkPassword($data['account_password'], $row->account_password) === true) {
                     // check password passed
-                    if (\Model_AccountLevelPermission::checkAdminPermission('account.account_admin_login', 'account.account_admin_login', $row->account_id) === true) {
+                    if (\Model_AccountLevelPermission::checkAdminPermission('account_admin_login', 'account_admin_login', $row->account_id) === true) {
                         // generate session id for check simultaneous login
                         $session_id = \Session::key('session_id');
 
@@ -255,7 +261,7 @@ class Model_Accounts extends \Orm\Model
                         // record failed login
                         \Model_AccountLogins::forge()->recordLogin($row->account_id, 0, 'account_not_allow_to_login_to_admin_page');
 
-                        return \Lang::get('admin.admin_you_have_no_permission_to_access_this_page');
+                        return \Lang::get('admin_you_have_no_permission_to_access_this_page');
                     }
                 } else {
                     // check password failed, wrong password
@@ -264,7 +270,7 @@ class Model_Accounts extends \Orm\Model
 
                     unset($query, $row);
 
-                    return \Lang::get('account.account_wrong_username_or_password');
+                    return \Lang::get('account_wrong_username_or_password');
                 }
             } else {
                 // account disabled
@@ -273,21 +279,21 @@ class Model_Accounts extends \Orm\Model
 
                 unset($query);
 
-                return \Lang::get('account.account_was_disabled') . ' : ' . $row->account_status_text;
+                return \Lang::get('account_was_disabled') . ' : ' . $row->account_status_text;
             }
         }
 
         // not found account. login failed
         unset($query);
 
-        return \Lang::get('account.account_wrong_username_or_password');
+        return \Lang::get('account_wrong_username_or_password');
     }// adminLogin
 
 
     /**
      * can i add or edit account
      *
-     * @param array $level_groups
+     * @param array $level_groups target level groups
      * @return boolean
      */
     public function canIAddEditAccount($level_groups)
@@ -305,7 +311,7 @@ class Model_Accounts extends \Orm\Model
         unset($cookie);
 
         // get current user level group priority
-        $my_level = \Model_AccountLevel::query()->related(array('account_level_group'))->where('account_id', $account_id)->order_by('account_level_group.level_priority', 'DESC')->get_one();
+        $my_level = \Model_AccountLevel::query()->related(array('account_level_group'))->where('account_id', $account_id)->order_by('account_level_group.level_priority', 'ASC')->get_one();
         if ($my_level == null) {
             return false;
         }
@@ -350,55 +356,71 @@ class Model_Accounts extends \Orm\Model
         }
 
         $site_id = \Model_Sites::getSiteId(false);
+        
+        $cache_name = 'model.accounts-checkAccount-'
+                . $site_id . '-'
+                . $account_id . '-'
+                . \Extension\Security::formatString($account_username, 
+                    'alphanum_dash_underscore') . '-'
+                . \Extension\Security::formatString($account_email, 
+                    'alphanum_dash_underscore') . '-'
+                . \Extension\Security::formatString($account_online_code, 
+                    'alphanum_dash_underscore');
+        $cached = \Extension\Cache::getSilence($cache_name);
 
-        // check for matches id username and email. ---------------------------------------------------------------
-        $query = static::query()
-                ->where('account_id', $account_id)
-                ->where('account_username', $account_username)
-                ->where('account_email', $account_email)
-                ->where('account_status', 1);
+        if (false === $cached) {
+            // check for matches id username and email. ---------------------------------------------------------------
+            $query = static::query()
+                    ->where('account_id', $account_id)
+                    ->where('account_username', $account_username)
+                    ->where('account_email', $account_email)
+                    ->where('account_status', 1);
 
-        if ($query->count() > 0) {
-            $row = $query->get_one();
-            unset($query);
+            if ($query->count() > 0) {
+                $row = $query->get_one();
+                unset($query);
 
-            // if not allow simultaneous login. (if not allow login from many places)
-            if (\Model_Config::getval('simultaneous_login') == '0') {
-                if ($this->isSimultaneousLogin($account_id, $account_online_code, $site_id) == true) {
-                    unset($row);
+                // if not allow simultaneous login. (if not allow login from many places)
+                if (\Model_Config::getval('simultaneous_login') == '0') {
+                    if ($this->isSimultaneousLogin($account_id, $account_online_code, $site_id) == true) {
+                        unset($row);
 
-                    // log out
-                    static::logout(array('remove_online_code' => false));
+                        // log out
+                        static::logout(array('remove_online_code' => false));
 
-                    // load langauge for set error msg.
-                    \Lang::load('account', 'account');
+                        // load langauge for set error msg.
+                        \Lang::load('account');
 
-                    // set error message.
-                    \Session::set_flash(
-                        'form_status',
-                        array(
-                            'form_status' => 'error',
-                            'form_status_message' => \Lang::get('account.account_simultaneous_login_detected')
-                        )
-                    );
+                        // set error message.
+                        \Session::set_flash(
+                            'form_status',
+                            array(
+                                'form_status' => 'error',
+                                'form_status_message' => \Lang::get('account_simultaneous_login_detected')
+                            )
+                        );
 
-                    return false;
+                        return false;
+                    }
                 }
+
+                // check account passed! with or without simultaneous login check.
+                unset($row);
+                
+                \Cache::set($cache_name, true, 2592000);
+                return true;
             }
 
-            // check pass with or without simultaneous login check.
-            unset($row);
+            // not found account in db. or found but disabled
+            unset($query);
 
-            return true;
+            // log out
+            static::logout();
+
+            return false;
         }
-
-        // not found account in db. or found but disabled
-        unset($query);
-
-        // log out
-        static::logout();
-
-        return false;
+        
+        return $cached;
     }// checkAccount
 
 
@@ -428,6 +450,7 @@ class Model_Accounts extends \Orm\Model
     public static function confirmRegister(array $data = array())
     {
         // check username and confirm code.
+        // confirm register has no time limitation.
         $query = static::query()
                 ->where('account_username', $data['account_username'])
                 ->where('account_confirm_code', $data['account_confirm_code'])
@@ -436,7 +459,7 @@ class Model_Accounts extends \Orm\Model
         if ($query->count() <= 0) {
             // not found.
             unset($query);
-            return \Lang::get('account.account_your_confirm_register_code_is_invalid');
+            return \Lang::get('account_your_confirm_register_code_is_invalid');
         } else {
             $row = $query->get_one();
             unset($query);
@@ -491,14 +514,20 @@ class Model_Accounts extends \Orm\Model
                     // delete from account_fields table
                     \DB::delete($table_siteid_prefix . 'account_fields')->where('account_id', $account_id)->execute();
                     
+                    // delete from account_permission table
+                    \DB::delete($table_siteid_prefix . 'account_permission')->where('account_id', $account_id)->execute();
+                    
                     // @todo [multisite] more multi-site tables that has account_id related should be delete here.
                 }
             }
         }
-        unset($list_site_option, $site, $sites, $site_id, $table_siteid_prefix);
+        unset($list_site_option, $site, $sites, $table_siteid_prefix);
 
         // delete account now.
         static::find($account_id)->delete();// needs to use ::find() to delete in related table
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.accounts-checkAccount-'.$site_id.'-'.$account_id);
 
         return true;
     }// deleteAccount
@@ -558,14 +587,14 @@ class Model_Accounts extends \Orm\Model
 
         // check permission that can i add or edit this account
         if (static::instance()->canIAddEditAccount($data_level['level_group_id']) == false) {
-            return \Lang::get('account.account_you_cannot_edit_account_that_contain_role_higher_than_yours');
+            return \Lang::get('account_you_cannot_edit_account_that_contain_role_higher_than_yours');
         }
 
         // check for duplicate account (username)
         $query = static::query()->where('account_id', '!=', $data['account_id'])->where('account_username', $data['account_username']);
         if ($query->count() > 0) {
             unset($query);
-            return \Lang::get('account.account_username_already_exists');
+            return \Lang::get('account_username_already_exists');
         }
         unset($query);
 
@@ -577,7 +606,7 @@ class Model_Accounts extends \Orm\Model
             $query = static::query()->where('account_id', '!=', $data['account_id'])->where('account_email', $data['account_email']);
             if ($query->count() > 0) {
                 unset($query);
-                return \Lang::get('account.account_email_already_exists');
+                return \Lang::get('account_email_already_exists');
             }
             unset($query);
         } else {
@@ -605,7 +634,7 @@ class Model_Accounts extends \Orm\Model
                             'form_status',
                             array(
                                 'form_status' => 'success',
-                                'form_status_message' => \Lang::get('account.account_your_password_changed_please_login_again')
+                                'form_status_message' => \Lang::get('account_your_password_changed_please_login_again')
                             )
                         );
 
@@ -613,17 +642,17 @@ class Model_Accounts extends \Orm\Model
                     } else {
                         unset($config, $query, $row);
 
-                        return \Lang::get('account.account_wrong_password');
+                        return \Lang::get('account_wrong_password');
                     }
                 } else {
                     unset($config, $query);
 
-                    return \Lang::get('account.account_not_found_account_in_db');
+                    return \Lang::get('account_not_found_account_in_db');
                 }
             } else {
                 unset($config);
 
-                return \Lang::get('account.account_please_enter_your_new_password');
+                return \Lang::get('account_please_enter_your_new_password');
             }
         } else {
             // no password change
@@ -689,7 +718,7 @@ class Model_Accounts extends \Orm\Model
         // if set data_field to null means not update account fields
         if (is_array($data_fields) && !empty($data_fields)) {
             $af = new \Model_AccountFields();
-            $af->updateAccountFields($data['account_id'], $data_fields);
+            $af->updateAccountFields($account_id, $data_fields);
             unset($af);
         }
 
@@ -701,6 +730,9 @@ class Model_Accounts extends \Orm\Model
         }
 
         unset($config);
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.accounts-checkAccount-'.\Model_Sites::getSiteId().'-'.$account_id);
 
         return true;
     }// editAccount
@@ -831,7 +863,7 @@ class Model_Accounts extends \Orm\Model
     /**
      * list accounts
      *
-     * @param array $option
+     * @param array $option available options: [search], [orders], [sort], [offset], [limit], [list_for]
      * @return mixed
      */
     public static function listAccounts($option = array())
@@ -840,8 +872,8 @@ class Model_Accounts extends \Orm\Model
         $query = static::query();
 
         // search
-        if (trim(\Input::get('q')) != null) {
-            $search = trim(\Input::get('q'));
+        if (isset($option['search']) && $option['search'] != null) {
+            $search = $option['search'];
 
             $query->where_open()
                 ->where('account_id', 'LIKE', '%' . $search . '%')
@@ -863,15 +895,13 @@ class Model_Accounts extends \Orm\Model
         $output['total'] = $query->count();
 
         // sort and order
-        $orders = \Security::strip_tags(trim(\Input::get('orders')));
         $allowed_orders = array('account_id', 'account_username', 'account_email', 'account_display_name', 'account_firstname', 'account_middlename', 'account_lastname', 'account_birthdate', 'account_signature', 'account_timezone', 'account_language', 'account_create', 'account_create_gmt', 'account_last_login', 'account_last_login_gmt', 'account_status', 'account_status_text');
-        if ($orders == null || !in_array($orders, $allowed_orders)) {
-            $orders = 'account_id';
+        if (!isset($option['orders']) || (isset($option['orders']) && !in_array($option['orders'], $allowed_orders))) {
+            $option['orders'] = 'account_id';
         }
         unset($allowed_orders);
-        $sort = \Security::strip_tags(trim(\Input::get('sort')));
-        if ($sort == null || $sort != 'DESC') {
-            $sort = 'ASC';
+        if (!isset($option['sort'])) {
+            $option['sort'] = 'ASC';
         }
 
         // offset and limit
@@ -887,9 +917,9 @@ class Model_Accounts extends \Orm\Model
         }
 
         // get the results from sort, order, offset, limit.
-        $output['items'] = $query->order_by($orders, $sort)->offset($option['offset'])->limit($option['limit'])->get();
+        $output['items'] = $query->order_by($option['orders'], $option['sort'])->offset($option['offset'])->limit($option['limit'])->get();
 
-        unset($orders, $query, $sort);
+        unset($query);
 
         return $output;
     }// listAccounts
@@ -898,7 +928,7 @@ class Model_Accounts extends \Orm\Model
     /**
      * logout
      *
-     * @param array $data
+     * @param array $data options: site_id for logout with specific site id., account_id for logout target account, remove_online_code for remove online code that use to check simultaneous login.
      * @return boolean
      */
     public static function logout($data = array())
@@ -932,6 +962,9 @@ class Model_Accounts extends \Orm\Model
 
             unset($account_sites, $row);
         }
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.accounts-checkAccount-'.$data['site_id'] .'-'.$data['account_id']);
 
         return true;
     }// logout
@@ -967,7 +1000,7 @@ class Model_Accounts extends \Orm\Model
                 // found email already in use.
                 unset($config, $email_change, $query);
 
-                return \Lang::get('account.account_email_already_exists');
+                return \Lang::get('account_email_already_exists');
             } else {
                 $data['account_new_email'] = $data['account_email'];
             }
@@ -995,7 +1028,7 @@ class Model_Accounts extends \Orm\Model
                             'form_status',
                             array(
                                 'form_status' => 'success',
-                                'form_status_message' => \Lang::get('account.account_your_password_changed_please_login_again')
+                                'form_status_message' => \Lang::get('account_your_password_changed_please_login_again')
                             )
                         );
 
@@ -1003,17 +1036,17 @@ class Model_Accounts extends \Orm\Model
                     } else {
                         unset($config, $query, $row);
 
-                        return \Lang::get('account.account_wrong_password');
+                        return \Lang::get('account_wrong_password');
                     }
                 } else {
                     unset($config, $query);
 
-                    return \Lang::get('account.account_not_found_account_in_db');
+                    return \Lang::get('account_not_found_account_in_db');
                 }
             } else {
                 unset($config);
 
-                return \Lang::get('account.account_please_enter_your_new_password');
+                return \Lang::get('account_please_enter_your_new_password');
             }
         } else {
             // no password change
@@ -1089,6 +1122,9 @@ class Model_Accounts extends \Orm\Model
         }
 
         unset($config);
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.accounts-checkAccount-'.\Model_Sites::getSiteId().'-'.$data['account_id']);
 
         return true;
     }// memberEditProfile
@@ -1179,7 +1215,7 @@ class Model_Accounts extends \Orm\Model
 
                     unset($query, $row);
 
-                    return \Lang::get('account.account_wrong_username_or_password');
+                    return \Lang::get('account_wrong_username_or_password');
                 }
             } else {
                 // account disabled
@@ -1188,14 +1224,14 @@ class Model_Accounts extends \Orm\Model
 
                 unset($query);
 
-                return \Lang::get('account.account_was_disabled') . ' : ' . $row->account_status_text;
+                return \Lang::get('account_was_disabled') . ' : ' . $row->account_status_text;
             }
         }
 
         // not found account. login failed
         unset($query);
 
-        return \Lang::get('account.account_wrong_username_or_password');
+        return \Lang::get('account_wrong_username_or_password');
     }// memberLogin
 
 
@@ -1221,7 +1257,7 @@ class Model_Accounts extends \Orm\Model
             foreach ($disallow_usernames as $disallow_username) {
                 if ($data['account_username'] == trim($disallow_username)) {
                     unset($cfg, $disallow_username, $disallow_usernames);
-                    return \Lang::get('account.account_username_disallowed');
+                    return \Lang::get('account_username_disallowed');
                 }
             }
         }
@@ -1230,7 +1266,7 @@ class Model_Accounts extends \Orm\Model
         $query = static::query()->select('account_username')->where('account_username', $data['account_username']);
         if ($query->count() > 0) {
             unset($query);
-            return \Lang::get('account.account_username_already_exists');
+            return \Lang::get('account_username_already_exists');
         }
         unset($query);
 
@@ -1238,7 +1274,7 @@ class Model_Accounts extends \Orm\Model
         $query = static::query()->select('account_email')->where('account_email', $data['account_email']);
         if ($query->count() > 0) {
             unset($query);
-            return \Lang::get('account.account_email_already_exists');
+            return \Lang::get('account_email_already_exists');
         }
         unset($query);
 
@@ -1264,9 +1300,9 @@ class Model_Accounts extends \Orm\Model
         } else {
             $data['account_status'] = '0';
             if ($cfg['member_verification']['value'] == '2') {
-                $data['account_status_text'] = \Lang::get('account.account_waiting_for_admin_verification');
+                $data['account_status_text'] = \Lang::get('account_waiting_for_admin_verification');
             } else {
-                $data['account_status_text'] = \Lang::get('account.account_please_confirm_registration_from_your_email');
+                $data['account_status_text'] = \Lang::get('account_please_confirm_registration_from_your_email');
             }
         }
 
@@ -1333,7 +1369,7 @@ class Model_Accounts extends \Orm\Model
     /**
      * send email change confirmation for require user to confirm changed action.
      *
-     * @param array $data
+     * @param array $data required data array: confirm_code, confirm_code_since, account_username, account_email
      * @return mixed
      */
     public function sendEmailChangeConfirmation(array $data = array())
@@ -1357,12 +1393,12 @@ class Model_Accounts extends \Orm\Model
         $email = \Email::forge($config);
         $email->from(\Model_Config::getval('mail_sender_email'));
         $email->to($data['account_old_email']);
-        $email->subject(\Lang::get('account.account_please_confirm_change_email'));
+        $email->subject(\Lang::get('account_please_confirm_change_email'));
         $email->html_body($email_content);
         $email->alt_body(str_replace("\t", '', strip_tags($email_content)));
         if ($email->send() == false) {
             unset($cfg_member_confirm_wait_time, $config, $email, $email_content);
-            return \Lang::get('account.account_email_could_not_send');
+            return \Lang::get('account_email_could_not_send');
         }
 
         unset($cfg_member_confirm_wait_time, $config, $email, $email_content);
@@ -1373,7 +1409,7 @@ class Model_Accounts extends \Orm\Model
 
     /**
      * send register email
-     * @param array $data
+     * @param array $data required data array: account_username, account_email, account_confirm_code
      * @return boolean|string return true when send register email was done and return error text when error occured.
      */
     public function sendRegisterEmail($data = array(), $options = array())
@@ -1400,7 +1436,7 @@ class Model_Accounts extends \Orm\Model
             $email_content = str_replace("%username%", \Security::htmlentities($data['account_username']), $email_content);
             $email_content = str_replace('%register_confirm_link%', \Uri::create('account/confirm-register/'.urlencode($data['account_username']).'/'.urlencode($data['account_confirm_code'])), $email_content);
         } elseif (isset($email_content) && $email_content == null) {
-            return \Lang::get('account.account_unable_to_load_email_template');
+            return \Lang::get('account_unable_to_load_email_template');
         }
 
         // if need to send verify register
@@ -1412,16 +1448,16 @@ class Model_Accounts extends \Orm\Model
             $email->from($cfg['mail_sender_email']['value']);
             $email->to($data['account_email']);
             if ($member_verification == '1') {
-                $email->subject(\Lang::get('account.account_please_confirm_your_account'));
+                $email->subject(\Lang::get('account_please_confirm_your_account'));
             } elseif ($member_verification == '2') {
-                $email->subject(\Lang::get('account.account_please_verify_user_registration'));
+                $email->subject(\Lang::get('account_please_verify_user_registration'));
             }
             $email->html_body($email_content);
             $email->alt_body(str_replace("\t", '', strip_tags($email_content)));
             if ($email->send() == false) {
                 // email could not sent.
                 unset($cfg, $config, $email, $email_content, $member_verification, $not_verify_register);
-                return \Lang::get('account.account_email_could_not_send');
+                return \Lang::get('account_email_could_not_send');
             }
             unset($email, $email_content, $not_verify_register);
         }
@@ -1437,13 +1473,13 @@ class Model_Accounts extends \Orm\Model
             $email = \Email::forge($config);
             $email->from($cfg['mail_sender_email']['value']);
             $email->to(\Extension\Email::setEmails($cfg['member_admin_verify_emails']['value']));
-            $email->subject(\Lang::get('account.account_notify_admin_new_register_account', array('username' => $data['account_username'])));
+            $email->subject(\Lang::get('account_notify_admin_new_register_account', array('username' => $data['account_username'])));
             $email->html_body($email_content);
             $email->alt_body(str_replace("\t", '', strip_tags($email_content)));
             if ($email->send() == false) {
                 // email could not sent.
                 unset($cfg, $config, $email, $email_content, $member_verification, $not_verify_register);
-                return \Lang::get('account.account_email_could_not_send');
+                return \Lang::get('account_email_could_not_send');
             }
         }
 
@@ -1472,14 +1508,14 @@ class Model_Accounts extends \Orm\Model
             unset($query);
 
             if ($row->account_status == '0') {
-                return \Lang::get('account.account_was_disabled') . ' : ' . $row->account_status_text;
+                return \Lang::get('account_was_disabled') . ' : ' . $row->account_status_text;
             }
 
             $cfg_member_confirm_wait_time = \Model_Config::getval('member_confirm_wait_time')*60;
 
             // check confirm wait time. you need to wait until 'wait time' passed to send reset password request again.
             if ($row->account_confirm_code != null && time()-$row->account_confirm_code_since <= $cfg_member_confirm_wait_time) {
-                return \Lang::get('account.account_reset_password_please_wait_until', array('wait_til_time' => date('d F Y H:i:s', ($row->account_confirm_code_since+(\Model_Config::getval('member_confirm_wait_time')*60)))));
+                return \Lang::get('account_reset_password_please_wait_until', array('wait_til_time' => date('d F Y H:i:s', ($row->account_confirm_code_since+(\Model_Config::getval('member_confirm_wait_time')*60)))));
             }
 
             $account_new_password = \Str::random('alnum', 10);
@@ -1497,12 +1533,12 @@ class Model_Accounts extends \Orm\Model
             $email = \Email::forge($config);
             $email->from(\Model_Config::getval('mail_sender_email'));
             $email->to($data['account_email']);
-            $email->subject(\Lang::get('account.account_email_reset_password_request'));
+            $email->subject(\Lang::get('account_email_reset_password_request'));
             $email->html_body($email_content);
             $email->alt_body(str_replace("\t", '', strip_tags($email_content)));
             if ($email->send() == false) {
                 unset($account_confirm_code, $account_confirm_code_since, $account_new_password, $cfg_member_confirm_wait_time, $config, $email, $email_content, $query, $row);
-                return \Lang::get('account.account_email_could_not_send');
+                return \Lang::get('account_email_could_not_send');
             }
 
             unset($cfg_member_confirm_wait_time, $config, $email, $email_content);
@@ -1519,7 +1555,7 @@ class Model_Accounts extends \Orm\Model
         }
 
         // account not found.
-        return \Lang::get('account.account_didnot_found_entered_email');
+        return \Lang::get('account_didnot_found_entered_email');
     }// sendResetPasswordEmail
 
 
@@ -1544,7 +1580,7 @@ class Model_Accounts extends \Orm\Model
         unset($cfg_values);
 
         if ($config['allow_avatar']['value'] != '1') {
-            return \Lang::get('account.account_didnot_allow_avatar');
+            return \Lang::get('account_didnot_allow_avatar');
         }
 
         $upload = new \Extension\Upload();
@@ -1590,7 +1626,7 @@ class Model_Accounts extends \Orm\Model
                 // not enough memory to resize image.
                 unset($config, $upload, $upload_data);
 
-                return \Lang::get('account.account_not_enough_memory_to_resize_image');
+                return \Lang::get('account_not_enough_memory_to_resize_image');
             }
 
             // done.

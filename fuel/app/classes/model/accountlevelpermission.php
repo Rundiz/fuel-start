@@ -52,10 +52,11 @@ class Model_AccountLevelPermission extends \Orm\Model
 
     /**
      * check admin permission
-     * check permission match to user'sgroup_id page_name and action
-     * @param integer $account_id
+     * if account id is not set, get it from admin cookie.
+     * 
      * @param string $page_name
      * @param string $action
+     * @param integer $account_id
      * @return boolean
      */
     public static function checkAdminPermission($page_name = '', $action = '', $account_id = '')
@@ -68,52 +69,119 @@ class Model_AccountLevelPermission extends \Orm\Model
 
             unset($ca_account, $model_accounts);
         }
-
+        
+        // check level or role's permission.
+        $permission_result = static::checkLevelPermission($page_name, $action, $account_id);
+        
+        if ($permission_result === true) {
+            return true;
+        } else {
+            // level or role's permission return false. check user's permission.
+            return \Model_AccountPermission::checkAccountPermission($page_name, $action, $account_id);
+        }
+    }// checkAdminPermission
+    
+    
+    /**
+     * check level permission
+     * check permission based on user's level group id and page name and action.
+     * 
+     * @param string $page_name
+     * @param string $action
+     * @param integer $account_id
+     * @return boolean
+     */
+    private static function checkLevelPermission($page_name = '', $action = '', $account_id = '')
+    {
         // check for required attribute
         if (!is_numeric($account_id) || $page_name == null || $action == null) {
             return false;
         }
 
         if ($account_id == '1') {return true;}// permanent owner's account
+        
+        $site_id = \Model_Sites::getSiteId(false);
+        $cache_name = 'model.accountLevelPermission-checkLevelPermission-' 
+                . $site_id . '-'
+                . \Extension\Security::formatString($page_name, 'alphanum_dash_underscore') . '-'
+                . \Extension\Security::formatString($action, 'alphanum_dash_underscore') . '-'
+                . $account_id;
+        $cached = \Extension\Cache::getSilence($cache_name);
 
-        // get current user levels from db.
-        $query = \Model_AccountLevel::query()->where('account_id', $account_id);
+        if (false === $cached) {
+            // get current user levels from db.
+            $query = \Model_AccountLevel::query()->where('account_id', $account_id);
 
-        if ($query->count() > 0) {
-            // loop each level of this user.
-            foreach ($query->get() as $row) {
-                if ($row->level_group_id == '1') {
-                    // this user is in super admin group.
-                    unset($query, $row);
+            if ($query->count() > 0) {
+                // loop each level of this user.
+                foreach ($query->get() as $row) {
+                    if ($row->level_group_id == '1') {
+                        // this user is in super admin group.
+                        unset($query, $row);
 
-                    return true;
-                }
+                        \Cache::set($cache_name, true, 2592000);
+                        return true;
+                    }
 
-                // check this level group in permission db.
-                $query2 = static::query()
-                            ->where('level_group_id', $row->level_group_id)
-                            ->where('permission_page', $page_name)
-                            ->where('permission_action', $action);
+                    // check this level group in permission db.
+                    $query2 = static::query()
+                                ->where('level_group_id', $row->level_group_id)
+                                ->where('permission_page', $page_name)
+                                ->where('permission_action', $action);
 
-                if ($query2->count() > 0) {
-                    // found.
-                    unset($query2, $row);
+                    if ($query2->count() > 0) {
+                        // found.
+                        unset($query2, $row);
 
-                    return true;
-                }
+                        \Cache::set($cache_name, true, 2592000);
+                        return true;
+                    }
 
-                unset($query2);
-            }// endforeach;
-            // not found in permission db. did not given any permission.
-            unset($query, $row);
+                    unset($query2);
+                }// endforeach;
+                // not found in permission db. did not given any permission.
+                unset($query, $row);
 
+                \Cache::set($cache_name, 'false', 2592000);
+                return false;
+            }
+            // not found this user role?
+            unset($query);
+
+            \Cache::set($cache_name, 'false', 2592000);
             return false;
         }
-        // not found this user role?
-        unset($query);
+        
+        if ('false' === $cached) {
+            return false;
+        } else {
+            return $cached;
+        }
+    }// checkLevelPermission
+    
+    
+    /**
+     * check member permission.
+     * if account id is not set, get it from member cookie.
+     * 
+     * @param string $page_name
+     * @param string $action
+     * @param integer $account_id
+     * @return boolean
+     */
+    public static function checkMemberPermission($page_name = '', $action = '', $account_id = '')
+    {
+        if ($account_id == null) {
+            // account id is empty, get it from cookie.
+            $model_accounts = new \Model_Accounts();
+            $cm_account = $model_accounts->getAccountCookie('member');
+            $account_id = (isset($cm_account['account_id']) ? $cm_account['account_id'] : '0');
 
-        return false;
-    }// checkAdminPermission
+            unset($cm_account, $model_accounts);
+        }
+        
+        return static::checkAdminPermission($page_name, $action, $account_id);
+    }// checkMemberPermission
 
 
     /**
@@ -210,6 +278,9 @@ class Model_AccountLevelPermission extends \Orm\Model
             static::query()->where('permission_core', '0')->delete();
             return true;
         }
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.accountLevelPermission-checkLevelPermission-' . \Model_Sites::getSiteId(false));
 
         return false;
     }// resetPermission
@@ -250,14 +321,20 @@ class Model_AccountLevelPermission extends \Orm\Model
 
         // now remove permission in db that was not checked.
         foreach ($data['permission_action'] as $key => $permission_action) {
-            if (isset($data['permission_page'][$key]) && isset($data['level_group_id'][$key])) {
+            if (isset($data['permission_page'][$key])) {
                 $query = static::query()
+                        ->where('permission_core', $data['permission_core'])
+                        ->where('module_system_name', $data['module_system_name'])
                         ->where('permission_page', $data['permission_page'][$key])
                         ->where('permission_action', $permission_action);
 
                 if ($query->count() > 0) {
                     foreach ($query->get() as $row) {
-                        if (!in_array($row->level_group_id, $data['level_group_id'][$key])) {
+                        if (isset($data['level_group_id'][$key])) {
+                            if (!in_array($row->level_group_id, $data['level_group_id'][$key])) {
+                                static::find($row->permission_id)->delete();
+                            }
+                        } else {
                             static::find($row->permission_id)->delete();
                         }
                     }
@@ -269,6 +346,9 @@ class Model_AccountLevelPermission extends \Orm\Model
         unset($key, $permission_action, $query, $row);
 
         $data = array();
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.accountLevelPermission-checkLevelPermission-' . \Model_Sites::getSiteId(false));
 
         return true;
     }// savePermission

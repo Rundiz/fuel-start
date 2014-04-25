@@ -30,7 +30,7 @@ class Controller_Account_ConfirmChangeEmail extends \Controller_BaseController
     public function action_index($account_id = '', $confirm_code = '', $action = '')
     {
         // load language
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         // get config
         $cfg_values = array('member_confirm_wait_time');
@@ -52,7 +52,7 @@ class Controller_Account_ConfirmChangeEmail extends \Controller_BaseController
             $output['hide_form'] = true;
 
             $output['form_status'] = 'error';
-            $output['form_status_message'] = \Lang::get('account.account_invalid_confirm_change_email_code');
+            $output['form_status_message'] = \Lang::get('account_invalid_confirm_change_email_code');
         }
 
         // if cancel reset password
@@ -68,7 +68,7 @@ class Controller_Account_ConfirmChangeEmail extends \Controller_BaseController
             $row->save();
 
             $output['form_status'] = 'success';
-            $output['form_status_message'] = \Lang::get('account.account_your_email_change_was_cancelled');
+            $output['form_status_message'] = \Lang::get('account_your_email_change_was_cancelled');
         }
 
         // form submitted
@@ -77,12 +77,12 @@ class Controller_Account_ConfirmChangeEmail extends \Controller_BaseController
 
             // validate form.
             $validate = \Validation::forge();
-            $validate->add('confirm_code', \Lang::get('account.account_confirm_code'), array(), array('required'));
+            $validate->add('confirm_code', \Lang::get('account_confirm_code'), array(), array('required'));
 
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -94,7 +94,7 @@ class Controller_Account_ConfirmChangeEmail extends \Controller_BaseController
                 if (time()-$row->account_confirm_code_since > $cfg_member_confirm_wait_time) {
                     // confirm wait time is too long than limit.
                     $output['form_status'] = 'error';
-                    $output['form_status_message'] = \Lang::get('account.account_change_email_time_expired');
+                    $output['form_status_message'] = \Lang::get('account_change_email_time_expired');
 
                     // empty confirm code.
                     $row->account_new_email = null;
@@ -111,7 +111,7 @@ class Controller_Account_ConfirmChangeEmail extends \Controller_BaseController
 
                     $output['hide_form'] = true;
                     $output['form_status'] = 'success';
-                    $output['form_status_message'] = \Lang::get('account.account_change_email_successfully');
+                    $output['form_status_message'] = \Lang::get('account_change_email_successfully');
                 }
             }
 
@@ -122,7 +122,7 @@ class Controller_Account_ConfirmChangeEmail extends \Controller_BaseController
         unset($config, $query, $row);
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_confirm_change_email'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_confirm_change_email'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('front/templates/account/confirmchangeemail_v', $output, false);

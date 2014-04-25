@@ -13,7 +13,7 @@ class Controller_Account_ResendActivate extends \Controller_BaseController
     public function action_index()
     {
         // load language
-        \Lang::load('account', 'account');
+        \Lang::load('account');
 
         if (\Input::method() == 'POST') {
             // store data for model
@@ -21,12 +21,12 @@ class Controller_Account_ResendActivate extends \Controller_BaseController
 
             // validate form.
             $validate = \Validation::forge();
-            $validate->add('account_email', \Lang::get('account.account_email'), array(), array('required', 'valid_email'));
+            $validate->add('account_email', \Lang::get('account_email'), array(), array('required', 'valid_email'));
 
             if (!\Extension\NoCsrf::check(null, null, null, null, false)) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -42,7 +42,7 @@ class Controller_Account_ResendActivate extends \Controller_BaseController
 
                 if ($query->count() <= 0) {
                     $output['form_status'] = 'error';
-                    $output['form_status_message'] = \Lang::get('account.account_didnot_found_entered_email');
+                    $output['form_status_message'] = \Lang::get('account_didnot_found_entered_email');
                 } else {
                     $row = $query->get_one();
 
@@ -61,7 +61,7 @@ class Controller_Account_ResendActivate extends \Controller_BaseController
                         $account->save();
 
                         $output['form_status'] = 'success';
-                        $output['form_status_message'] = \Lang::get('account.account_registration_completed_need_confirm');
+                        $output['form_status_message'] = \Lang::get('account_registration_completed_need_confirm');
                     } else {
                         $output['form_status'] = 'error';
                         $output['form_status_message'] = $result;
@@ -75,7 +75,7 @@ class Controller_Account_ResendActivate extends \Controller_BaseController
         }
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_resend_confirm_registration_email'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_resend_confirm_registration_email'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('front/templates/account/resendactivate_v', $output, false);

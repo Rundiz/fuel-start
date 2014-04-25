@@ -1,5 +1,5 @@
 <article class="general-page-container">
-	<h1><?php echo \Lang::get('account.account_view_login_history_of', array('name' => $account->account_display_name)); ?></h1>
+	<h1><?php echo \Lang::get('account_view_login_history_of', array('name' => $account->account_display_name)); ?></h1>
 	
 	<table class="table table-bordered table-striped table-responsive list-logins-table">
 		<thead>
@@ -8,11 +8,11 @@
 				// except querystring to generate
 				$except_querystring[] = 'page';
 				?> 
-				<th style="width: 50%;"><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ua', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_user_agent')); ?></th>
-				<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_browser', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_browser')); ?></th>
-				<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ip', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_ip')); ?></th>
-				<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_timezone', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_date_time')); ?></th>
-				<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_attempt', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins.accountlogins_result')); ?></th>
+				<th style="width: 50%;"><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ua', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_user_agent')); ?></th>
+				<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_browser', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_browser')); ?></th>
+				<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_ip', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_ip')); ?></th>
+				<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_timezone', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_date_time')); ?></th>
+				<th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'login_attempt', 'sort' => $next_sort), $except_querystring, null, \Lang::get('accountlogins_result')); ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -28,7 +28,7 @@
 			<?php } // endofreach; ?> 
 			<?php } else { ?> 
 			<tr>
-				<td colspan="5"><?php echo \Lang::get('fslang.fslang_no_data'); ?></td>
+				<td colspan="5"><?php echo \Lang::get('fslang_no_data'); ?></td>
 			</tr>
 			<?php } // endif; ?> 
 		</tbody>

@@ -49,7 +49,9 @@ class Modules
                     if (class_exists($class_name_with_namespace)) {
                         if (method_exists($class_name_with_namespace, '_define_permission')) {
                             $class = new $class_name_with_namespace;
-                            $output = array_merge($output, call_user_func_array(array($class, '_define_permission'), array()));
+                            if (is_array(call_user_func_array(array($class, '_define_permission'), array()))) {
+                                $output = array_merge($output, call_user_func_array(array($class, '_define_permission'), array()));
+                            }
                         }
                     }
                 }

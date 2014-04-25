@@ -1,4 +1,4 @@
-<?php echo \Form::open(array('action' => 'admin/account-permission/save', 'class' => 'form-horizontal', 'role' => 'form')); ?> 
+<?php echo \Form::open(array('action' => 'admin/account-level-permission/save', 'class' => 'form-horizontal', 'role' => 'form')); ?> 
 	<div class="form-status-placeholder">
 		<?php if (isset($form_status) && isset($form_status_message)) { ?> 
 		<div class="alert alert-<?php echo str_replace('error', 'danger', $form_status); ?>"><button type="button" class="close" data-dismiss="alert">&times;</button><?php echo $form_status_message; ?></div>
@@ -12,8 +12,8 @@
 	<table class="table table-hover table-bordered tableWithFloatingHeader">
 		<thead>
 			<tr>
-				<th class="perm-page-cell-head"><?php echo \Lang::get('acperm.acperm_permission_page'); ?></th>
-				<th class="perm-action-cell-head"><?php echo \Lang::get('acperm.acperm_permission_action'); ?></th>
+				<th class="perm-page-cell-head"><?php echo \Lang::get('acperm_permission_page'); ?></th>
+				<th class="perm-action-cell-head"><?php echo \Lang::get('acperm_permission_action'); ?></th>
 				<?php 
 				$column = 2; 
 				foreach ($list_levels['items'] as $lv) { ?> 
@@ -26,8 +26,8 @@
 		</thead>
 		<tfoot>
 			<tr>
-				<th class="perm-page-cell-head"><?php echo \Lang::get('acperm.acperm_permission_page'); ?></th>
-				<th class="perm-action-cell-head"><?php echo \Lang::get('acperm.acperm_permission_action'); ?></th>
+				<th class="perm-page-cell-head"><?php echo \Lang::get('acperm_permission_page'); ?></th>
+				<th class="perm-action-cell-head"><?php echo \Lang::get('acperm_permission_action'); ?></th>
 				<?php foreach ($list_levels['items'] as $lv) { ?> 
 				<th class="perm-lv-cell-head"><?php echo $lv->level_name; ?></th>
 				<?php } // endforeach; ?> 
@@ -60,7 +60,7 @@
 			?> 
 			<?php } else { ?> 
 			<tr>
-				<td colspan="<?php echo $column; ?>"><?php echo \Lang::get('fslang.fslang_no_data'); ?></td>
+				<td colspan="<?php echo $column; ?>"><?php echo \Lang::get('fslang_no_data'); ?></td>
 			</tr>
 			<?php } // endif; ?> 
 		</tbody>
@@ -68,8 +68,8 @@
 
 	<div class="row cmds">
 		<div class="col-sm-6">
-			<button type="submit" class="btn btn-primary"><?php echo \Lang::get('admin.admin_save'); ?></button>
-			<?php echo \Extension\Html::anchor('admin', \Lang::get('admin.admin_cancel'), array('class' => 'btn btn-default')); ?> 
+			<button type="submit" class="btn btn-primary"><?php echo \Lang::get('admin_save'); ?></button>
+			<?php echo \Extension\Html::anchor('admin', \Lang::get('admin_cancel'), array('class' => 'btn btn-default')); ?> 
 		</div>
 	</div>
 <?php echo \Form::close(); ?> 
@@ -77,6 +77,6 @@
 
 <script type="text/javascript">
 	$(function() {
-		
+		tableWithFloatingheader();
 	});// jquery start
 </script>

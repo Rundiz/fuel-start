@@ -15,7 +15,7 @@ class Controller_Admin_Config extends \Controller_AdminController
         parent::__construct();
 
         // load language
-        \Lang::load('config', 'config');
+        \Lang::load('config');
     }// __construct
 
 
@@ -27,31 +27,28 @@ class Controller_Admin_Config extends \Controller_AdminController
     public function _define_permission()
     {
         // return array('controller page name' => array('action 1', 'action 2', 'action 3', 'a lot more action. up to you...'));
-        return array('config.config_global' => array('config.config_global'));
+        return array('config_global' => array('config_global'));
     }// _define_permission
 
 
     public function action_ajax_test_ftp()
     {
-        // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('config.config_global', 'config.config_global') == false) {
-            \Session::set_flash(
-                'form_status',
-                array(
-                    'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
-                )
-            );
-            \Response::redirect(\Uri::create('admin'));
-        }
-
         // is ajax
         if (! \Input::is_ajax()) {
             \Response::redirect(\Uri::create('admin'));
         }
-
-        // load language
-        \Lang::load('config', 'config');
+        
+        // check permission
+        if (\Model_AccountLevelPermission::checkAdminPermission('config_global', 'config_global') == false) {
+            \Session::set_flash(
+                'form_status',
+                array(
+                    'form_status' => 'error',
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
+                )
+            );
+            return null;
+        }
 
         if (\Input::method() == 'POST') {
             // get post value and test connection
@@ -75,7 +72,7 @@ class Controller_Admin_Config extends \Controller_AdminController
 
             if ($files !== false) {
                 $output['form_status'] = 'success';
-                $output['form_status_message'] = \Lang::get('config.config_ftp_connected_check_basepath_from_dir_structure_below');
+                $output['form_status_message'] = \Lang::get('config_ftp_connected_check_basepath_from_dir_structure_below');
 
                 natsort($files);
                 $output['list_files'] = '<ul>';
@@ -86,7 +83,7 @@ class Controller_Admin_Config extends \Controller_AdminController
             } else {
                 // got false from list_files means cannot connect
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('config.config_ftp_could_not_connect_to_server');
+                $output['form_status_message'] = \Lang::get('config_ftp_could_not_connect_to_server');
             }
 
             // clear no use variables
@@ -104,19 +101,16 @@ class Controller_Admin_Config extends \Controller_AdminController
     public function action_index()
     {
         // check permission
-        if (\Model_AccountLevelPermission::checkAdminPermission('config.config_global', 'config.config_global') == false) {
+        if (\Model_AccountLevelPermission::checkAdminPermission('config_global', 'config_global') == false) {
             \Session::set_flash(
                 'form_status',
                 array(
                     'form_status' => 'error',
-                    'form_status_message' => \Lang::get('admin.admin_permission_denied', array('page' => \Uri::string()))
+                    'form_status_message' => \Lang::get('admin_permission_denied', array('page' => \Uri::string()))
                 )
             );
             \Response::redirect(\Uri::create('admin'));
         }
-
-        // load language
-        \Lang::load('config', 'config');
 
         // get timezone list for select box
         \Config::load('timezone', 'timezone');
@@ -193,7 +187,7 @@ class Controller_Admin_Config extends \Controller_AdminController
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed
                 $output['form_status'] = 'error';
-                $output['form_status_message'] = \Lang::get('fslang.fslang_invalid_csrf_token');
+                $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
@@ -214,7 +208,7 @@ class Controller_Admin_Config extends \Controller_AdminController
                         'form_status',
                         array(
                             'form_status' => 'success',
-                            'form_status_message' => \Lang::get('admin.admin_saved')
+                            'form_status_message' => \Lang::get('admin_saved')
                         )
                     );
 
@@ -232,7 +226,7 @@ class Controller_Admin_Config extends \Controller_AdminController
         }
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('config.config_global_configuration'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('config_global_configuration'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/config/config_v', $output, false);

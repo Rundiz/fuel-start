@@ -70,7 +70,7 @@ class WebCron
                 // get site id
                 $site_id = \Model_Sites::getSiteId(false);
                 
-                $cache = \Cache::get('webcron-siteid' . $site_id . '-' . $option['name']);
+                $cache = \Cache::get('library.webcron-siteid' . $site_id . '-' . $option['name']);
             } catch (\CacheNotFoundException $e) {
                 $cache = false;
             }
@@ -82,7 +82,7 @@ class WebCron
                 // get site id
                 $site_id = \Model_Sites::getSiteId(false);
                 
-                \Cache::set('webcron-siteid' . $site_id . '-' . $option['name'], 'done', $option['second_expired']);
+                \Cache::set('library.webcron-siteid' . $site_id . '-' . $option['name'], 'done', $option['second_expired']);
             }
         }
 

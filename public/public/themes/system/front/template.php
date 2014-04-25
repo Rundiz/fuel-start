@@ -32,10 +32,9 @@ $theme = \Theme::instance();
 		}
 		?> 
 
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap.min.css')); ?>">
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/font-awesome.min.css')); ?>">
-		<?php /*<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap-theme.min.css')); ?>">*/ ?> 
-		<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/front.css')); ?>">
+		<?php echo \Asset::css('bootstrap.min.css'); ?>
+		<?php echo $theme->asset->css('font-awesome.min.css'); ?>
+		<?php echo $theme->asset->css('front.css'); ?>
 		<?php 
 		// render <link>
 		if (isset($page_link) && is_array($page_link)) {
@@ -46,9 +45,9 @@ $theme = \Theme::instance();
 		}
 		?> 
 
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/modernizr.min.js')); ?>"></script>
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/respond/respond.min.js')); ?>"></script>
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/jquery-1.11.0.min.js')); ?>"></script>
+		<?php echo \Asset::js('modernizr.min.js'); ?>
+		<?php echo \Asset::js('respond/respond.min.js'); ?>
+		<?php echo \Asset::js('jquery.min.js'); ?>
 		<?php 
 		// render <script>
 		if (isset($page_script) && is_array($page_script)) {
@@ -84,12 +83,12 @@ $theme = \Theme::instance();
 				</main>
 				<aside class="col-sm-3 sidebar">
 					<div class="sidebar-block">
-						<h3><?php echo \Lang::get('fslang.fslang_languages'); ?></h3>
+						<h3><?php echo \Lang::get('fslang_languages'); ?></h3>
 						<?php echo languageSwitchDropdown(); ?> 
 					</div>
 					
 					<div class="sidebar-block">
-						<h3><?php echo \Lang::get('fslang.fslang_navigation'); ?></h3>
+						<h3><?php echo \Lang::get('fslang_navigation'); ?></h3>
 						<ul>
 							<li><a href="<?php echo Uri::create('admin'); ?>">Go to Admin dashboard</a></li>
 							<li><a href="<?php echo Uri::create('account/register'); ?>">Register account</a></li>
@@ -97,7 +96,7 @@ $theme = \Theme::instance();
 							<li><a href="<?php echo Uri::create('account/login'); ?>">Login</a></li>
 							<li><a href="<?php echo Uri::create('account/forgotpw'); ?>">Forgot username or password</a></li>
 							<li><a href="<?php echo Uri::create('account/edit'); ?>">Edit account</a></li>
-									<li><a href="<?php echo Uri::create('account/view-logins'); ?>">View logins</a></li>
+							<li><a href="<?php echo Uri::create('account/view-logins'); ?>">View logins</a></li>
 							<li><a href="<?php echo Uri::create('account/logout'); ?>">Logout</a></li>
 						</ul>
 					</div>
@@ -111,7 +110,7 @@ $theme = \Theme::instance();
 			</div>
 		</div>     
 		
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/bootstrap.min.js')); ?>"></script>
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/main.js')); ?>"></script>
+		<?php echo \Asset::js('bootstrap.min.js'); ?>
+		<?php echo $theme->asset->js('main.js'); ?>
 	</body>
 </html>

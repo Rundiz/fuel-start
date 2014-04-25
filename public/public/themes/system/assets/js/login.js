@@ -1,5 +1,6 @@
 /* 
- * login page.
+ * login javascript.
+ * This js used in admin/login page
  * 
  * @author Vee W.
  * @license http://opensource.org/licenses/MIT
@@ -33,7 +34,7 @@ function ajaxAdminLogin(obj) {
 					);
 				}
 				
-				$('.captcha').attr('src', theme_assets+'img/securimage_show.php?' + Math.random());
+				$('.captcha').attr('src', base_url+'assets/img/securimage_show.php?' + Math.random());
 				$('.login-page-input-username').focus();
 				
 				if (data.show_captcha == true) {
@@ -60,9 +61,6 @@ function ajaxAdminLogin(obj) {
 
 
 $(function() {
-	// auto focus at login page
-	$('.login-page-input-username').focus();
-	
 	// javascript check at login page
 	$('#login-page-js-check').removeClass('glyphicon-remove').addClass('glyphicon-ok');// jquery checked javascript requirement at login page
 }); // jquery start

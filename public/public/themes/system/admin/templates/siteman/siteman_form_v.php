@@ -27,16 +27,16 @@
 			<label for="site_status" class="col-sm-2 control-label"><?php echo __('siteman_site_status'); ?>:</label>
 			<div class="col-sm-5">
 				<select name="site_status" id="site_status" class="form-control chosen-select account_status">
-					<option value="0"<?php if (isset($site_status) && $site_status == '0') { ?> selected="selected"<?php } ?>><?php echo \Lang::get('admin.admin_disable'); ?></option>
-					<option value="1"<?php if (isset($site_status) && $site_status == '1') { ?> selected="selected"<?php } ?>><?php echo \Lang::get('admin.admin_enable'); ?></option>
+					<option value="0"<?php if (isset($site_status) && $site_status == '0') { ?> selected="selected"<?php } ?>><?php echo \Lang::get('admin_disable'); ?></option>
+					<option value="1"<?php if (isset($site_status) && $site_status == '1') { ?> selected="selected"<?php } ?>><?php echo \Lang::get('admin_enable'); ?></option>
 				</select>
 			</div>
 		</div>
 
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
-			<button type="submit" class="btn btn-primary"><?php echo __('admin.admin_save'); ?></button>
-			<a href="<?php echo \Uri::create('admin/siteman'); ?>" class="btn btn-default"><?php echo \Lang::get('admin.admin_cancel'); ?></a>
+			<button type="submit" class="btn btn-primary"><?php echo __('admin_save'); ?></button>
+			<a href="<?php echo \Uri::create('admin/siteman'); ?>" class="btn btn-default"><?php echo \Lang::get('admin_cancel'); ?></a>
 		</div>
 	</div>
 <?php echo \Form::close(); ?> 

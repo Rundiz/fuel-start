@@ -7,9 +7,6 @@
 
 
 $(function() {
-	// auto focus at login page
-	$('.login-page-input-username').focus();
-	
 	// activate bootstrap tooltip
 	$('.bootstrap-tooltip').tooltip();
 });// jquery start

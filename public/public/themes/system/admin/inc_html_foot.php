@@ -1,12 +1,12 @@
 
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/jquery-ui-1.10.4.custom.min.js')); ?>"></script>
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/bootstrap.min.js')); ?>"></script>
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/jquery.smartmenus.min.js')); ?>"></script>
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/chosen/chosen.jquery.min.js')); ?>"></script>
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/icheck/icheck.min.js')); ?>"></script>
+		<?php echo \Asset::js('jquery-ui.min.js'); ?>
+		<?php echo \Asset::js('bootstrap.min.js'); ?>
+		<?php echo $theme->asset->js('smartmenus/jquery.smartmenus.min.js'); ?>
+		<?php echo $theme->asset->js('chosen/chosen.jquery.min.js'); ?>
+		<?php echo $theme->asset->js('icheck/icheck.min.js'); ?>
 		<?php echo $theme->asset->render('fuelstart_footer'); ?> 
 		
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/main.js')); ?>"></script>
-		<script src="<?php echo Uri::createNL($theme->asset_path('js/admin.js')); ?>"></script>
+		<?php echo $theme->asset->js('main.js'); ?>
+		<?php echo $theme->asset->js('admin.js'); ?>
 	</body>
 </html>

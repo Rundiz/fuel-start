@@ -2,8 +2,8 @@
 
 <div class="row cmds">
 	<div class="col-sm-6">
-		<?php if (\Model_AccountLevelPermission::checkAdminPermission('blog_perm', 'blog_write_perm')) {echo \Html::anchor('blog/admin/index/add', \Lang::get('admin.admin_add'), array('class' => 'btn btn-default'));} ?> 
-		| <?php printf(\Lang::get('admin.admin_total', array('total' => (isset($list_items['total']) ? $list_items['total'] : '0')))); ?>
+		<?php if (\Model_AccountLevelPermission::checkAdminPermission('blog_perm', 'blog_write_perm')) {echo \Html::anchor('blog/admin/index/add', \Lang::get('admin_add'), array('class' => 'btn btn-default'));} ?> 
+		| <?php printf(\Lang::get('admin_total', array('total' => (isset($list_items['total']) ? $list_items['total'] : '0')))); ?>
 	</div>
 </div>
 
@@ -44,13 +44,13 @@
 					<td></td>
 					<td><?php echo \Extension\Date::gmtDate('', $row->post_date); ?></td>
 					<td>
-						<?php if (\Model_AccountLevelPermission::checkAdminPermission('blog_perm', 'blog_write_perm')) { ?><?php echo \Extension\Html::anchor('blog/admin/index/edit/' . $row->post_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin.admin_edit'), array('class' => 'btn btn-default btn-xs')); ?><?php } ?> 
+						<?php if (\Model_AccountLevelPermission::checkAdminPermission('blog_perm', 'blog_write_perm')) { ?><?php echo \Extension\Html::anchor('blog/admin/index/edit/' . $row->post_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin_edit'), array('class' => 'btn btn-default btn-xs')); ?><?php } ?> 
 					</td>
 				</tr>
 				<?php } // endforeach; ?> 
 				<?php } else { ?> 
 				<tr>
-					<td colspan="5"><?php echo \Lang::get('fslang.fslang_no_data'); ?></td>
+					<td colspan="5"><?php echo \Lang::get('fslang_no_data'); ?></td>
 				</tr>
 				<?php } // endfi; ?> 
 			</tbody>
@@ -62,10 +62,10 @@
 			 
 			<select name="act" class="form-control select-inline chosen-select">
 				<option value="" selected="selected"></option>
-				<?php if (\Model_AccountLevelPermission::checkAdminPermission('blog_perm', 'blog_manage_perm')) { ?><option value="del"><?php echo \Lang::get('admin.admin_delete'); ?></option><?php } ?> 
+				<?php if (\Model_AccountLevelPermission::checkAdminPermission('blog_perm', 'blog_manage_perm')) { ?><option value="del"><?php echo \Lang::get('admin_delete'); ?></option><?php } ?> 
 			</select>
-			<button type="submit" class="bb-button btn btn-warning"><?php echo \Lang::get('admin.admin_submit'); ?></button>
-			<?php echo \Extension\Html::anchor('admin', \Lang::get('admin.admin_cancel'), array('class' => 'btn btn-default')); ?> 
+			<button type="submit" class="bb-button btn btn-warning"><?php echo \Lang::get('admin_submit'); ?></button>
+			<?php echo \Extension\Html::anchor('admin', \Lang::get('admin_cancel'), array('class' => 'btn btn-default')); ?> 
 		</div>
 		<div class="col-sm-6">
 			<?php if (isset($pagination)) {echo $pagination->render();} ?> 

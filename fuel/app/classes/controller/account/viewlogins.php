@@ -18,8 +18,8 @@ class Controller_Account_ViewLogins extends \Controller_BaseController
         }
 
         // load language
-        \Lang::load('account', 'account');
-        \Lang::load('accountlogins', 'accountlogins');
+        \Lang::load('account');
+        \Lang::load('accountlogins');
 
         // get account id
         $cookie_account = \Model_Accounts::forge()->getAccountCookie();
@@ -49,9 +49,14 @@ class Controller_Account_ViewLogins extends \Controller_BaseController
         // list logins -----------------------------------------------------------------------------------------------------
         $option['limit'] = \Model_Config::getval('content_items_perpage');
         $option['offset'] = (trim(\Input::get('page')) != null ? ((int)\Input::get('page')-1)*$option['limit'] : 0);
+        if (\Security::strip_tags(trim(\Input::get('orders'))) != null) {
+            $option['orders'] = \Security::strip_tags(trim(\Input::get('orders')));
+        }
+        if (\Security::strip_tags(trim(\Input::get('sort'))) != null) {
+            $option['sort'] = \Security::strip_tags(trim(\Input::get('sort')));
+        }
         $data['account_id'] = $cookie_account['account_id'];
         $data['site_id'] = \Model_Sites::getSiteId();
-
         $list_logins = \Model_AccountLogins::listLogins($data, $option);
 
         // pagination config
@@ -78,7 +83,7 @@ class Controller_Account_ViewLogins extends \Controller_BaseController
         unset($config, $data, $list_logins, $option, $pagination);
 
         // <head> output ----------------------------------------------------------------------------------------------
-        $output['page_title'] = $this->generateTitle(\Lang::get('account.account_login_history'));
+        $output['page_title'] = $this->generateTitle(\Lang::get('account_login_history'));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('front/templates/account/viewlogins_v', $output, false);

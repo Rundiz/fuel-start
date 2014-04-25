@@ -16,5 +16,5 @@
 <?php if (isset($pagination)) {echo $pagination->render();} ?> 
 
 <?php } else { ?> 
-<p><?php echo \Lang::get('fslang.fslang_no_data'); ?></p>
+<p><?php echo \Lang::get('fslang_no_data'); ?></p>
 <?php } // endif; ?> 

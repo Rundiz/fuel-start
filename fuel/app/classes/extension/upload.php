@@ -159,7 +159,7 @@ class Upload
     public function getErrors($match_fuelphp_error = true)
     {
         if ($match_fuelphp_error === true) {
-            $fuelphp_upload_errors = \Lang::load('upload', 'upload');
+            $fuelphp_upload_errors = \Lang::load('upload');
 
             // number of message array below must match in FuelPHP upload language to use it translated properly.
             $codeguy_upload_errors = array(

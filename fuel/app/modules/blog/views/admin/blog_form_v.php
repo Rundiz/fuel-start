@@ -25,8 +25,8 @@
 	</div>
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
-			<button type="submit" class="btn btn-primary"><?php echo __('admin.admin_save'); ?></button>
-			<a href="<?php echo \Uri::create('blog/admin'); ?>" class="btn btn-default"><?php echo \Lang::get('admin.admin_cancel'); ?></a>
+			<button type="submit" class="btn btn-primary"><?php echo __('admin_save'); ?></button>
+			<a href="<?php echo \Uri::create('blog/admin'); ?>" class="btn btn-default"><?php echo \Lang::get('admin_cancel'); ?></a>
 		</div>
 	</div>
 <?php echo \Extension\Form::close(); ?> 

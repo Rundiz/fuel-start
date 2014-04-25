@@ -41,6 +41,7 @@ class Model_Sites extends \Orm\Model
         'account_level',// this table require data.
         'account_level_group', // this table require base level data.
         'account_level_permission',
+        'account_permission',
 
         'config', // this table must copy "core" config data
     );
@@ -114,6 +115,11 @@ class Model_Sites extends \Orm\Model
                     ->execute();
         }
         unset($cfg_data, $cfg_name, $cfg_value);
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.sites-getSiteId');
+        \Extension\Cache::deleteCache('model.sites-isSiteEnabled');
+        \Extension\Cache::deleteCache('controller.AdminController-generatePage-fs_list_sites');
 
         // done.
         return true;
@@ -203,6 +209,11 @@ class Model_Sites extends \Orm\Model
 
         // delete this site from sites table
         static::find($site_id)->delete();
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.sites-getSiteId');
+        \Extension\Cache::deleteCache('model.sites-isSiteEnabled');
+        \Extension\Cache::deleteCache('controller.AdminController-generatePage-fs_list_sites');
 
         // done
         return true;
@@ -260,6 +271,11 @@ class Model_Sites extends \Orm\Model
                     ->execute();
         }
         unset($cfg_data, $cfg_name, $cfg_value);
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.sites-getSiteId');
+        \Extension\Cache::deleteCache('model.sites-isSiteEnabled');
+        \Extension\Cache::deleteCache('controller.AdminController-generatePage-fs_list_sites');
 
         // done
         return true;
@@ -270,9 +286,10 @@ class Model_Sites extends \Orm\Model
      * get current site id
      *
      * @param boolean $enabled_only
-     * @return int
+     * @param boolean $real_id_only set true to return real site id only, if not found then return false.
+     * @return integer
      */
-    public static function getSiteId($enabled_only = true)
+    public static function getSiteId($enabled_only = true, $real_id_only = false)
     {
         // get domain
         if (isset($_SERVER['HTTP_HOST'])) {
@@ -282,21 +299,47 @@ class Model_Sites extends \Orm\Model
         } else {
             $site_domain = 'localhost';
         }
+        
+        $cache_name = 'model.sites-getSiteId-' 
+                . ($enabled_only == true ? 'true' : 'false') . '-'
+                . ($real_id_only == true ? 'true' : 'false') . '-'
+                . \Extension\Security::formatString($site_domain, 
+                    'alphanum_dash_underscore');
+        $cached = \Extension\Cache::getSilence($cache_name);
 
-        $query = static::query();
-        $query->where('site_domain', $site_domain);
-        if ($enabled_only === true) {
-            $query->where('site_status', 1);
+        if (false === $cached) {
+            $query = static::query();
+            $query->where('site_domain', $site_domain);
+            if ($enabled_only === true) {
+                $query->where('site_status', 1);
+            }
+
+            if ($query->count() > 0) {
+                // found.
+                $row = $query->get_one();
+
+                unset($query, $site_domain);
+
+                \Cache::set($cache_name, $row->site_id, 2592000);
+                return $row->site_id;
+            }
+            // not found, always return 1.
+            unset($query, $site_domain);
+
+            if ($real_id_only == false) {
+                \Cache::set($cache_name, 1, 2592000);
+                return 1;
+            } else {
+                \Cache::set($cache_name, 'false', 2592000);
+                return false;
+            }
         }
-        $row = $query->get_one();
-
-        unset($query, $site_domain);
-
-        if ($row != null) {
-            return $row->site_id;
+        
+        if ('false' === $cached) {
+            return false;
+        } else {
+            return $cached;
         }
-
-        return 1;
     }// getSiteId
     
     
@@ -325,6 +368,12 @@ class Model_Sites extends \Orm\Model
      */
     public static function isSiteEnabled()
     {
+        // always return true if it is main site. (site id 1).
+        $site_id = static::getSiteId(false);
+        if (1 == $site_id) {
+            return true;
+        }
+        
         // get domain
         if (isset($_SERVER['HTTP_HOST'])) {
             $site_domain = $_SERVER['HTTP_HOST'];
@@ -334,25 +383,40 @@ class Model_Sites extends \Orm\Model
             $site_domain = 'localhost';
         }
         
-        $query = static::query();
-        $query->where('site_domain', $site_domain);
-        $query->where('site_status', 1);
-        $total = $query->count();
-
-        unset($query, $site_domain);
+        $cache_name = 'model.sites-isSiteEnabled-' 
+                . \Extension\Security::formatString($site_domain, 
+                    'alphanum_dash_underscore');
+        $cached = \Extension\Cache::getSilence($cache_name);
         
-        if ($total > 0) {
-            return true;
+        if (false === $cached) {
+            $query = static::query();
+            $query->where('site_domain', $site_domain);
+            $query->where('site_status', 1);
+            $total = $query->count();
+
+            unset($query, $site_domain);
+
+            if ($total > 0) {
+                \Cache::set($cache_name, true, 2592000);
+                return true;
+            }
+
+            \Cache::set($cache_name, 'false', 2592000);
+            return false;
         }
         
-        return false;
+        if ('false' === $cached) {
+            return false;
+        } else {
+            return $cached;
+        }
     }// isSiteEnabled
 
 
     /**
      * list websites from db
      *
-     * @param array $option
+     * @param array $option available options: [list_for], [orders], [sort], [offset], [limit], [list_for], [unlimit]
      * @return array
      */
     public static function listSites($option = array())
@@ -367,15 +431,13 @@ class Model_Sites extends \Orm\Model
         $output['total'] = $query->count();
 
         // sort and order
-        $orders = \Security::strip_tags(trim(\Input::get('orders')));
         $allowed_orders = array('site_id', 'site_name', 'site_domain', 'site_status', 'site_create', 'site_update');
-        if ($orders == null || !in_array($orders, $allowed_orders)) {
-            $orders = 'site_id';
+        if (!isset($option['orders']) || (isset($option['orders']) && !in_array($option['orders'], $allowed_orders))) {
+            $option['orders'] = 'site_id';
         }
         unset($allowed_orders);
-        $sort = \Security::strip_tags(trim(\Input::get('sort')));
-        if ($sort == null || $sort != 'DESC') {
-            $sort = 'ASC';
+        if (!isset($option['sort'])) {
+            $option['sort'] = 'ASC';
         }
 
         // offset and limit
@@ -391,13 +453,13 @@ class Model_Sites extends \Orm\Model
         }
 
         // get the results from sort, order, offset, limit.
-        $query->order_by($orders, $sort);
+        $query->order_by($option['orders'], $option['sort']);
         if (!isset($option['unlimit']) || (isset($option['unlimit']) && $option['unlimit'] == false)) {
             $query->offset($option['offset'])->limit($option['limit']);
         }
         $output['items'] = $query->get();
 
-        unset($orders, $query, $sort);
+        unset($query);
 
         return $output;
     }// listSites
