@@ -79,6 +79,9 @@ class Model_AccountLevel extends \Orm\Model
                 unset($entry);
             }
         }
+        
+        // clear cache
+        \Extension\Cache::deleteCache('model.accountLevelPermission-checkLevelPermission-' . \Model_Sites::getSiteId(false));
 
         return true;
     }// updateLevels

@@ -311,14 +311,31 @@ class Model_Accounts extends \Orm\Model
         }
         $account_id = $cookie['account_id'];
         unset($cookie);
+        
+        // get site id
+        $site_id = \Model_Sites::getSiteId(false);
+        $table_site_prefix = '';
+        if ($site_id != '1') {
+            $table_site_prefix = $site_id . '_';
+        }
+        unset($site_id);
 
         // get current user level group priority
-        $my_level = \Model_AccountLevel::query()->related(array('account_level_group'))->where('account_id', $account_id)->order_by('account_level_group.level_priority', 'ASC')->get_one();
+        $my_level = \DB::select()
+                ->from($table_site_prefix . 'account_level')
+                ->as_object('\Model_AccountLevel')
+                ->join($table_site_prefix . 'account_level_group', 'LEFT')
+                ->on($table_site_prefix . 'account_level_group.level_group_id', '=', $table_site_prefix . 'account_level.level_group_id')
+                ->where('account_id', $account_id)
+                ->order_by('level_priority', 'ASC')
+                ->execute();
+        $my_level = $my_level->current();
+
         if ($my_level == null) {
             return false;
         }
         $my_level_priority = $my_level->account_level_group->level_priority;
-
+        
         // loop check each target level group.
         foreach ($level_groups as $level_group_id) {
             // get target level group priority
@@ -530,6 +547,8 @@ class Model_Accounts extends \Orm\Model
         
         // clear cache
         \Extension\Cache::deleteCache('model.accounts-checkAccount-'.$site_id.'-'.$account_id);
+        \Extension\Cache::deleteCache('model.accountLevelPermission-checkLevelPermission-' . \Model_Sites::getSiteId(false));
+        \Extension\Cache::deleteCache('model.accountPermission-checkAccountPermission-' . \Model_Sites::getSiteId(false));
 
         return true;
     }// deleteAccount
@@ -735,6 +754,7 @@ class Model_Accounts extends \Orm\Model
         
         // clear cache
         \Extension\Cache::deleteCache('model.accounts-checkAccount-'.\Model_Sites::getSiteId().'-'.$account_id);
+        \Extension\Cache::deleteCache('model.accountPermission-checkAccountPermission-' . \Model_Sites::getSiteId(false));
 
         return true;
     }// editAccount
