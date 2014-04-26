@@ -176,17 +176,25 @@ class Uri extends \Fuel\Core\Uri
                 $redirect_url = $default_lang;
             } else {
                 // current url is in dir or /lang
-                $first_uri = $this->segments[0];
+                $uri_exp = explode('/', \Input::uri());
+                // the \Input::uri will return uri segments with / at the start. when explode it, the first array might be null.
+                // check that first array of exploded uri is not null.
+                if (isset($uri_exp[0]) && $uri_exp[0] != null) {
+                    $first_uri = $uri_exp[0];
+                } elseif (isset($uri_exp[1])) {
+                    $first_uri = $uri_exp[1];
+                } else {
+                    // in case that \Input::uri with exploded / is not array or something wrong.
+                    $first_uri = $default_lang;
+                }
 
                 // if first uri is NOT in locales.
                 if (!array_key_exists($first_uri, $locales)) {
                     // first uri segment is not lang. the url is http://domain.tld/fuelphp_root_web/page
-                    // Never use redirect when current url is not at root web because HMVC request will get redirect and error or wrong result.
-                    // @todo fix redirect error.
-                    //$need_redirect = true;
+                    $need_redirect = true;
 
                     // redirect to http://domain.tld/fuelphp_root_web/{lang}/page
-                    //$redirect_url = $default_lang . '/' . implode('/', $this->segments);
+                    $redirect_url = $default_lang . '/' . implode('/', $this->segments);
                 }
             }
 
