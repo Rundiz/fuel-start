@@ -169,6 +169,12 @@ html, body {
 
 
 
+.language-switch a.current {
+	background: inherit;
+}
+
+
+
 .navbar .navbar-nav .non-link-navbar {
 	cursor: text;
 }

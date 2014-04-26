@@ -45,7 +45,6 @@ $lang['admin_website'] = 'Website';
 
 
 // on right navigation
-$lang['admin_hello_admin'] = 'Hello, :displayname';
 $lang['admin_logout'] = 'Logout';
 
 

@@ -115,7 +115,7 @@ class Model_Sites extends \Orm\Model
                     ->execute();
         }
         unset($cfg_data, $cfg_name, $cfg_value);
-        
+
         // clear cache
         \Extension\Cache::deleteCache('model.sites-getSiteId');
         \Extension\Cache::deleteCache('model.sites-isSiteEnabled');

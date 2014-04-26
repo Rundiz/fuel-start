@@ -99,13 +99,13 @@ include __DIR__ . DS . 'inc_html_head.php';
 								</li>
 							</ul>
 							<ul class="nav navbar-nav navbar-right sm sm-bsblack navbar-smart-menu">
-								<li><?php echo languageSwitchAdminNavbar(); ?></li>
+								<li class="language-switch"><?php echo languageSwitchAdminNavbar(); ?></li>
 								<li>
  									<a href="#" onclick="return false;">
- 										<span class="glyphicon glyphicon-user"></span> 
- 										<?php echo \Lang::get('admin_hello_admin', array('displayname' => $cookie_admin['account_display_name'])); ?>
+ 										<span class="glyphicon glyphicon-user"></span>
  									</a>
  									<ul>
+ 										<li><a href="#" onclick="return false;"><?php echo $cookie_admin['account_display_name']; ?></a></li>
  										<?php if (checkAdminPermission('account_perm', 'account_edit_perm')) { ?><li><?php echo \Html::anchor('admin/account/edit', \Lang::get('admin_edit_my_account')); ?></li><?php } ?> 
  										<li><?php echo \Html::anchor('admin/logout', \Lang::get('admin_logout')); ?></li>
  									</ul>

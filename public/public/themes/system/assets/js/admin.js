@@ -60,6 +60,8 @@ $(function() {
 	
 	// activate SmartMenus
 	$('.navbar-smart-menu').smartmenus({
+		markCurrentItem: true,
+		markCurrentTree: true,
 		mainMenuSubOffsetY: 1,
 		subMenusSubOffsetX: 1,
 		subMenusSubOffsetY: -2

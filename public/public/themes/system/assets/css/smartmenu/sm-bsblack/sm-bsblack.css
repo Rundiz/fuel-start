@@ -36,8 +36,12 @@
 	}
 	/* current items - add the class manually to some item or check the "markCurrentItem" script option */
 	.sm-bsblack a.current, .sm-bsblack a.current:hover, .sm-bsblack a.current:focus, .sm-bsblack a.current:active {
-		background:#555;
+		background:#080808;
 		color:#fff;
+	}
+	.sm-bsblack ul a.current, .sm-bsblack ul a.current:hover, .sm-bsblack ul a.current:focus, .sm-bsblack ul a.current:active {
+		background:#eee;
+		color:#555;
 	}
 	.sm-bsblack a.has-submenu {
 		padding-right:32px;
@@ -179,13 +183,13 @@
 	.sm-bsblack a {
 		padding-top:13px;
 		padding-bottom:13px;
-		background:transparent !important;
-		color:#555 !important;
+		background:transparent;
+		color:#555;
 	}
-	.sm-bsblack a.current {
-		background:#555 !important;
-		color:#fff !important;
-	}
+	/*.sm-bsblack a.current {
+		background:#555;
+		color:#fff;
+	}*/
 	.sm-bsblack a.has-submenu {
 		padding-right:23px;
 	}

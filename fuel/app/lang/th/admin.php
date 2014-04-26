@@ -45,7 +45,6 @@ $lang['admin_website'] = 'เว็บไซต์';
 
 
 // on right navigation
-$lang['admin_hello_admin'] = 'สวัสดี :displayname';
 $lang['admin_logout'] = 'ออกจากระบบ';
 
 
