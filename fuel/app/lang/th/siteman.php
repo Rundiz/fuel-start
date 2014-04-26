@@ -1,6 +1,7 @@
 <?php
 
 $lang['siteman_add'] = 'เพิ่มเว็บไซต์';
+$lang['siteman_added_please_login_to_new_site_and_go_config_user_roles_and_permission'] = 'เว็บไซต์เพิ่มเรียบร้อยแล้ว.<br>กรุณาเข้าสู่ระบบในเว็บไซต์ใหม่แล้วทำการตรวจสอบ-ปรับหน้าที่ผู้ใช้ รวมถึงการปรับสิทธิต่างๆของแต่ละหน้าที่และผู้ใช้.';
 $lang['siteman_domain_currently_exists'] = 'โดเมนนี้มีใช้งานอยู่แล้ว, กรุณาเลือกโดเมนอื่น.';
 $lang['siteman_donot_enter_http_only_domain'] = 'ไม่ต้องกรอก http:// ให้กรอกเฉพาะโดเมน และไม่ต้องมี / ต่อท้าย. เช่น domain.tld';
 $lang['siteman_edit'] = 'แก้ไขเว็บไซต์';

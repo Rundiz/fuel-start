@@ -83,7 +83,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                             'form_status',
                             array(
                                 'form_status' => 'success',
-                                'form_status_message' => \Lang::get('admin_saved')
+                                'form_status_message' => \Lang::get('siteman_added_please_login_to_new_site_and_go_config_user_roles_and_permission')
                             )
                         );
                     }
