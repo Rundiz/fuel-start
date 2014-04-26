@@ -2,8 +2,10 @@
 
 <div class="row cmds">
 	<div class="col-sm-6">
-		<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_add_perm')) {echo \Html::anchor('admin/account-level/add', \Lang::get('admin_add'), array('class' => 'btn btn-default'));} ?> 
-		| <?php printf(\Lang::get('admin_total', array('total' => (isset($list_levels['total']) ? $list_levels['total'] : '0')))); ?>
+		<ul class="actions-inline">
+			<li><?php printf(\Lang::get('admin_total', array('total' => (isset($list_levels['total']) ? $list_levels['total'] : '0')))); ?></li>
+			<?php if (\Model_AccountLevelPermission::checkAdminPermission('accountlv_perm', 'accountlv_add_perm')) { ?><li><?php echo \Html::anchor('admin/account-level/add', \Lang::get('admin_add'), array('class' => 'btn btn-default')); ?></li><?php } ?> 
+		</ul>
 	</div>
 </div>
 

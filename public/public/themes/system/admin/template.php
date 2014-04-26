@@ -29,10 +29,11 @@ include __DIR__ . DS . 'inc_html_head.php';
 						<!-- Collect the nav links, forms, and other content for toggling -->
 						<div class="collapse navbar-collapse" id="fs-admin-navbar-collapse">
 							<ul id="admin-nav-menu" class="nav navbar-nav sm sm-bsblack navbar-smart-menu">
+								<!--website menu-->
 								<li>
-									<a href="#" onclick="return false;"><?php echo \Lang::get('admin_website'); ?></a>
+									<a href="#" onclick="return false;"><?php echo __('admin_website'); ?></a>
 									<ul>
-										<li><?php echo \Html::anchor('admin', \Lang::get('admin_admin_home')); ?> 
+										<li><?php echo \Html::anchor('admin', __('admin_admin_home')); ?> 
 											<?php if (isset($fs_list_sites) && $fs_list_sites != null) { ?> 
 											<ul>
 											<?php
@@ -46,7 +47,7 @@ include __DIR__ . DS . 'inc_html_head.php';
 											</ul>
 											<?php }// endif; ?> 
 										</li>
-										<li><?php echo \Html::anchor('', \Lang::get('admin_visit_site')); ?> 
+										<li><?php echo \Html::anchor('', __('admin_visit_site')); ?> 
 											<?php if (isset($fs_list_sites) && $fs_list_sites != null) { ?> 
 											<ul>
 											<?php
@@ -60,43 +61,75 @@ include __DIR__ . DS . 'inc_html_head.php';
 											</ul>
 											<?php }// endif; ?> 
 										</li>
-										<?php if (checkAdminPermission('config_global', 'config_global')) { ?><li><?php echo \Html::anchor('admin/config', \Lang::get('admin_global_configuration')); ?></li><?php } ?> 
+										<?php if (checkAdminPermission('config_global', 'config_global')) { ?><li><?php echo \Html::anchor('admin/config', __('admin_global_configuration')); ?></li><?php } ?> 
 										<?php if (checkAdminPermission('cacheman_perm', 'cacheman_clearcache_perm')) { ?> 
 										<li>
-											<a href="#" onclick="return false;"><?php echo \Lang::get('admin_nav_tools'); ?></a>
+											<a href="#" onclick="return false;"><?php echo __('admin_nav_tools'); ?></a>
 											<ul>
-												<?php if (checkAdminPermission('cacheman_perm', 'cacheman_clearcache_perm')) { ?><li><?php echo \Html::anchor('admin/cacheman', \Lang::get('admin_nav_cacheman')); ?></li><?php } ?> 
+												<?php if (checkAdminPermission('cacheman_perm', 'cacheman_clearcache_perm')) { ?><li><?php echo \Html::anchor('admin/cacheman', __('admin_nav_cacheman')); ?></li><?php } ?> 
 											</ul>
 										</li>
 										<?php } ?> 
 									</ul>
 								</li>
+								<!--end website menu-->
+								<?php 
+								// permission check for top parent menu.
+								if (checkAdminPermission('account_perm', 'account_viewusers_perm')
+									|| checkAdminPermission('account_perm', 'account_add_perm')
+									|| checkAdminPermission('account_perm', 'account_edit_perm')
+									|| checkAdminPermission('accountlv_perm', 'accountlv_viewlevels_perm')
+									|| checkAdminPermission('acperm_perm', 'acperm_manage_perm')
+								) { ?><!--accounts, levels, permissions menu-->
 								<li>
-									<a href="#" onclick="return false;"><?php echo \Lang::get('admin_users_roles_permissions'); ?></a>
+									<a href="#" onclick="return false;"><?php echo __('admin_users_roles_permissions'); ?></a>
 									<ul>
-										<?php if (checkAdminPermission('account_perm', 'account_viewusers_perm')) { ?><li><?php echo \Html::anchor('admin/account', \Lang::get('admin_users')); ?></li><?php } ?> 
-										<?php if (checkAdminPermission('account_perm', 'account_add_perm')) { ?><li><?php echo \Html::anchor('admin/account/add', \Lang::get('admin_add_user')); ?></li><?php } ?> 
-										<?php if (checkAdminPermission('account_perm', 'account_edit_perm')) { ?><li><?php echo \Html::anchor('admin/account/edit', \Lang::get('admin_edit_my_account')); ?></li><?php } ?> 
-										<?php if (checkAdminPermission('accountlv_perm', 'accountlv_viewlevels_perm') || checkAdminPermission('acperm_perm', 'acperm_manage_perm')) { ?> 
 										<li>
-											<a href="#" onclick="return false;"><?php echo \Lang::get('admin_roles_permissions'); ?></a>
+											<a<?php if (checkAdminPermission('account_perm', 'account_viewusers_perm')) { ?> href="<?php echo \Uri::create('admin/account'); ?>"<?php } else { ?> href="#" onclick="return false;"<?php } ?>><?php echo __('admin_users'); ?></a>
+											<?php 
+											// check permission for parent menu
+											if (checkAdminPermission('account_perm', 'account_add_perm')
+												|| checkAdminPermission('account_perm', 'account_edit_perm')
+											) { ?> 
 											<ul>
-												<?php if (checkAdminPermission('accountlv_perm', 'accountlv_viewlevels_perm')) { ?><li><?php echo \Html::anchor('admin/account-level', \Lang::get('admin_roles')); ?></li><?php } ?> 
-												<?php if (checkAdminPermission('acperm_perm', 'acperm_manage_perm')) { ?><li><?php echo \Html::anchor('admin/account-level-permission', \Lang::get('admin_permissions_for_roles')); ?></li><?php } ?> 
-												<?php if (checkAdminPermission('acperm_perm', 'acperm_manage_perm')) { ?><li><?php echo \Html::anchor('admin/account-permission', \Lang::get('admin_permissions_for_users')); ?></li><?php } ?> 
+												<?php if (checkAdminPermission('account_perm', 'account_add_perm')) { ?><li><?php echo \Html::anchor('admin/account/add', __('admin_add_user')); ?></li><?php } ?> 
+												<?php if (checkAdminPermission('account_perm', 'account_edit_perm')) { ?><li><?php echo \Html::anchor('admin/account/edit', __('admin_edit_my_account')); ?></li><?php } ?> 
+											</ul>
+											<?php }// end check permission for parent menu ?> 
+										</li>
+										<?php 
+										// check permission for parent menu
+										if (checkAdminPermission('accountlv_perm', 'accountlv_viewlevels_perm') 
+											|| checkAdminPermission('acperm_perm', 'acperm_manage_perm')
+										) { ?> 
+										<li>
+											<a href="#" onclick="return false;"><?php echo __('admin_roles_permissions'); ?></a>
+											<ul>
+												<?php if (checkAdminPermission('accountlv_perm', 'accountlv_viewlevels_perm')) { ?><li><?php echo \Html::anchor('admin/account-level', __('admin_roles')); ?></li><?php } ?> 
+												<?php if (checkAdminPermission('acperm_perm', 'acperm_manage_perm')) { ?><li><?php echo \Html::anchor('admin/account-level-permission', __('admin_permissions_for_roles')); ?></li><?php } ?> 
+												<?php if (checkAdminPermission('acperm_perm', 'acperm_manage_perm')) { ?><li><?php echo \Html::anchor('admin/account-permission', __('admin_permissions_for_users')); ?></li><?php } ?> 
 											</ul>
 										</li>
-										<?php } ?> 
+										<?php }// end check permission for parent menu ?> 
 									</ul>
 								</li>
-								<li><a href="#" onclick="return false;"><?php echo \Lang::get('admin_components'); ?></a>
+								<?php }// end permission check for top parent menu ?><!--end accounts, levels, permissions menu-->
+								<!--components menu-->
+								<li><a href="#" onclick="return false;"><?php echo __('admin_components'); ?></a>
 									<?php echo \Library\Modules::forge()->listAdminNavbar(); ?> 
 								</li>
-								<li><a href="#" onclick="return false;"><?php echo \Lang::get('admin_extensions'); ?></a>
+								<!--end components menu-->
+								<?php 
+								// permission check for top parent menu.
+								if (
+									checkAdminPermission('siteman_perm', 'siteman_viewsites_perm')
+								) { ?><!--extensions menu-->
+								<li><a href="#" onclick="return false;"><?php echo __('admin_extensions'); ?></a>
 									<ul>
-										<?php if (checkAdminPermission('siteman_perm', 'siteman_viewsites_perm')) { ?><li><?php echo \Html::anchor('admin/siteman', \Lang::get('admin_multisite_manager')); ?></li><?php } ?> 
+										<?php if (checkAdminPermission('siteman_perm', 'siteman_viewsites_perm')) { ?><li><?php echo \Html::anchor('admin/siteman', __('admin_multisite_manager')); ?></li><?php } ?> 
 									</ul>
 								</li>
+								<?php }// end permission check for top parent menu ?><!--end extensions menu-->
 							</ul>
 							<ul class="nav navbar-nav navbar-right sm sm-bsblack navbar-smart-menu">
 								<li class="language-switch"><?php echo languageSwitchAdminNavbar(); ?></li>
@@ -106,8 +139,8 @@ include __DIR__ . DS . 'inc_html_head.php';
  									</a>
  									<ul>
  										<li><a href="#" onclick="return false;"><?php echo $cookie_admin['account_display_name']; ?></a></li>
- 										<?php if (checkAdminPermission('account_perm', 'account_edit_perm')) { ?><li><?php echo \Html::anchor('admin/account/edit', \Lang::get('admin_edit_my_account')); ?></li><?php } ?> 
- 										<li><?php echo \Html::anchor('admin/logout', \Lang::get('admin_logout')); ?></li>
+ 										<?php if (checkAdminPermission('account_perm', 'account_edit_perm')) { ?><li><?php echo \Html::anchor('admin/account/edit', __('admin_edit_my_account')); ?></li><?php } ?> 
+ 										<li><?php echo \Html::anchor('admin/logout', __('admin_logout')); ?></li>
  									</ul>
 								</li>
 								
@@ -133,7 +166,7 @@ include __DIR__ . DS . 'inc_html_head.php';
 			</div><!--.the-page-inner-container-->
 		</div><!--.the-page-container-->
 		<div class="the-page-footer">
-			<?php echo \Lang::get('fslang_credit'); // you can remove credit or change it. ?> 
+			<?php echo __('fslang_credit'); // you can remove credit or change it. ?> 
 		</div>
 		
 		

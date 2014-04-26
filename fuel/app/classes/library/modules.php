@@ -149,7 +149,7 @@ class Modules
             unset($class_name_with_namespace, $file, $handle, $module_path, $obj);
 
             if ($output != null) {
-                $output = '<ul>' . "\n" . $output . '</ul>' . "\n";
+                $output = "\n" . '<ul>' . "\n" . $output . '</ul>' . "\n";
             }
 
             return $output;
