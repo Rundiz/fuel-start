@@ -312,7 +312,7 @@ class Model_Accounts extends \Orm\Model
         $account_id = $cookie['account_id'];
         unset($cookie);
         
-        // get site id
+        // get site id and set table prefix for site
         $site_id = \Model_Sites::getSiteId(false);
         $table_site_prefix = '';
         if ($site_id != '1') {
@@ -331,7 +331,7 @@ class Model_Accounts extends \Orm\Model
                 ->execute();
         $my_level = $my_level->current();
 
-        if ($my_level == null) {
+        if ($my_level == null || $my_level->count() == '0') {
             return false;
         }
         $my_level_priority = $my_level->account_level_group->level_priority;

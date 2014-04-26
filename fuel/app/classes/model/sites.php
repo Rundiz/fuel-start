@@ -171,9 +171,17 @@ class Model_Sites extends \Orm\Model
                 ->as_object()
                 ->execute();
         foreach ($result as $row) {
+            // check and set level group id
+            $lvg = \Model_AccountLevelGroup::getHighestPriorityAccountLevel($row->account_id);
+            if ($lvg !== false && $lvg->level_group_id == '1') {
+                $level_group_id = '1';
+            } else {
+                $level_group_id = '3';// 3 is just member. always set to 3 for non super-administrator for safety.
+            }
+            
             if (!in_array($row->account_id, $exist_account_id)) {
                 \DB::insert($site_id . '_account_level')->set(array(
-                    'level_group_id' => $row->level_group_id,
+                    'level_group_id' => $level_group_id,
                     'account_id' => $row->account_id
                 ))->execute();
                 
@@ -211,6 +219,11 @@ class Model_Sites extends \Orm\Model
         static::find($site_id)->delete();
         
         // clear cache
+        \Extension\Cache::deleteCache('model.accounts-checkAccount-' . $site_id);
+        \Extension\Cache::deleteCache('model.accountLevelPermission-checkLevelPermission-' . $site_id);
+        \Extension\Cache::deleteCache('model.accountPermission-checkAccountPermission-' . $site_id);
+        \Extension\Cache::deleteCache('model.config-getval-' . $site_id);
+        \Extension\Cache::deleteCache('model.config-getvalues-' . $site_id);
         \Extension\Cache::deleteCache('model.sites-getSiteId');
         \Extension\Cache::deleteCache('model.sites-isSiteEnabled');
         \Extension\Cache::deleteCache('controller.AdminController-generatePage-fs_list_sites');

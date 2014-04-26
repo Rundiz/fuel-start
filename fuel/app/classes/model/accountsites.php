@@ -36,7 +36,12 @@ class Model_AccountSites extends \Orm\Model
      */
     public function addLoginSession($data = array())
     {
-        $site_id = \Model_Sites::getSiteId(false);
+        if (!isset($data['site_id'])) {
+            $site_id = \Model_Sites::getSiteId(false);
+        } else {
+            $site_id = $data['site_id'];
+        }
+        unset($data['site_id']);
 
         // find exists last login on target site id.
         $account_sites = \Model_AccountSites::query()->where('account_id', $data['account_id'])->where('site_id', $site_id);

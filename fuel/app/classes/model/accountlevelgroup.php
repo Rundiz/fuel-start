@@ -123,6 +123,43 @@ class Model_AccountLevelGroup extends \Orm\Model
 
         return true;
     }// editLevel
+    
+    
+    /**
+     * get highest priority level of selected user.
+     * 
+     * @param integer $account_id account id.
+     * @return mixed return object when found, return false when not found
+     */
+    public static function getHighestPriorityAccountLevel($account_id = '')
+    {
+        // get site id and set table prefix for site
+        $site_id = \Model_Sites::getSiteId(false);
+        $table_site_prefix = '';
+        if ($site_id != '1') {
+            $table_site_prefix = $site_id . '_';
+        }
+        unset($site_id);
+        
+        $query = \DB::select()
+                ->from($table_site_prefix . 'account_level')
+                ->as_object('\Model_AccountLevel')
+                ->join($table_site_prefix . 'account_level_group', 'LEFT')
+                ->on($table_site_prefix . 'account_level_group.level_group_id', '=', $table_site_prefix . 'account_level.level_group_id')
+                ->where('account_id', $account_id)
+                ->order_by('level_priority', 'ASC')
+                ->execute();
+        
+        if ($query == null || $query->count() == '0') {
+            return false;
+        }
+        
+        $entry = $query->current();
+        
+        unset($query);
+        
+        return $entry;
+    }// getHighestPriorityAccountLevel
 
 
     /**
