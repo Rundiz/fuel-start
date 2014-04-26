@@ -398,7 +398,7 @@ echo \Theme::instance()->asset->js('amplify.min.js', array(), 'fuelstart_config'
 		var basepath = $('#cfg-ftp_basepath').val();
 		
 		$.ajax({
-			url: base_url+'admin/config/ajax_test_ftp',
+			url: site_url+'admin/config/ajax_test_ftp',
 			type: 'POST',
 			data: csrf_name+'='+nocsrf_val+'&hostname='+ftp_host+'&username='+username+'&password='+password+'&port='+port+'&passive='+passive+'&basepath='+basepath,
 			dataType: 'json',

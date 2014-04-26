@@ -98,7 +98,7 @@
 			update : function () {
 				var orders = $('.table-sortable tbody').sortable('serialize');
 				$.ajax({
-					url: base_url+'admin/account-level/ajaxsort',
+					url: site_url+'admin/account-level/ajaxsort',
 					type: 'POST',
 					data: csrf_name+'='+nocsrf_val+'&'+orders,
 					dataType: 'json',

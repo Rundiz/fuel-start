@@ -87,7 +87,7 @@ include_once __DIR__ . DS . 'functions.php';
 		
 		<script type="text/javascript">
 			// required js variables for use in .js file.
-			var base_url = '<?php echo \Uri::base(); ?>';
+			var base_url = '<?php echo \Uri::base(false); ?>';
 			var site_url = '<?php echo \Uri::create(); ?>/';
 			var theme_assets = '<?php echo Uri::createNL(\Theme::instance()->asset_path('')); ?>';
 			var csrf_name = '<?php echo \Config::get('security.csrf_token_key'); ?>';
