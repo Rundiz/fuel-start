@@ -186,9 +186,11 @@
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">
 			<button type="submit" class="btn btn-primary"><?php echo __('account_submit'); ?></button>
-			<a href="<?php echo \Uri::create('admin/account'); ?>" class="btn btn-default"><?php echo \Lang::get('admin_cancel'); ?></a>
+			<a href="<?php echo \Uri::create('admin/account'); ?>" class="btn btn-default"><?php echo __('admin_cancel'); ?></a>
 			<?php if (\Uri::segment(3) == 'add') { ?> 
 			<span class="text-muted"><?php echo \Lang::get('account_add_account_from_admin_will_not_send_email_to_user'); ?></span>
+			<?php } elseif (\Uri::segment(3) == 'edit') {?> 
+			<a href="<?php echo \Uri::create('admin/account-permission/index/' . $account_id); ?>" class="btn btn-default"><?php echo __('account_set_permission'); ?></a>
 			<?php } // endif; ?> 
 		</div>
 	</div>

@@ -15,14 +15,28 @@
 				<tr>
 					<th class="perm-page-cell-head"><?php echo \Lang::get('acperm_permission_page'); ?></th>
 					<th class="perm-action-cell-head"><?php echo \Lang::get('acperm_permission_action'); ?></th>
-					<th><?php echo __('acperm_account_x', array('account_username' => (isset($account_username) ? htmlspecialchars($account_username) : null))); ?></th>
+					<th><?php echo \Html::anchor('admin/account/edit/' . $account_id, 
+							__('acperm_account_x', 
+								array(
+									'account_username' =>
+									(isset($account_username) ? htmlspecialchars($account_username) : null)
+								)
+							)
+						); ?></th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
 					<th class="perm-page-cell-head"><?php echo \Lang::get('acperm_permission_page'); ?></th>
 					<th class="perm-action-cell-head"><?php echo \Lang::get('acperm_permission_action'); ?></th>
-					<th><?php echo __('acperm_account_x', array('account_username' => (isset($account_username) ? htmlspecialchars($account_username) : null))); ?></th>
+					<th><?php echo \Html::anchor('admin/account/edit/' . $account_id, 
+							__('acperm_account_x', 
+								array(
+									'account_username' =>
+									(isset($account_username) ? htmlspecialchars($account_username) : null)
+								)
+							)
+						); ?></th>
 				</tr>
 			</tfoot>
 			<tbody>
