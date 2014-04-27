@@ -92,11 +92,16 @@ class Controller_Admin_AccountPermission extends \Controller_AdminController
         $account_check_result = $this->checkAccountData($account_id);
         $output['account_check_result'] = (is_object($account_check_result) || is_array($account_check_result) ? true : $account_check_result);
         $output['account_username'] = (is_object($account_check_result) || is_array($account_check_result) ? $account_check_result->account_username : null);
-        $output['account_level'] = $account_check_result->account_level;
+        if ($output['account_check_result'] != true) {
+            $output['account_level'] = $account_check_result->account_level;
+        }
+        
         // set level group for check
         $level_group_check = array();
-        foreach ($account_check_result->account_level as $lvl) {
-            $level_group_check[] = $lvl->level_group_id;
+        if ($output['account_check_result'] != true) {
+            foreach ($account_check_result->account_level as $lvl) {
+                $level_group_check[] = $lvl->level_group_id;
+            }
         }
         $output['level_group_check'] = $level_group_check;
         unset($level_group_check);
