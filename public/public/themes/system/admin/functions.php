@@ -23,6 +23,26 @@ function checkAdminPermission($page_name = '', $action = '', $account_id = '')
 
 
 /**
+ * get root site url
+ * it is up to configuration with {lang} in url or not. if there is no {lang} in url, the root web may contain // at the end.
+ * 
+ * @return string
+ */
+function getRootSiteURL()
+{
+	$root_url = \Uri::create('/');
+	
+	if (mb_substr($root_url, -2) == '//') {
+		// this case is http://domain/fuelstart//
+		return mb_substr($root_url, 0, -1);
+	}
+	
+	// this case is http://domain/th/fuelstart/
+	return $root_url;
+}// getRootSiteURL
+
+
+/**
  * language switch for admin page based on Bootstrap navbar.
  * 
  * @return string

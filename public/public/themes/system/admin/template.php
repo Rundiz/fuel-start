@@ -47,7 +47,7 @@ include __DIR__ . DS . 'inc_html_head.php';
 											</ul>
 											<?php }// endif; ?> 
 										</li>
-										<li><?php echo \Html::anchor('', __('admin_visit_site')); ?> 
+										<li><?php echo \Html::anchor(\Uri::base(), __('admin_visit_site')); ?> 
 											<?php if (isset($fs_list_sites) && $fs_list_sites != null) { ?> 
 											<ul>
 											<?php
