@@ -1,3 +1,6 @@
+<?php
+$nocsrf_form_value = \Extension\NoCsrf::generate(null, true);
+?>
 <h1><?php echo (\Uri::segment(3) == 'add' ? \Lang::get('account_add') : \Lang::get('account_edit')); ?></h1>
 
 <?php echo \Extension\Form::openMultipart(array('class' => 'form-horizontal', 'role' => 'form')); ?> 
@@ -7,7 +10,7 @@
 		<?php } ?> 
 	</div>
 	<div class="hidden csrf-container">
-		<?php echo \Extension\NoCsrf::generate(); ?> 
+		<input type="hidden" name="<?php echo \Config::get('security.csrf_token_key'); ?>" value="<?php echo $nocsrf_form_value; ?>" />
 	</div>
 
 	<?php if (!isset($hide_form) || (isset($hide_form) && $hide_form === false)) { ?> 
@@ -239,7 +242,7 @@
 			$.ajax({
 				url: '<?php echo \Uri::create('admin/account/delete_avatar'); ?>',
 				type: 'POST',
-				data: '<?php echo \Config::get('security.csrf_token_key'); ?>=<?php echo \Extension\NoCsrf::generate(null, true); ?>&account_id=<?php echo $account_id; ?>',
+				data: '<?php echo \Config::get('security.csrf_token_key'); ?>=<?php echo $nocsrf_form_value; ?>&account_id=<?php echo $account_id; ?>',
 				dataType: 'json',
 				success: function(data) {
 					if (data.result == true) {

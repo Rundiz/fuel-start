@@ -1,3 +1,4 @@
+<?php $nocsrf_form_input = \Extension\NoCsrf::generate(); ?> 
 <article class="general-page-container">
 	<h1><?php echo \Lang::get('account_login'); ?></h1>
 	
@@ -7,7 +8,7 @@
 			<div class="alert alert-<?php echo str_replace('error', 'danger', $form_status); ?>"><button type="button" class="close" data-dismiss="alert">&times;</button><?php echo $form_status_message; ?></div>
 			<?php } ?> 
 		</div>
-		<?php echo \Extension\NoCsrf::generate(); ?> 
+		<?php echo $nocsrf_form_input; ?> 
 	
 		<div class="form-group">
 			<label for="account_username" class="col-sm-2 control-label"><?php echo __('account_username_or_email'); ?>: <span class="txt_require">*</span></label>
@@ -60,7 +61,7 @@
 			<div class="alert alert-<?php echo str_replace('error', 'danger', $form_status); ?>"><button type="button" class="close" data-dismiss="alert">&times;</button><?php echo $form_status_message; ?></div>
 			<?php } ?> 
 		</div>
-		<?php echo \Extension\NoCsrf::generate(); ?> 
+		<?php echo $nocsrf_form_input; ?> 
 	
 		<div class="form-group">
 			<label for="account_username2" class="col-sm-2 control-label"><?php echo __('account_username_or_email'); ?>: <span class="txt_require">*</span></label>

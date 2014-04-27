@@ -75,6 +75,16 @@ class Controller_Account_Login extends \Controller_BaseController
                 // validate token failed
                 $output['form_status'] = 'error';
                 $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
+
+                // if ajax request, return error message.
+                if (\Input::is_ajax()) {
+                    unset($output['config']);
+
+                    $response = new \Response();
+                    $response->set_header('Content-Type', 'application/json');
+                    $response->body(json_encode($output));
+                    return $response;
+                }
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';

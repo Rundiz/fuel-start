@@ -86,7 +86,20 @@ class NoCsrf extends \NoCsrf
         }
 
         // if csrf session exists, return old value. if not, return new value.
-        if (!isset($_SESSION['csrf_' . $key]) || (isset($_SESSION['csrf_' . $key]) && $_SESSION['csrf_' . $key] == null)) {
+        if (
+            (
+                !isset($_SESSION['token_generated']) 
+                || (
+                    isset($_SESSION['token_generated']) 
+                    && $_SESSION['token_generated']+5 < time()
+                )
+            )
+            || (
+                    !isset($_SESSION['csrf_' . $key])
+            )
+        ) {
+            $_SESSION['token_generated'] = time();
+            
             if ($noinput === false) {
                 return '<input type="hidden" name="' . $key . '" value="' . parent::generate($key) . '" />';
             } else {
