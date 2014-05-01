@@ -62,10 +62,10 @@ abstract class Controller_BaseController extends \Controller
         // start theme class
         $theme = \Theme::instance();
         $theme->active($this->theme_system_name);
-        
+
         $output['layout_content'] = $theme->view($view, $output, $auto_filter);
         $output['layout_file'] = 'front/layout/' . $layout;
-        
+
         return $output;
     }// generateLayout
     

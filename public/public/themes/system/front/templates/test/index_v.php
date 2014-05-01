@@ -13,6 +13,7 @@
 	Nunc non molestie nunc. Donec eros ligula, pretium et dui eget, laoreet fermentum orci. Vivamus dictum libero at sem condimentum, a molestie magna dictum. Donec bibendum sagittis enim, vehicula ornare lorem. Sed scelerisque iaculis odio dictum pellentesque. Sed viverra ac dui non tincidunt. Fusce arcu ipsum, luctus elementum lacus et, consequat ultricies lorem. Sed congue ante accumsan arcu malesuada, vel auctor eros accumsan.
 </p>
 <p>
-	<i class="glyphicon glyphicon-link"></i> <a href="<?php echo \Uri::create('test/2column'); ?>">Go to 2 column test.</a><br>
 	<i class="glyphicon glyphicon-link"></i> <a href="<?php echo \Uri::create('test'); ?>">Go to 1 column test.</a><br>
+	<i class="glyphicon glyphicon-link"></i> <a href="<?php echo \Uri::create('test/2column'); ?>">Go to 2 column test.</a><br>
+	<i class="glyphicon glyphicon-link"></i> <a href="<?php echo \Uri::create('test/1inside2column'); ?>">Go to 1 column inside 2 column test.</a> (This is multiple sub layout)<br>
 </p>
