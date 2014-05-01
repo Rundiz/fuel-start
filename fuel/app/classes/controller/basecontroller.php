@@ -12,6 +12,9 @@
 
 abstract class Controller_BaseController extends \Controller
 {
+    
+    
+    public $theme_system_name;
 
 
     public function __construct()
@@ -32,15 +35,73 @@ abstract class Controller_BaseController extends \Controller
 
         // call web cron to run tasks (including purge old login history)
         \Library\WebCron::forge()->init();
+        
+        // set default theme name
+        // @todo [theme] for theme management. you should get default theme setting from db here.
+        $this->theme_system_name = 'system';
     }// __construct
+    
+    
+    /**
+     * Generate the page layout.
+     * Use this method if you want to generate sub layout (sub layout is not the whole page template.)
+     * You can use this method to generate sub layout multiple time and you have to call generatePage.
+     * 
+     * @param string $view Path to view of current controller.
+     * @param array $output The data that will be send to view file.
+     * @param boolean $auto_filter Auto filter html?
+     * @param string $layout The layout file.
+     * @return array The generate content put in [layout_content] and the layout file that ready for create view put in [layout_file]
+     */
+    public function generateLayout($view = null, $output = array(), $auto_filter = null, $layout = null)
+    {
+        if (!is_array($output)) {
+            $output = array();
+        }
+        
+        // start theme class
+        $theme = \Theme::instance();
+        $theme->active($this->theme_system_name);
+        
+        $output['layout_content'] = $theme->view($view, $output, $auto_filter);
+        $output['layout_file'] = 'front/layout/' . $layout;
+        
+        return $output;
+    }// generateLayout
+    
+    
+    /**
+     * Generate the page layout and then generate page.
+     * Use this method if you want to generate sub layout and then generate page immediately.
+     * 
+     * @param string $view Path to view of current controller.
+     * @param array $output The data that will be send to view file.
+     * @param boolean $auto_filter Auto filter html?
+     * @param string $layout The layout file.
+     * @return view
+     */
+    public function generateLayoutAndPage($view = null, $output = array(), $auto_filter = null, $layout = null)
+    {
+        $layout = $this->generateLayout($view, $output, $auto_filter, $layout);
+        
+        $output = array_merge($layout, $output);
+        
+        $layout_file = $view;
+        if (isset($layout['layout_file'])) {
+            $layout_file = $layout['layout_file'];
+        }
+        unset($layout);
+        
+        return $this->generatePage($layout_file, $output, false);
+    }// generateLayoutAndPage
 
 
     /**
-     * generate whole page
+     * Generate the whole page template.
      *
-     * @param string $view path to view of current controller.
-     * @param array $output
-     * @param boolean $auto_filter
+     * @param string $view Path to view of current controller.
+     * @param array $output The data that will be send to view file.
+     * @param boolean $auto_filter Auto filter html?
      * @return view
      */
     public function generatePage($view = null, $output = array(), $auto_filter = null)
@@ -51,7 +112,7 @@ abstract class Controller_BaseController extends \Controller
 
         // start theme class
         $theme = \Theme::instance();
-        $theme->active('system');
+        $theme->active($this->theme_system_name);
 
         // load requested controller theme into page_content variable.
         $output['page_content'] = $theme->view($view, $output, $auto_filter);
@@ -61,6 +122,13 @@ abstract class Controller_BaseController extends \Controller
     }// generatePage
 
 
+    /**
+     * Generate title by set title name and name separator position.
+     * 
+     * @param string|array $title Title name. This can be array that the title will be generate respectively.
+     * @param string $name_position Position of name to generate. if first, the site name will come first then title name. example: site name | title 1 | title 2
+     * @return string Generated title.
+     */
     public function generateTitle($title, $name_position = 'last')
     {
         $cfg_values = array('site_name', 'page_title_separator');
