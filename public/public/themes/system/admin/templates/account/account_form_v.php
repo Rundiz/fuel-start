@@ -206,20 +206,14 @@ $nocsrf_form_value = \Extension\NoCsrf::generate(null, true);
 ?> 
 
 <script type="text/javascript">
-	$(function() {
-		<?php 
-		// check that this is pc request to display datepicker
-		include_once APPPATH . 'vendor' . DS . 'browser' . DS . 'lib' . DS . 'Browser.php';
-		$browser = new Browser();
-		if (!$browser->isMobile() && !$browser->isTablet()) { 
-		?> 
-		$('#account_birthdate').datepicker({
-			format: 'yyyy-mm-dd'
-		});
-		<?php 
-		} // endif;
-		unset($browser);
-		?> 
+	$(function() { 
+		// datepicker
+		if (!Modernizr.inputtypes.date) {
+			// this browser support date picker.
+			$('#account_birthdate').datepicker({
+				format: 'yyyy-mm-dd'
+			});
+		}// datepicker
 		
 		// change account status and toggle status text
 		$('.account_status').change(function() {
