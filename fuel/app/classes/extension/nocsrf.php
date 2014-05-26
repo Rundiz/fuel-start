@@ -84,6 +84,7 @@ class NoCsrf extends \NoCsrf
         if ($key == null) {
             $key = \Config::get('security.csrf_token_key');
         }
+        $time_span = \Config::get('security.csrf_expiration');
 
         // if csrf session exists, return old value. if not, return new value.
         if (
@@ -91,7 +92,7 @@ class NoCsrf extends \NoCsrf
                 !isset($_SESSION['token_generated']) 
                 || (
                     isset($_SESSION['token_generated']) 
-                    && $_SESSION['token_generated']+5 < time()
+                    && ($_SESSION['token_generated']+($time_span-120)) < time()
                 )
             )
             || (
