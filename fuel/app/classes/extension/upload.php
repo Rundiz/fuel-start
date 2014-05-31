@@ -190,6 +190,43 @@ class Upload
         }
     }// getErrors
 
+
+    /**
+     * get php.ini upload max file size and return as bytes.
+     * 
+     * @return int upload max file size in byte.
+     */
+    public static function getMaximumUploadSize()
+    {
+        $max_php_upload = ini_get("upload_max_filesize"); // ex: 2M
+        
+        if (!is_numeric($max_php_upload)) {
+            $sSuffix = substr($max_php_upload, -1);
+            $iValue = substr($max_php_upload, 0, -1);
+            
+            switch(strtoupper($sSuffix)){  
+                case 'P':
+                    $iValue *= 1024;
+                case 'T':
+                    $iValue *= 1024;
+                case 'G':
+                    $iValue *= 1024;
+                case 'M':
+                    $iValue *= 1024;
+                case 'K':
+                    $iValue *= 1024;
+                    break;
+                }
+                
+                $max_php_upload = $iValue;
+                
+                unset($iValue, $sSuffix);
+        }
+        
+        return $max_php_upload;
+    }// getMaximumUploadSize
+
+
     /**
      * get mime types list from extension
      *
@@ -334,7 +371,7 @@ class Upload
         }
 
         // we need to collect data before call upload() method. if call after upload() method, the error may occur.
-        $upload_data['dimensions'] = ($this->u_file->getPathname() != null ? $this->u_file->getDimensions() : array('width' => '', 'height' => '')); // width, height (add @ to prevent error when reading false image, example text file with .jpg extension).
+        $upload_data['dimensions'] = ($this->u_file->getPathname() != null ? @$this->u_file->getDimensions() : array('width' => '', 'height' => '')); // width, height (add @ to prevent error when reading false image, example text file with .jpg extension).
         $upload_data['extension'] = $this->u_file->getExtension(); // ext without dot.
         $upload_data['md5'] = ($this->u_file->getPathname() != null ? $this->u_file->getMd5() : ''); // md5 file.
         $upload_data['mimetype'] = ($this->u_file->getPathname() != null ? $this->u_file->getMimetype() : ''); // mime type
@@ -346,6 +383,10 @@ class Upload
 
         // try to upload and return upload status, if error occur return false.
         try {
+			// auto loader again to prevent some case error in modules.
+            $autoloader = new \Upload\Autoloader();
+            $autoloader->register();
+
             $result = $this->u_file->upload();
 
             // almost done, unregister autoload
