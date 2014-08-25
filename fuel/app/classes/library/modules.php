@@ -123,9 +123,21 @@ class Modules
 
             // loop module paths
             foreach ($this->module_paths as $module_path) {
-                if ($handle = opendir($module_path)) {
-                    while (false != ($file = readdir($handle))) {
-                        if ($file != '.' && $file != '..' && is_dir($module_path . $file)) {
+                $config['basedir'] = $module_path;
+                $file_area = \File::forge($config);
+                unset($config);
+                
+                $files = \File::read_dir($module_path, 1,
+                    array(
+                        '!^\.',
+                    ),
+                    $file_area
+                );
+                unset($file_area);
+
+                foreach ($files as $file => $subs) {
+                    $file = mb_substr($file, 0, mb_strlen($file)-1);
+                    if (is_dir($module_path . $file)) {
                             if (file_exists($module_path . $file . DS . 'classes' . DS . $file . 'admin.php') && is_file($module_path . $file . DS . 'classes' . DS . $file . 'admin.php')) {
                                 $class_name_with_namespace = '\\' . ucfirst($file) . '\\' . ucfirst($file) . 'Admin' ;
 
@@ -138,15 +150,13 @@ class Modules
                                         $output .= "\t" . call_user_func_array(array($obj, 'admin_navbar'), array()) . "\n";
                                     }
                                 }
-                            }
-                        }
-                    }
+                        }// endif file exists.
+                    }// endif is dir
+                }// endforaech;
+                unset($class_name_with_namespace, $file, $files, $obj, $subs);
+            }// endforaech;
 
-                    closedir($handle);
-                }
-            }
-
-            unset($class_name_with_namespace, $file, $handle, $module_path, $obj);
+            unset($module_path);
 
             if ($output != null) {
                 $output = "\n" . '<ul>' . "\n" . $output . '</ul>' . "\n";
@@ -172,9 +182,21 @@ class Modules
 
             // loop module paths
             foreach ($this->module_paths as $module_path) {
-                if ($handle = opendir($module_path)) {
-                    while (false != ($file = readdir($handle))) {
-                        if ($file != '.' && $file != '..' && is_dir($module_path . $file)) {
+                $config['basedir'] = $module_path;
+                $file_area = \File::forge($config);
+                unset($config);
+                
+                $files = \File::read_dir($module_path, 1,
+                    array(
+                        '!^\.',
+                    ),
+                    $file_area
+                );
+                unset($file_area);
+
+                foreach ($files as $file => $subs) {
+                    $file = mb_substr($file, 0, mb_strlen($file)-1);
+                    if (is_dir($module_path . $file)) {
                             if (file_exists($module_path . $file . DS . 'classes' . DS . $file . 'admin.php') && is_file($module_path . $file . DS . 'classes' . DS . $file . 'admin.php')) {
                                 $class_name_with_namespace = '\\' . ucfirst($file) . '\\' . ucfirst($file) . 'Admin' ;
 
@@ -196,15 +218,13 @@ class Modules
                                         $i++;
                                     }
                                 }
-                            }
-                        }
-                    }
+                        }// endif file exists.
+                    }// endif is dir
+                }// endforaech;
+                unset($class_name_with_namespace, $file, $files, $subs);
+            }// endforaech;
 
-                    closedir($handle);
-                }
-            }
-
-            unset($class_name_with_namespace, $file, $handle, $i, $info, $module_path);
+            unset($module_path);
 
             return $output;
         }
