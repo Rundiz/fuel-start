@@ -7,7 +7,6 @@ $baseDir = dirname(dirname($vendorDir));
 
 return array(
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
-    'Okvee\\Vimage' => array($vendorDir . '/okvee/vimage'),
     'Monolog' => array($vendorDir . '/monolog/monolog/src'),
-    'Fuel\\Upload' => array($vendorDir . '/fuelphp/upload/src'),
+    'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src'),
 );
