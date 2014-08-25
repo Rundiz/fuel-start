@@ -776,7 +776,7 @@ class Model_Accounts extends \Orm\Model
 
         if ($cookie_account != null) {
             $cookie_account = \Crypt::decode($cookie_account);
-            $cookie_account = unserialize($cookie_account);
+            $cookie_account = @unserialize($cookie_account);// there is no way to check is serialize or unserializable so i have to suppress error.
         }
 
         return $cookie_account;
