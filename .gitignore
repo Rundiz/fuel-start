@@ -7,6 +7,8 @@ Thumbs.db
 ehthumbs.db
 
 # Folder config file
+Thumbs.db
+desktop.ini
 Desktop.ini
 
 # Recycle Bin used on file shares
@@ -18,6 +20,7 @@ $RECYCLE.BIN/
 ################
 ##Fuel Start ignored files
 ################
+/composer.lock
 fuel/app/cache/
 fuel/app/cache/*
 fuel/app/logs/
