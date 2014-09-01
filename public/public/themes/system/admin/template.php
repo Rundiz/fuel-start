@@ -79,7 +79,8 @@ include __DIR__ . DS . 'inc_html_head.php';
 									|| checkAdminPermission('account_perm', 'account_add_perm')
 									|| checkAdminPermission('account_perm', 'account_edit_perm')
 									|| checkAdminPermission('accountlv_perm', 'accountlv_viewlevels_perm')
-									|| checkAdminPermission('acperm_perm', 'acperm_manage_perm')
+									|| checkAdminPermission('acperm_perm', 'acperm_manage_level_perm')
+									|| checkAdminPermission('acperm_perm', 'acperm_manage_user_perm')
 								) { ?><!--accounts, levels, permissions menu-->
 								<li>
 									<a href="#" onclick="return false;"><?php echo __('admin_users_roles_permissions'); ?></a>
@@ -100,14 +101,15 @@ include __DIR__ . DS . 'inc_html_head.php';
 										<?php 
 										// check permission for parent menu
 										if (checkAdminPermission('accountlv_perm', 'accountlv_viewlevels_perm') 
-											|| checkAdminPermission('acperm_perm', 'acperm_manage_perm')
+											|| checkAdminPermission('acperm_perm', 'acperm_manage_level_perm')
+											|| checkAdminPermission('acperm_perm', 'acperm_manage_user_perm')
 										) { ?> 
 										<li>
 											<a href="#" onclick="return false;"><?php echo __('admin_roles_permissions'); ?></a>
 											<ul>
 												<?php if (checkAdminPermission('accountlv_perm', 'accountlv_viewlevels_perm')) { ?><li><?php echo \Html::anchor('admin/account-level', __('admin_roles')); ?></li><?php } ?> 
-												<?php if (checkAdminPermission('acperm_perm', 'acperm_manage_perm')) { ?><li><?php echo \Html::anchor('admin/account-level-permission', __('admin_permissions_for_roles')); ?></li><?php } ?> 
-												<?php if (checkAdminPermission('acperm_perm', 'acperm_manage_perm')) { ?><li><?php echo \Html::anchor('admin/account-permission', __('admin_permissions_for_users')); ?></li><?php } ?> 
+												<?php if (checkAdminPermission('acperm_perm', 'acperm_manage_level_perm')) { ?><li><?php echo \Html::anchor('admin/account-level-permission', __('admin_permissions_for_roles')); ?></li><?php } ?> 
+												<?php if (checkAdminPermission('acperm_perm', 'acperm_manage_user_perm')) { ?><li><?php echo \Html::anchor('admin/account-permission', __('admin_permissions_for_users')); ?></li><?php } ?> 
 											</ul>
 										</li>
 										<?php }// end check permission for parent menu ?> 
