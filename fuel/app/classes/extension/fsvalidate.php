@@ -45,7 +45,7 @@ class FsValidate
     {
         list($table, $field) = explode('.', $options);
 
-        $result = \DB::select("LOWER (\"$field\")")
+        $result = \DB::select(\DB::expr("LOWER (\"$field\")"))
             ->where($field, '=', \Str::lower($val))
             ->from($table)->execute();
 
