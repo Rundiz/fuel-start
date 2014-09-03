@@ -110,6 +110,8 @@ function languageSwitchAdminNavbar()
                 $item['name'], 
                 array('class' => (isset($active_class) ? $active_class : ''))
             ) . '</li>' . "\n";
+			
+			unset($active_class);
         }
     }
 
