@@ -48,7 +48,7 @@ class Controller_Admin_Login extends \Controller_BaseController
 
         // set active theme for admin. this controller is not based on admin controller, then it is require to set to admin theme.
         $theme = \Theme::instance();
-        $theme->active('system');
+        $theme->active($this->theme_system_name);
 
         // set login redirect
         if (\Input::get('rdr') != null) {
