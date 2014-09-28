@@ -124,28 +124,42 @@ class Uri extends \Fuel\Core\Uri
      */
     public static function getCurrentQuerystrings($question_param = true, $valid_html = true, $valid_url = true)
     {
+        // the current query string can be ?a=b, ?a[]=b, ?a[a]=b, ?aก[bข]=b, ?a=b&amp;=b (a=b amp;=b), and can be more weird. so, i cannot use $_SERVER['querystring'] to re-format valid url and valid html encode.
         $querystring = '';
-
+        $querystring_array = array();
+        
         foreach ($_GET as $key => $value) {
-            if ($valid_html === true) {
-                $querystring .= urlencode($key) . '=' . urlencode($value);
+            if (is_array($value)) {
+                foreach ($value as $vk => $vv) {
+                    if ($valid_html === true) {
+                        $querystring_array[] = urlencode($key) . '[' . urlencode($vk) . ']=' . urlencode($vv);
+                    } else {
+                        $querystring_array[] = $key . '[' . $vk . ']=' . $vv;
+                    }
+                }
+                
+                unset($vk, $vv);
             } else {
-                $querystring .= $key . '=' . $value;
-            }
-
-            if (end($_GET) != $value) {
-                if ($valid_url === true) {
-                    $querystring .= '&amp;';
+                if ($valid_html === true) {
+                    $querystring_array[] = urlencode($key) . '=' . urlencode($value);
                 } else {
-                    $querystring .= '&';
+                    $querystring_array[] = $key . '=' . $value;
                 }
             }
+        }// endforeach $_GET
+        
+        if ($valid_url === true) {
+            $querystring = implode('&amp;', $querystring_array);
+        } else {
+            $querystring = implode('&', $querystring_array);
         }
+
+        unset($querystring_array);
 
         if ($querystring != null && $question_param === true) {
             $querystring = '?' . $querystring;
         }
-
+        
         return $querystring;
     }// getCurrentQuerystrings
     
