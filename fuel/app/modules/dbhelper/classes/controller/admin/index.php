@@ -34,6 +34,7 @@ class Controller_Admin_Index extends \Controller_AdminController
         // if form submitted
         if (\Input::method() == 'POST') {
             $table_name = trim(\Input::post('table_name'));
+            $output['table_name'] = $table_name;
             
             if (!\Extension\NoCsrf::check()) {
                 // validate token failed

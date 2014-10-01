@@ -12,7 +12,7 @@
                 <?php 
                 if (isset($list_tables) && !empty($list_tables)) {
                     foreach ($list_tables as $table) {
-                        echo '<option value="' . $table . '">' . $table . '</option>' . "\n";
+                        echo '<option value="' . $table . '"' . (isset($table_name) && $table_name == $table ? ' selected="selected"' : null) . '>' . $table . '</option>' . "\n";
                     }
                 }
                 unset($list_tables, $table);
