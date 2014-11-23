@@ -112,6 +112,52 @@ class Uri extends \Fuel\Core\Uri
             unset($uri_exp, $uris);
         }
     }// detectLanguage
+    
+    
+    /**
+     * get all the query string
+     * @param boolean $url_encode
+     * @return array
+     */
+    public static function getAllQuerystring($url_encode = true)
+    {
+        $querystring_array = array();
+        
+        if (isset($_GET) && is_array($_GET)) {
+            $querystrings = \Input::server('QUERY_STRING');
+            $querystring_exp = explode('&', $querystrings);
+            
+            if (is_array($querystring_exp) && !empty($querystring_exp)) {
+                foreach ($querystring_exp as $querystring) {
+                    $querystring_n_v = explode('=', $querystring);
+                    
+                    if (is_array($querystring_n_v)) {
+                        if ($url_encode !== true) {
+                            $querystring_array[urldecode($querystring_n_v[0])] = (isset($querystring_n_v[1]) ? urldecode($querystring_n_v[1]) : null);
+                        } else {
+                            $querystring_array[$querystring_n_v[0]] = (isset($querystring_n_v[1]) ? $querystring_n_v[1] : null);
+                        }
+                    } else {
+                        $querystring_array[$querystring_n_v];
+                    }
+                }
+                
+                return $querystring_array;
+            } else {
+                if (is_array($querystrings)) {
+                    return $querystrings;
+                } else {
+                    return array($querystrings);
+                }
+            }
+        } else {
+            if (!is_array($_GET)) {
+                return array($_GET);
+            } else {
+                return $_GET;
+            }
+        }
+    }// getAllQuerystring
 
 
     /**
@@ -125,28 +171,17 @@ class Uri extends \Fuel\Core\Uri
     public static function getCurrentQuerystrings($question_param = true, $valid_html = true, $valid_url = true)
     {
         // the current query string can be ?a=b, ?a[]=b, ?a[a]=b, ?aก[bข]=b, ?a=b&amp;=b (a=b amp;=b), and can be more weird. so, i cannot use $_SERVER['querystring'] to re-format valid url and valid html encode.
+        $all_querystring = static::getAllQuerystring($valid_html);
         $querystring = '';
         $querystring_array = array();
         
-        foreach ($_GET as $key => $value) {
-            if (is_array($value)) {
-                foreach ($value as $vk => $vv) {
-                    if ($valid_html === true) {
-                        $querystring_array[] = urlencode($key) . '[' . urlencode($vk) . ']=' . urlencode($vv);
-                    } else {
-                        $querystring_array[] = $key . '[' . $vk . ']=' . $vv;
-                    }
-                }
-                
-                unset($vk, $vv);
-            } else {
-                if ($valid_html === true) {
-                    $querystring_array[] = urlencode($key) . '=' . urlencode($value);
-                } else {
-                    $querystring_array[] = $key . '=' . $value;
+        if (!empty($all_querystring)) {
+            foreach ($all_querystring as $q_name => $q_value) {
+                if (!empty($q_name) || !empty($q_value)) {
+                    $querystring_array[] = $q_name . '=' . $q_value;
                 }
             }
-        }// endforeach $_GET
+        }
         
         if ($valid_url === true) {
             $querystring = implode('&amp;', $querystring_array);

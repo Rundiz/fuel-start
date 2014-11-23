@@ -23,7 +23,7 @@ class Html extends \Fuel\Core\Html
      * @param boolean $secure
      * @return string
      */
-    public static function fuelStartSortableLink($sortable_data = array(), $except_querystring = array(), $link = null, $link_text = '', $attributes = array(), $secure = null)
+    public static function fuelStartSortableLink(array $sortable_data = array(), array $except_querystring = array(), $link = null, $link_text = '', array $attributes = array(), $secure = null)
     {
         if ($link == null) {
             $link = \Uri::main();
@@ -38,33 +38,45 @@ class Html extends \Fuel\Core\Html
         // build querystring of sortable_data
         if (!empty($sortable_data) && is_array($sortable_data)) {
             foreach ($sortable_data as $name => $value) {
-                $querystring[$name] = $value;
+                if (!empty($name) || !empty($value)) {
+                    $querystring_array[] = $name . '=' . $value;
+                    $except_querystring = array_merge($except_querystring, array($name));
+                }
             }
+            unset($name, $value);
         }
 
-        // build querystring of exists querystring except sortable_data and except_querystring
-        foreach ($_GET as $key => $value) {
-            if (!in_array($key, $except_querystring) && !isset($querystring[$key])) {
-                $querystring[$key] = $value;
+        // build querystring of exists querystring except except_querystring
+        $all_querystring = \Uri::getAllQuerystring(true);
+        foreach ($all_querystring as $q_name => $q_value) {
+            if (!empty($q_name) || !empty($q_value)) {
+                if (!in_array(urldecode($q_name), $except_querystring)) {
+                    $querystring_array[] = $q_name . '=' . $q_value;
+                }
             }
+        }// endforeach
+        unset($all_querystring, $q_name, $q_value);
+        
+        if (isset($querystring_array)) {
+            $querystring[1] = implode('&amp;', $querystring_array);
         }
-        unset($key, $value);
+        $querystring_str = implode('&amp;', $querystring);
 
         // if there is querystring. build it as string (name=val&amp;name2=val2...)
         if (!empty($querystring)) {
-            $querystring_str = '';
-
-            foreach ($querystring as $key => $value) {
-                $querystring_str .= $key . '=' . $value;
-
-                if (end($querystring) != $value) {
-                    $querystring_str .= '&amp;';
-                }
-            }
 
             $link .= '?' . $querystring_str;
 
-            unset($key, $querystring, $querystring_str, $value);
+            unset($i, $key, $querystring, $querystring_str, $value);
+        }
+
+        // add sorted icons.
+        if (isset($sortable_data['orders']) && $sortable_data['orders'] == \Input::get('orders')) {
+            if (strtoupper(\Input::get('sort')) == 'ASC') {
+                $link_text .= ' <span class="glyphicon glyphicon-sort-by-attributes"></span>';
+            } elseif (strtoupper(\Input::get('sort')) == 'DESC') {
+                $link_text .= ' <span class="glyphicon glyphicon-sort-by-attributes-alt"></span>';
+            }
         }
 
         return \Html::anchor($link, $link_text, $attributes, $secure);
