@@ -25,6 +25,10 @@ class Image extends \Fuel\Core\Image
      */
     public static function checkMemAvailbleForResize($filename, $targetX, $targetY, $returnRequiredMem = false, $gdBloat = 1.68)
     {
+        if (!file_exists($filename) || (file_exists($filename) && !is_file($filename))) {
+            return false;
+        }
+        
         $maxMem = ((int) ini_get('memory_limit') * 1024) * 1024;
         $imageSizeInfo = getimagesize($filename);
         $srcGDBytes = ceil((($imageSizeInfo[0] * $imageSizeInfo[1]) * 3) * $gdBloat);
