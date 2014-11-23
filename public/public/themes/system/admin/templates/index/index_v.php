@@ -14,5 +14,5 @@
 </div>
 <div class="dashboard-block dashboard-block-account">
 	<h2><?php echo \Html::anchor('admin/account', \Lang::get('index_account')); ?></h2>
-	<p><?php echo \Lang::get('index_total_accounts', array('total_accounts' => $total_accounts)); ?></p>
+	<p><?php echo \Lang::get('index_total_accounts', array('total_accounts' => (isset($total_accounts) ? $total_accounts : 0))); ?></p>
 </div>

@@ -2,6 +2,7 @@
 
 $lang['admin_add'] = 'เพิ่ม';
 $lang['admin_administrator_dashbord'] = 'หน้าแรกผู้ดูแล';
+$lang['admin_are_you_sure_to_delete_selected_items'] = 'คุณแน่ใจหรือไม่ที่จะลบรายการที่เลือก?';
 $lang['admin_cancel'] = 'ยกเลิก';
 $lang['admin_delete'] = 'ลบ';
 $lang['admin_disable'] = 'ปิดใช้งาน';

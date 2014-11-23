@@ -6,6 +6,7 @@ require COREPATH.'bootstrap.php';
 Autoloader::add_classes(array(
 	// Add classes you want to override here
 	// Example: 'View' => APPPATH.'classes/view.php',
+	'Theme' => APPPATH.'classes/extension/theme.php',
 	// @link http://www.marcopace.it/blog/2012/12/fuelphp-i18n-internationalization-of-a-web-application tutorial i18n.
 	'Uri' => APPPATH.'classes/extension/uri.php',
 ));

@@ -2,6 +2,7 @@
 
 $lang['admin_add'] = 'Add';
 $lang['admin_administrator_dashbord'] = 'Administrator dashboard';
+$lang['admin_are_you_sure_to_delete_selected_items'] = 'Are you sure to delete selected items?';
 $lang['admin_cancel'] = 'Canel';
 $lang['admin_delete'] = 'Delete';
 $lang['admin_disable'] = 'Disable';
