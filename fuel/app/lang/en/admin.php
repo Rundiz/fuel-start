@@ -1,52 +1,52 @@
 <?php
 
-$lang['admin_add'] = 'Add';
-$lang['admin_administrator_dashbord'] = 'Administrator dashboard';
-$lang['admin_are_you_sure_to_delete_selected_items'] = 'Are you sure to delete selected items?';
-$lang['admin_cancel'] = 'Canel';
-$lang['admin_delete'] = 'Delete';
-$lang['admin_disable'] = 'Disable';
-$lang['admin_edit'] = 'Edit';
-$lang['admin_enable'] = 'Enable';
-$lang['admin_get_modern_browser'] = 'Please update your web browser or <a href="http://browsehappy.com" target="browsehappy">download</a> other browser for free.';
-$lang['admin_javascript'] = 'Javascript';
-$lang['admin_no'] = 'No';
-$lang['admin_permission_denied'] = 'Access denied. You did not allowed to access :page.';
-$lang['admin_please_enable_javascript'] = 'Please enable Javascript.';
-$lang['admin_save'] = 'Save';
-$lang['admin_saved'] = 'Saved successfully.';
-$lang['admin_search'] = 'Search';
-$lang['admin_submit'] = 'Submit';
-$lang['admin_total'] = 'Total :total items';
-$lang['admin_using_unknow_browser'] = 'You are using web browser that cannot confirm to work correctly. You may use without problem or if not, please use other browser from <a href="http://browsehappy.com" target="browsehappy">here</a>.';
-$lang['admin_web_browser'] = 'Web browser';
-$lang['admin_yes'] = 'Yes';
-$lang['admin_you_have_no_permission_to_access_this_page'] = 'You have no permission to access this page.';
-
-
-// on navigation
-$lang['admin_add_user'] = 'Add user';
-$lang['admin_admin_home'] = 'Admin home';
-$lang['admin_components'] = 'Components';
-$lang['admin_edit_my_account'] = 'Edit my account';
-$lang['admin_extensions'] = 'Extensions';
-$lang['admin_global_configuration'] = 'Global configuration';
-$lang['admin_multisite_manager'] = 'Multi-site manager';
-$lang['admin_nav_cacheman'] = 'Cache management';
-$lang['admin_nav_tools'] = 'Tools';
-$lang['admin_permissions'] = 'Permissions';
-$lang['admin_permissions_for_roles'] = 'Permissions for roles';
-$lang['admin_permissions_for_users'] = 'Permissions for users';
-$lang['admin_roles'] = 'Roles';
-$lang['admin_roles_permissions'] = 'Roles and permissions';
-$lang['admin_users'] = 'Users';
-$lang['admin_users_roles_permissions'] = 'Users roles and permissions';
-$lang['admin_visit_site'] = 'Visit site';
-$lang['admin_website'] = 'Website';
-
-
-// on right navigation
-$lang['admin_logout'] = 'Logout';
-
-
-return $lang;
+return array(
+    'admin_add' => 'Add',
+    'admin_administrator_dashbord' => 'Administrator dashboard',
+    'admin_are_you_sure_to_delete_selected_items' => 'Are you sure to delete selected items?',
+    'admin_cancel' => 'Canel',
+    'admin_delete' => 'Delete',
+    'admin_disable' => 'Disable',
+    'admin_edit' => 'Edit',
+    'admin_enable' => 'Enable',
+    'admin_filter' => 'Filter',
+    'admin_get_modern_browser' => 'Please update your web browser or <a href="http://browsehappy.com" target="browsehappy">download</a> other browser for free.',
+    'admin_javascript' => 'Javascript',
+    'admin_no' => 'No',
+    'admin_permission_denied' => 'Access denied. You did not allowed to access :page.',
+    'admin_please_enable_javascript' => 'Please enable Javascript.',
+    'admin_save' => 'Save',
+    'admin_saved' => 'Saved successfully.',
+    'admin_search' => 'Search',
+    'admin_since' => 'Since',
+    'admin_submit' => 'Submit',
+    'admin_total' => 'Total :total items',
+    'admin_using_unknow_browser' => 'You are using web browser that cannot confirm to work correctly. You may use without problem or if not, please use other browser from <a href="http://browsehappy.com" target="browsehappy">here</a>.',
+    'admin_view_all' => 'View all',
+    'admin_web_browser' => 'Web browser',
+    'admin_yes' => 'Yes',
+    'admin_you_have_no_permission_to_access_this_page' => 'You have no permission to access this page.',
+    
+    // on navigation
+    'admin_add_user' => 'Add user',
+    'admin_admin_home' => 'Admin home',
+    'admin_components' => 'Components',
+    'admin_edit_my_account' => 'Edit my account',
+    'admin_extensions' => 'Extensions',
+    'admin_global_configuration' => 'Global configuration',
+    'admin_multisite_manager' => 'Multi-site manager',
+    'admin_nav_cacheman' => 'Cache management',
+    'admin_nav_tools' => 'Tools',
+    'admin_permissions' => 'Permissions',
+    'admin_permissions_for_roles' => 'Permissions for roles',
+    'admin_permissions_for_users' => 'Permissions for users',
+    'admin_roles' => 'Roles',
+    'admin_roles_permissions' => 'Roles and permissions',
+    'admin_users' => 'Users',
+    'admin_users_roles_permissions' => 'Users roles and permissions',
+    'admin_visit_site' => 'Visit site',
+    'admin_website' => 'Website',
+    
+    // on right navigation
+    'admin_logout' => 'Logout',
+);

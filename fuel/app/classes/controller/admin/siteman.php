@@ -241,11 +241,29 @@ class Controller_Admin_Siteman extends \Controller_AdminController
         }
         $output['next_sort'] = $next_sort;
         unset($next_sort);
+        
+        // filters
+        $output['filter_site_id'] = trim(\Input::get('filter_site_id'));
+        $output['filter_site_name'] = trim(\Input::get('filter_site_name'));
+        $output['filter_site_domain'] = trim(\Input::get('filter_site_domain'));
+        $output['filter_site_status'] = trim(\Input::get('filter_site_status'));
 
         // list sites ------------------------------------------------------------------------------------------------------
         $option['list_for'] = 'admin';
         $option['limit'] = \Model_Config::getval('content_admin_items_perpage');
         $option['offset'] = (trim(\Input::get('page')) != null ? ((int)\Input::get('page')-1)*$option['limit'] : 0);
+        if ($output['filter_site_id'] != null) {
+            $option['filter_site_id'] = $output['filter_site_id'];
+        }
+        if ($output['filter_site_name'] != null) {
+            $option['filter_site_name'] = $output['filter_site_name'];
+        }
+        if ($output['filter_site_domain'] != null) {
+            $option['filter_site_domain'] = $output['filter_site_domain'];
+        }
+        if ($output['filter_site_status'] != null) {
+            $option['filter_site_status'] = $output['filter_site_status'];
+        }
         if (\Security::strip_tags(trim(\Input::get('orders'))) != null) {
             $option['orders'] = \Security::strip_tags(trim(\Input::get('orders')));
         }

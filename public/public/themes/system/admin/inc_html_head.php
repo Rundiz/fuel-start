@@ -47,7 +47,7 @@ include_once __DIR__ . DS . 'functions.php';
 		}
 		?> 
 
-		<?php echo \Asset::css('ui-smoothness/jquery-ui.min.css'); ?>
+		<?php echo \Asset::css('jquery-ui/jquery-ui.min.css'); ?>
 		<?php echo \Asset::css('bootstrap.min.css'); ?>
 		<?php echo $theme->asset->css('font-awesome.min.css'); ?>
 		<?php echo $theme->asset->css('smartmenu/sm-core-css.css'); ?>

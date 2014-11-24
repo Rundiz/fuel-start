@@ -429,7 +429,7 @@ class Model_Sites extends \Orm\Model
     /**
      * list websites from db
      *
-     * @param array $option available options: [list_for], [orders], [sort], [offset], [limit], [list_for], [unlimit]
+     * @param array $option available options: [list_for], [filter_], [orders], [sort], [offset], [limit], [list_for], [unlimit]
      * @return array
      */
     public static function listSites($option = array())
@@ -440,6 +440,21 @@ class Model_Sites extends \Orm\Model
         if (!isset($option['list_for']) || (isset($option['list_for']) && $option['list_for'] == 'front')) {
             $query->where('site_status', 1);
         }
+        
+        // filters --------------------------------------------------------------------------------------------------------------------------------------------
+        if (isset($option['filter_site_id'])) {
+            $query->where('site_id', 'LIKE', '%'.$option['filter_site_id'].'%');
+        }
+        if (isset($option['filter_site_name'])) {
+            $query->where('site_name', 'LIKE', '%'.\Security::htmlentities($option['filter_site_name']).'%');
+        }
+        if (isset($option['filter_site_domain'])) {
+            $query->where('site_domain', 'LIKE', '%'.mb_strtolower(\Security::strip_tags($option['filter_site_domain'])).'%');
+        }
+        if (isset($option['filter_site_status'])) {
+            $query->where('site_status', $option['filter_site_status']);
+        }
+        // end filters --------------------------------------------------------------------------------------------------------------------------------------
 
         $output['total'] = $query->count();
 

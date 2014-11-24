@@ -891,7 +891,8 @@ class Model_Accounts extends \Orm\Model
     public static function listAccounts($option = array())
     {
         // get total logins of current user
-        $query = static::query();
+        $query = static::query()
+            ->related('account_level');
 
         // search
         if (isset($option['search']) && $option['search'] != null) {
@@ -913,6 +914,34 @@ class Model_Accounts extends \Orm\Model
 
             unset($search);
         }
+        
+        // filters ------------------------------------------------------------------------------------------------
+        if (isset($option['filter_account_id'])) {
+            $query->where('account_id', 'LIKE', '%' . $option['filter_account_id'] . '%');
+        }
+        if (isset($option['filter_account_username'])) {
+            $query->where('account_username', 'LIKE', '%' . $option['filter_account_username'] . '%');
+        }
+        if (isset($option['filter_account_email'])) {
+            $query->where('account_email', 'LIKE', '%' . $option['filter_account_email'] . '%');
+        }
+        if (isset($option['filter_level_group_id'])) {
+            $query->where('account_level.level_group_id', $option['filter_level_group_id']);
+        }
+        if (isset($option['filter_account_create'])) {
+            $datetime = new \DateTime($option['filter_account_create']);
+            $query->where('account_create', '>=', $datetime->getTimestamp());
+            unset($datetime);
+        }
+        if (isset($option['filter_account_last_login'])) {
+            $datetime = new \DateTime($option['filter_account_last_login']);
+            $query->where('account_last_login', '>=', $datetime->getTimestamp());
+            unset($datetime);
+        }
+        if (isset($option['filter_account_status'])) {
+            $query->where('account_status', $option['filter_account_status']);
+        }
+        // filters ------------------------------------------------------------------------------------------------
 
         $output['total'] = $query->count();
 

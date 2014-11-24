@@ -24,7 +24,7 @@ include __DIR__ . DS . 'inc_html_head.php';
 								<span class="icon-bar"></span>
 							</button>
 							<a class="navbar-brand" href="<?php echo \Uri::create('admin'); ?>"><?php echo \Model_Config::getval('site_name'); ?></a>
-						</div>
+						</div><!--.navbar-header-->
 
 						<!-- Collect the nav links, forms, and other content for toggling -->
 						<div class="collapse navbar-collapse" id="fs-admin-navbar-collapse">

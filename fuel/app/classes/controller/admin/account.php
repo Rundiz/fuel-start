@@ -544,6 +544,17 @@ class Controller_Admin_Account extends \Controller_AdminController
             $output['form_status_message'] = $form_status['form_status_message'];
         }
         unset($form_status);
+        
+        // get levels to select
+        $account_levels = \Model_AccountLevelGroup::listLevels(array('no_guest' => false));
+        $select_lvls = array();
+        if (!empty($account_levels['items']) && is_array($account_levels)) {
+            foreach ($account_levels['items'] as $lvr) {
+                $select_lvls[$lvr->level_group_id] = $lvr->level_name;
+            }
+        }
+        $output['account_levels'] = $select_lvls;
+        unset($account_levels, $select_lvls);
 
         // set sort variable for sortable in views.
         $sort = \Security::strip_tags(trim(\Input::get('sort')));
@@ -557,12 +568,41 @@ class Controller_Admin_Account extends \Controller_AdminController
 
         // search query
         $output['q'] = trim(\Input::get('q'));
+        // filters
+        $output['filter_account_id'] = trim(\Input::get('filter_account_id'));
+        $output['filter_account_username'] = trim(\Input::get('filter_account_username'));
+        $output['filter_account_email'] = trim(\Input::get('filter_account_email'));
+        $output['filter_level_group_id'] = trim(\Input::get('filter_level_group_id'));
+        $output['filter_account_create'] = trim(\Input::get('filter_account_create'));
+        $output['filter_account_last_login'] = trim(\Input::get('filter_account_last_login'));
+        $output['filter_account_status'] = trim(\Input::get('filter_account_status'));
 
         // list accounts --------------------------------------------------------------------------------------------------
         $option['limit'] = \Model_Config::getval('content_admin_items_perpage');
         $option['offset'] = (trim(\Input::get('page')) != null ? ((int)\Input::get('page')-1)*$option['limit'] : 0);
         if (trim(\Input::get('q')) != null) {
             $option['search'] = trim(\Input::get('q'));
+        }
+        if ($output['filter_account_id'] != null) {
+            $option['filter_account_id'] = $output['filter_account_id'];
+        }
+        if ($output['filter_account_username'] != null) {
+            $option['filter_account_username'] = $output['filter_account_username'];
+        }
+        if ($output['filter_account_email'] != null) {
+            $option['filter_account_email'] = $output['filter_account_email'];
+        }
+        if ($output['filter_level_group_id'] != null) {
+            $option['filter_level_group_id'] = $output['filter_level_group_id'];
+        }
+        if ($output['filter_account_create'] != null) {
+            $option['filter_account_create'] = $output['filter_account_create'];
+        }
+        if ($output['filter_account_last_login'] != null) {
+            $option['filter_account_last_login'] = $output['filter_account_last_login'];
+        }
+        if ($output['filter_account_status'] != null) {
+            $option['filter_account_status'] = $output['filter_account_status'];
         }
         if (\Security::strip_tags(trim(\Input::get('orders'))) != null) {
             $option['orders'] = \Security::strip_tags(trim(\Input::get('orders')));
@@ -597,6 +637,7 @@ class Controller_Admin_Account extends \Controller_AdminController
 
         // <head> output ----------------------------------------------------------------------------------------------
         $output['page_title'] = $this->generateTitle(\Lang::get('account_accounts'));
+        $output['page_link'][] = html_tag('link', array('rel' => 'stylesheet', 'href' => Uri::createNL(\Theme::instance()->asset_path('css/datepicker.css'))));
         // <head> output ----------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/account/account_v', $output, false);
