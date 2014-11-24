@@ -34,6 +34,8 @@ class Controller_Admin_Index extends \Controller
 		echo "\n";
 		echo \Html::anchor('tmd/admin/cont', 'test module admin controller') . '<br>';
 		echo "\n";
+		echo \Html::anchor('tmd/admin/test', 'test jquery-ui') . '<br>';
+		echo "\n";
 	}// action_index
 	
 	
