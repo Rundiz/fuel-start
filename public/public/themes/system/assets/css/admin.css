@@ -149,13 +149,17 @@ html, body {
 
 .dashboard-block {
 	background: #f5f5f5;
-	border-radius: 5px;
+	border-radius: 2px;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 	margin: 0 0 20px;
 	padding: 10px;
 }
 .dashboard-block h2 {
 	margin: 0 0 10px;
+}
+.dashboard-block-introduce {
+	background-color: #333;
+	color: #aaa;
 }
 
 
@@ -165,6 +169,12 @@ html, body {
 	display: none;
 	margin: 10px 0 0;
 	padding: 10px;
+}
+
+
+
+.input-no-spinner {
+    -moz-appearance: textfield;
 }
 
 
@@ -220,6 +230,13 @@ html, body {
 
 .table .check-column {
 	text-align: center;
+}
+.table .row-filter-form th {
+	background-color: #f5f5f5;
+	font-weight: normal;
+}
+.table .row-filter-form th .input-id {
+	max-width: 40px;
 }
 .table-sortable .sortable-cell {
 	display: none;

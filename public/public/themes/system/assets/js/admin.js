@@ -36,6 +36,15 @@ function makeBs3Tabs() {
 }// makeBs3Tabs
 
 
+function noEnter(e) {
+	var code = e.keyCode || e.which; 
+	if (code == 13) {
+		e.preventDefault();
+		return false;
+	}
+}// noEnter
+
+
 /**
  * table with floating header
  * to use this, call tableWithFloatingheader() function in the page you want and add tableWithFloatingHeader class to table
