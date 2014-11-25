@@ -38,7 +38,10 @@ abstract class Controller_BaseController extends \Controller
         
         // set default theme name
         // @todo [theme] for theme management. you should get default theme setting from db here.
-        $this->theme_system_name = 'system';
+        \Config::load('theme', true);
+        $theme_active = \Config::get('theme.active');
+        $this->theme_system_name = $theme_active;
+        unset($theme_active);
     }// __construct
     
     

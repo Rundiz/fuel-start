@@ -69,7 +69,7 @@ class Controller_AdminController extends \Controller_BaseController
 
         // start theme class
         $theme = \Theme::instance();
-        $theme->active('system');
+        $theme->active($this->theme_system_name);
 
         // load requested controller theme into page_content variable.
         $output['page_content'] = $theme->view($view, $output, $auto_filter);
