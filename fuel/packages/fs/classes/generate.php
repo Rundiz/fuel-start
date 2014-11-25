@@ -618,7 +618,7 @@ ADMIN_FORM;
         $module_name = array_shift($args);
         $module_name = str_replace(' ', '', $module_name);
         
-        if ($path = \Module::exists($module_name)) {
+        if ($path = \Module::exists(strtolower($module_name))) {
             throw new Exception('A module named '.$module_name.' already exists at '.$path);
             exit;
         }
@@ -642,7 +642,7 @@ ADMIN_FORM;
             $base = $module_paths[$path_idx - 1];
         }
         
-        $module_path = $base.$module_name.DS;
+        $module_path = $base.strtolower($module_name).DS;
         
         static::$create_folders[] = $module_path;
         static::$create_folders[] = $module_path.'classes/controller/admin';
