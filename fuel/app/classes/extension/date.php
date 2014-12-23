@@ -84,8 +84,8 @@ class Date extends \Date
             : (string) (int) $timestamp;
 
         return ($check === $timestamp)
-            AND ( (int) $timestamp <= PHP_INT_MAX)
-            AND ( (int) $timestamp >= ~PHP_INT_MAX); 
+            AND ((int) $timestamp <= PHP_INT_MAX)
+            AND ((int) $timestamp >= ~PHP_INT_MAX); 
     }// isValidTimeStamp
 
 
