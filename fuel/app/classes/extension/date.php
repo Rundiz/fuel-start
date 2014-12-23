@@ -73,15 +73,19 @@ class Date extends \Date
 
     /**
     * is valid timestamp
-    * @author Gordon
-    * @link http://stackoverflow.com/questions/2524680/check-whether-the-string-is-a-unix-timestamp
-    * @param string $timestamp timestamp needs to be string
+    * @author sepehr
+    * @link https://gist.github.com/sepehr/6351385
+    * @param string $timestamp timestamp to validate
     * @return boolean
     */
     public static function isValidTimeStamp($timestamp) {
-        return ((string) (int) $timestamp === $timestamp)
-              && ($timestamp <= PHP_INT_MAX)
-              && ($timestamp >= ~PHP_INT_MAX);
+        $check = (is_int($timestamp) OR is_float($timestamp))
+            ? $timestamp
+            : (string) (int) $timestamp;
+
+        return ($check === $timestamp)
+            AND ( (int) $timestamp <= PHP_INT_MAX)
+            AND ( (int) $timestamp >= ~PHP_INT_MAX); 
     }// isValidTimeStamp
 
 
