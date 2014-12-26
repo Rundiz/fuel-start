@@ -31,7 +31,9 @@ include dirname(dirname(__DIR__)) . DS . 'inc_html_head.php';
 							<div class="alert alert-<?php echo str_replace('error', 'danger', $form_status); ?>"><button type="button" class="close" data-dismiss="alert">&times;</button><?php echo $form_status_message; ?></div>
 							<?php } ?> 
 						</div>
-						<?php echo \Extension\NoCsrf::generate(); ?> 
+						<div class="form-csrf-protection-placeholder">
+							<?php echo \Extension\NoCsrf::generate(); ?> 
+						</div>
 						
 						<div class="form-group">
 							<label for="account_username" class="sr-only"><?php echo __('account_username_or_email'); ?>: <span class="txt_require">*</span></label>

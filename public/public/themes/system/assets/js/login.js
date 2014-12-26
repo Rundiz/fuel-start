@@ -34,6 +34,10 @@ function ajaxAdminLogin(obj) {
 					);
 				}
 				
+				if (data.input_csrf_token != '') {
+					$('.form-csrf-protection-placeholder').html(data.input_csrf_token);
+				}
+				
 				$('.captcha').attr('src', base_url+'assets/img/securimage_show.php?' + Math.random());
 				$('.login-page-input-username').focus();
 				

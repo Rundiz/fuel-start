@@ -103,6 +103,7 @@ class Controller_Admin_Login extends \Controller_BaseController
                 // validate token failed
                 $output['form_status'] = 'error';
                 $output['form_status_message'] = \Lang::get('fslang_invalid_csrf_token');
+				$output['input_csrf_token'] = \Extension\NoCsrf::generate();
             } elseif (!$validate->run()) {
                 // validate failed
                 $output['form_status'] = 'error';
