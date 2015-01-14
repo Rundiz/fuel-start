@@ -110,7 +110,7 @@ class {$module_name}Admin
     {
         if (\Model_AccountLevelPermission::checkAdminPermission('{$lcase_module_name}_perm', '{$lcase_module_name}_viewall_perm')) {
             \$output = '<li>' . \Extension\Html::anchor('{$lcase_module_name}/admin', '{$module_name}') . "\\n";
-            \$output .'</li>';
+            \$output .= '</li>';
             
             return \$output;
         }
