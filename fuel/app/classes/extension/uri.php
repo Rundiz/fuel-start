@@ -97,6 +97,8 @@ class Uri extends \Fuel\Core\Uri
 
             Config::set('language', $first);
             Config::set('locale', $locales[$first]['locale']);
+			// set locale
+            setlocale(LC_ALL, Config::get('locale'));
         } else {
             // this condition is requested by hmvc. so /{lang} prefix can not be retrieve via $this->segments.
             $uris = \Input::uri();
@@ -108,6 +110,8 @@ class Uri extends \Fuel\Core\Uri
             if (array_key_exists($uri_exp[0], $locales)) {
                 Config::set('language', $uri_exp[0]);
                 Config::set('locale', $locales[$uri_exp[0]]['locale']);
+                // set locale
+                setlocale(LC_ALL, \Config::get('locale'));
             }
             unset($uri_exp, $uris);
         }
