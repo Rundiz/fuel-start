@@ -57,7 +57,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
         if (\Input::method() == 'POST') {
             // store data for save
             $data['site_name'] = \Security::htmlentities(trim(\Input::post('site_name')));
-            $data['site_domain'] = mb_strtolower(\Security::strip_tags(trim(\Input::post('site_domain'))));
+            $data['site_domain'] = str_replace(array('http://', '/'), '', mb_strtolower(\Security::strip_tags(trim(\Input::post('site_domain')))));
             $data['site_status'] = (int) trim(\Input::post('site_status'));
 
             $validate = \Validation::forge();
@@ -105,7 +105,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
         $output['page_title'] = $this->generateTitle(\Lang::get('siteman_multisite_manager'));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/siteman/siteman_form_v', $output, false);
+        return $this->generatePage('admin/templates/siteman/form_v', $output, false);
     }// action_add
 
 
@@ -155,7 +155,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
             // store data for save
             $data['site_id'] = $site_id;
             $data['site_name'] = \Security::htmlentities(trim(\Input::post('site_name')));
-            $data['site_domain'] = mb_strtolower(\Security::strip_tags(trim(\Input::post('site_domain'))));
+            $data['site_domain'] = str_replace(array('http://', '/'), '', mb_strtolower(\Security::strip_tags(trim(\Input::post('site_domain')))));
             $data['site_status'] = (int) trim(\Input::post('site_status'));
 
             $validate = \Validation::forge();
@@ -203,7 +203,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
         $output['page_title'] = $this->generateTitle(\Lang::get('siteman_multisite_manager'));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/siteman/siteman_form_v', $output, false);
+        return $this->generatePage('admin/templates/siteman/form_v', $output, false);
     }// action_edit
 
 
@@ -299,7 +299,7 @@ class Controller_Admin_Siteman extends \Controller_AdminController
         $output['page_title'] = $this->generateTitle(\Lang::get('siteman_multisite_manager'));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/siteman/siteman_v', $output, false);
+        return $this->generatePage('admin/templates/siteman/index_v', $output, false);
     }// action_index
 
 

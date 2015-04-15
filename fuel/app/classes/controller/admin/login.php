@@ -209,7 +209,7 @@ class Controller_Admin_Login extends \Controller_BaseController
             $response->body(json_encode($output));
             return $response;
         } else {
-            return $theme->view('admin/templates/login/login_v', $output, false);
+            return $theme->view('admin/templates/login/index_v', $output, false);
         }
     }// action_index
 

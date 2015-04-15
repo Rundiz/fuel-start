@@ -196,7 +196,7 @@ class Controller_Admin_Account extends \Controller_AdminController
         $output['page_link'][] = html_tag('link', array('rel' => 'stylesheet', 'href' => Uri::createNL(\Theme::instance()->asset_path('css/datepicker.css'))));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/account/account_form_v', $output, false);
+        return $this->generatePage('admin/templates/account/form_v', $output, false);
     }// action_add
 
 
@@ -513,7 +513,7 @@ class Controller_Admin_Account extends \Controller_AdminController
         $output['page_link'][] = html_tag('link', array('rel' => 'stylesheet', 'href' => Uri::createNL(\Theme::instance()->asset_path('css/datepicker.css'))));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/account/account_form_v', $output, false);
+        return $this->generatePage('admin/templates/account/form_v', $output, false);
     }// action_edit
 
 
@@ -640,7 +640,7 @@ class Controller_Admin_Account extends \Controller_AdminController
         $output['page_link'][] = html_tag('link', array('rel' => 'stylesheet', 'href' => Uri::createNL(\Theme::instance()->asset_path('css/datepicker.css'))));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/account/account_v', $output, false);
+        return $this->generatePage('admin/templates/account/index_v', $output, false);
     }// action_index
 
 
@@ -855,7 +855,7 @@ class Controller_Admin_Account extends \Controller_AdminController
         $output['page_title'] = $this->generateTitle(\Lang::get('account_view_login_history'));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/account/account_viewlogins_v', $output, false);
+        return $this->generatePage('admin/templates/account/viewlogins_v', $output, false);
     }// action_viewlogins
     
     

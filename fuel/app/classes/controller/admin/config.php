@@ -229,7 +229,7 @@ class Controller_Admin_Config extends \Controller_AdminController
         $output['page_title'] = $this->generateTitle(\Lang::get('config_global_configuration'));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/config/config_v', $output, false);
+        return $this->generatePage('admin/templates/config/index_v', $output, false);
     }// action_index
 
 

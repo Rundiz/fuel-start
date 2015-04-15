@@ -119,7 +119,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
         $output['page_title'] = $this->generateTitle(\Lang::get('accountlv_role'));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/accountlevel/accountlevel_form_v', $output, false);
+        return $this->generatePage('admin/templates/accountlevel/form_v', $output, false);
     }// action_add
 
 
@@ -280,7 +280,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
         $output['page_title'] = $this->generateTitle(\Lang::get('accountlv_role'));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/accountlevel/accountlevel_form_v', $output, false);
+        return $this->generatePage('admin/templates/accountlevel/form_v', $output, false);
     }// action_edit
 
 
@@ -325,7 +325,7 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
         $output['page_title'] = $this->generateTitle(\Lang::get('accountlv_role'));
         // <head> output ----------------------------------------------------------------------------------------------
 
-        return $this->generatePage('admin/templates/accountlevel/accountlevel_v', $output, false);
+        return $this->generatePage('admin/templates/accountlevel/index_v', $output, false);
     }// action_index
 
 
