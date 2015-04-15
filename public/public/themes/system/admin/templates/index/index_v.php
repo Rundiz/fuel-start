@@ -1,9 +1,9 @@
-<h1><?php echo \Lang::get('admin_administrator_dashbord'); ?></h1>
+<h1><?php echo __('admin_administrator_dashbord'); ?></h1>
 
 <div class="form-status-placeholder">
-	<?php if (isset($form_status) && isset($form_status_message)) { ?> 
-	<div class="alert alert-<?php echo str_replace('error', 'danger', $form_status); ?>"><button type="button" class="close" data-dismiss="alert">&times;</button><?php echo $form_status_message; ?></div>
-	<?php } ?> 
+    <?php if (isset($form_status) && isset($form_status_message)) { ?> 
+    <div class="alert alert-<?php echo str_replace('error', 'danger', $form_status); ?>"><button type="button" class="close" data-dismiss="alert">&times;</button><?php echo $form_status_message; ?></div>
+    <?php } ?> 
 </div>
 
 
@@ -22,8 +22,8 @@
     <div class="row">
         <div class="col-sm-4">
             <div class="dashboard-block dashboard-block-account">
-                <h2><?php echo \Html::anchor('admin/account', \Lang::get('index_account')); ?></h2>
-                <p><?php echo \Lang::get('index_total_accounts', array('total_accounts' => (isset($total_accounts) ? $total_accounts : 0))); ?></p>
+                <h2><?php echo \Html::anchor('admin/account', __('index_account')); ?></h2>
+                <p><?php echo __('index_total_accounts', array('total_accounts' => (isset($total_accounts) ? $total_accounts : 0))); ?></p>
             </div>
         </div><!--.col-->
         <div class="col-sm-4">

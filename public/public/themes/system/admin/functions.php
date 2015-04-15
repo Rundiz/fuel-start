@@ -30,15 +30,15 @@ function checkAdminPermission($page_name = '', $action = '', $account_id = '')
  */
 function getRootSiteURL()
 {
-	$root_url = \Uri::create('/');
-	
-	if (mb_substr($root_url, -2) == '//') {
-		// this case is http://domain/fuelstart//
-		return mb_substr($root_url, 0, -1);
-	}
-	
-	// this case is http://domain/th/fuelstart/
-	return $root_url;
+    $root_url = \Uri::create('/');
+    
+    if (mb_substr($root_url, -2) == '//') {
+        // this case is http://domain/fuelstart//
+        return mb_substr($root_url, 0, -1);
+    }
+    
+    // this case is http://domain/th/fuelstart/
+    return $root_url;
 }// getRootSiteURL
 
 
@@ -89,7 +89,7 @@ function languageSwitchAdminBootstrapNavbar()
 function languageSwitchAdminNavbar()
 {
     $languages = \Config::get('locales');
-	
+    
     ksort($languages);
 
     $current_lang = \Lang::get_lang();
@@ -110,8 +110,8 @@ function languageSwitchAdminNavbar()
                 $item['name'], 
                 array('class' => (isset($active_class) ? $active_class : ''))
             ) . '</li>' . "\n";
-			
-			unset($active_class);
+            
+            unset($active_class);
         }
     }
 

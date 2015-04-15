@@ -1,7 +1,7 @@
 <?php
 $nocsrf_form_value = \Extension\NoCsrf::generate(null, true);
 ?>
-<h1><?php echo (\Uri::segment(3) == 'add' ? \Lang::get('account_add') : \Lang::get('account_edit')); ?></h1>
+<h1><?php echo (\Uri::segment(3) == 'add' ? __('account_add') : __('account_edit')); ?></h1>
 
 <?php echo \Extension\Form::openMultipart(array('class' => 'form-horizontal', 'role' => 'form')); ?> 
     <div class="form-status-placeholder">
@@ -29,7 +29,7 @@ $nocsrf_form_value = \Extension\NoCsrf::generate(null, true);
     </div>
 
     <fieldset>
-        <legend><?php echo \Lang::get('account_password'); ?> <?php if (\Uri::segment(3) == 'edit') { ?><small><?php echo \Lang::get('account_enter_only_when_you_want_to_change'); ?></small><?php } ?></legend>
+        <legend><?php echo __('account_password'); ?> <?php if (\Uri::segment(3) == 'edit') { ?><small><?php echo __('account_enter_only_when_you_want_to_change'); ?></small><?php } ?></legend>
         <div class="form-group">
             <label for="account_password" class="col-sm-2 control-label"><?php echo (\Uri::segment(3) == 'add' ? __('account_password') : __('account_current_password')); ?>:</label>
             <div class="col-sm-7">
@@ -47,12 +47,12 @@ $nocsrf_form_value = \Extension\NoCsrf::generate(null, true);
     </fieldset>
 
     <fieldset>
-        <legend><?php echo \Lang::get('account_display'); ?></legend>
+        <legend><?php echo __('account_display'); ?></legend>
         <div class="form-group">
             <label for="account_display_name" class="col-sm-2 control-label"><?php echo __('account_display_name'); ?>: <span class="txt_require">*</span></label>
             <div class="col-sm-7">
                 <?php echo \Extension\Form::input('account_display_name', (isset($account_display_name) ? $account_display_name : ''), array('id' => 'account_display_name', 'maxlength' => '255', 'class' => 'form-control', 'required' => '')); ?> 
-                <div class="help-block"><?php echo \Lang::get('account_display_name_use_for_prevent_showing_username'); ?></div>
+                <div class="help-block"><?php echo __('account_display_name_use_for_prevent_showing_username'); ?></div>
             </div>
         </div>
         <div class="form-group">
@@ -60,15 +60,15 @@ $nocsrf_form_value = \Extension\NoCsrf::generate(null, true);
             <div class="col-sm-7">
                 <?php if (isset($account_avatar) && $account_avatar != null) { ?> 
                 <div class="current-avatar">
-                    <a href="#" class="btn btn-danger btn-xs" onclick="return ajaxDeleteAvatar();"><span class="glyphicon glyphicon-remove"></span> <?php echo \Lang::get('account_delete_avatar'); ?></a>
+                    <a href="#" class="btn btn-danger btn-xs" onclick="return ajaxDeleteAvatar();"><span class="glyphicon glyphicon-remove"></span> <?php echo __('account_delete_avatar'); ?></a>
                     <span class="remove-avatar-status"></span>
                     <img src="<?php echo \Uri::createNL($account_avatar); ?>" alt="" class="img-responsive" />
                 </div>
                 <?php } // endif $account_avatar; ?> 
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $avatar_size*1024; // KB to Bytes ?>" />
                 <?php echo \Form::file('account_avatar', array('id' => 'account_avatar')); ?> 
-                <div class="help-block"><?php echo \Lang::get('account_file_size_less_than_or_equal_to', array('file_size' => $avatar_size)); ?> 
-                    <?php echo \Lang::get('account_file_type_allowed', array('file_types' => str_replace('|', ', ', $avatar_allowed_types))); ?>
+                <div class="help-block"><?php echo __('account_file_size_less_than_or_equal_to', array('file_size' => $avatar_size)); ?> 
+                    <?php echo __('account_file_type_allowed', array('file_types' => str_replace('|', ', ', $avatar_allowed_types))); ?>
                 </div>
             </div>
         </div>
@@ -96,13 +96,13 @@ $nocsrf_form_value = \Extension\NoCsrf::generate(null, true);
                     unset($timezone_list, $tznum, $tzval);
                     ?> 
                 </select>
-                <div class="help-block"><?php echo \Lang::get('account_current_date_time_example', array('time' => \Extension\Date::gmtDate('%Y-%m-%d %H:%M:%S', (string)time(), $tmp_account_timezone))); ?></div>
+                <div class="help-block"><?php echo __('account_current_date_time_example', array('time' => \Extension\Date::gmtDate('%Y-%m-%d %H:%M:%S', (string)time(), $tmp_account_timezone))); ?></div>
             </div>
         </div>
     </fieldset>
 
     <fieldset>
-        <legend><?php echo \Lang::get('account_personal_info'); ?></legend>
+        <legend><?php echo __('account_personal_info'); ?></legend>
         <div class="form-group">
             <label for="account_firstname" class="col-sm-2 control-label"><?php echo __('account_firstname'); ?>: </label>
             <div class="col-sm-5">
@@ -123,13 +123,13 @@ $nocsrf_form_value = \Extension\NoCsrf::generate(null, true);
                         <?php echo \Extension\Form::date('account_birthdate', (isset($account_birthdate) ? $account_birthdate : ''), array('id' => 'account_birthdate', 'maxlength' => '10', 'class' => 'form-control')); ?> 
                     </div>
                 </div>
-                <div class="help-block"><?php echo \Lang::get('account_birthdate_format_should_be'); ?></div>
+                <div class="help-block"><?php echo __('account_birthdate_format_should_be'); ?></div>
             </div>
         </div>
     </fieldset>
 
     <fieldset>
-        <legend><?php echo \Lang::get('account_role_and_status'); ?></legend>
+        <legend><?php echo __('account_role_and_status'); ?></legend>
         <div class="form-group">
             <label for="level_group_id" class="col-sm-2 control-label"><?php echo __('account_role'); ?>: <span class="txt_require">*</span></label>
             <div class="col-sm-5">
@@ -149,8 +149,8 @@ $nocsrf_form_value = \Extension\NoCsrf::generate(null, true);
             <label for="account_status" class="col-sm-2 control-label"><?php echo __('account_status'); ?>: <span class="txt_require">*</span></label>
             <div class="col-sm-5">
                 <select name="account_status" id="account_status" class="form-control chosen-select account_status">
-                    <option value="0"<?php if (isset($account_status) && $account_status == '0') { ?> selected="selected"<?php } ?>><?php echo \Lang::get('admin_disable'); ?></option>
-                    <option value="1"<?php if (isset($account_status) && $account_status == '1') { ?> selected="selected"<?php } ?>><?php echo \Lang::get('admin_enable'); ?></option>
+                    <option value="0"<?php if (isset($account_status) && $account_status == '0') { ?> selected="selected"<?php } ?>><?php echo __('admin_disable'); ?></option>
+                    <option value="1"<?php if (isset($account_status) && $account_status == '1') { ?> selected="selected"<?php } ?>><?php echo __('admin_enable'); ?></option>
                 </select>
             </div>
         </div>
@@ -191,7 +191,7 @@ $nocsrf_form_value = \Extension\NoCsrf::generate(null, true);
             <button type="submit" class="btn btn-primary"><?php echo __('account_submit'); ?></button>
             <a href="<?php echo \Uri::create('admin/account'); ?>" class="btn btn-default"><?php echo __('admin_cancel'); ?></a>
             <?php if (\Uri::segment(3) == 'add') { ?> 
-            <span class="text-muted"><?php echo \Lang::get('account_add_account_from_admin_will_not_send_email_to_user'); ?></span>
+            <span class="text-muted"><?php echo __('account_add_account_from_admin_will_not_send_email_to_user'); ?></span>
             <?php } elseif (\Uri::segment(3) == 'edit') {?> 
             <a href="<?php echo \Uri::create('admin/account-permission/index/' . $account_id); ?>" class="btn btn-default"><?php echo __('account_set_permission'); ?></a>
             <?php } // endif; ?> 
@@ -228,7 +228,7 @@ $nocsrf_form_value = \Extension\NoCsrf::generate(null, true);
     
     <?php if (\Uri::segment(3) == 'edit') { ?> 
     function ajaxDeleteAvatar() {
-        $confirm = confirm('<?php echo \Lang::get('account_are_you_sure_delete_avatar'); ?>');
+        $confirm = confirm('<?php echo __('account_are_you_sure_delete_avatar'); ?>');
         
         if ($confirm == true) {
             $('.remove-avatar-status').html('<i class="fa fa-spinner fa-spin"></i>');

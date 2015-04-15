@@ -1,10 +1,10 @@
-<h1><?php echo \Lang::get('account_accounts'); ?></h1>
+<h1><?php echo __('account_accounts'); ?></h1>
 
 <div class="row cmds">
     <div class="col-sm-6">
         <ul class="actions-inline">
-            <li><?php printf(\Lang::get('admin_total', array('total' => (isset($list_accounts['total']) ? $list_accounts['total'] : '0')))); ?></li>
-            <?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_add_perm')) { ?><li><?php echo \Html::anchor('admin/account/add', \Lang::get('admin_add'), array('class' => 'btn btn-default')); ?></li><?php } ?> 
+            <li><?php printf(__('admin_total', array('total' => (isset($list_accounts['total']) ? $list_accounts['total'] : '0')))); ?></li>
+            <?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_add_perm')) { ?><li><?php echo \Html::anchor('admin/account/add', __('admin_add'), array('class' => 'btn btn-default')); ?></li><?php } ?> 
         </ul>
     </div>
     <div class="col-sm-6">
@@ -25,7 +25,7 @@
             <div class="form-group">
                 <?php echo \Form::input('q', (isset($q) ? $q : ''), array('class' => 'form-control search-input', 'maxlength' => '255')); ?> 
             </div>
-            <button type="submit" class="btn btn-default"><?php echo \Lang::get('admin_search'); ?></button>
+            <button type="submit" class="btn btn-default"><?php echo __('admin_search'); ?></button>
             <?php echo \Html::anchor('admin/account', __('admin_view_all'), array('class' => 'btn btn-default')); ?> 
         </form>
     </div>
@@ -48,13 +48,13 @@
             <thead>
                 <tr>
                     <th class="check-column"><input type="checkbox" name="id_all" value="" onclick="checkAll(this.form,'id[]',this.checked)" /></th>
-                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_id', 'sort' => $next_sort), $except_querystring, null, \Lang::get('account_id')); ?></th>
-                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_username', 'sort' => $next_sort), $except_querystring, null, \Lang::get('account_username')); ?></th>
-                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_email', 'sort' => $next_sort), $except_querystring, null, \Lang::get('account_email')); ?></th>
-                    <th><?php echo \Lang::get('account_role'); ?></th>
-                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_create', 'sort' => $next_sort), $except_querystring, null, \Lang::get('account_register_since')); ?></th>
-                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_last_login', 'sort' => $next_sort), $except_querystring, null, \Lang::get('account_last_login')); ?></th>
-                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_status', 'sort' => $next_sort), $except_querystring, null, \Lang::get('account_status')); ?></th>
+                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_id', 'sort' => $next_sort), $except_querystring, null, __('account_id')); ?></th>
+                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_username', 'sort' => $next_sort), $except_querystring, null, __('account_username')); ?></th>
+                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_email', 'sort' => $next_sort), $except_querystring, null, __('account_email')); ?></th>
+                    <th><?php echo __('account_role'); ?></th>
+                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_create', 'sort' => $next_sort), $except_querystring, null, __('account_register_since')); ?></th>
+                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_last_login', 'sort' => $next_sort), $except_querystring, null, __('account_last_login')); ?></th>
+                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_status', 'sort' => $next_sort), $except_querystring, null, __('account_status')); ?></th>
                     <th></th>
                 </tr>
                 <tr class="row-filter-form">
@@ -105,13 +105,13 @@
             <tfoot>
                 <tr>
                     <th class="check-column"><input type="checkbox" name="id_all" value="" onclick="checkAll(this.form,'id[]',this.checked)" /></th>
-                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_id', 'sort' => $next_sort), $except_querystring, null, \Lang::get('account_id')); ?></th>
-                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_username', 'sort' => $next_sort), $except_querystring, null, \Lang::get('account_username')); ?></th>
-                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_email', 'sort' => $next_sort), $except_querystring, null, \Lang::get('account_email')); ?></th>
-                    <th><?php echo \Lang::get('account_role'); ?></th>
-                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_create', 'sort' => $next_sort), $except_querystring, null, \Lang::get('account_register_since')); ?></th>
-                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_last_login', 'sort' => $next_sort), $except_querystring, null, \Lang::get('account_last_login')); ?></th>
-                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_status', 'sort' => $next_sort), $except_querystring, null, \Lang::get('account_status')); ?></th>
+                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_id', 'sort' => $next_sort), $except_querystring, null, __('account_id')); ?></th>
+                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_username', 'sort' => $next_sort), $except_querystring, null, __('account_username')); ?></th>
+                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_email', 'sort' => $next_sort), $except_querystring, null, __('account_email')); ?></th>
+                    <th><?php echo __('account_role'); ?></th>
+                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_create', 'sort' => $next_sort), $except_querystring, null, __('account_register_since')); ?></th>
+                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_last_login', 'sort' => $next_sort), $except_querystring, null, __('account_last_login')); ?></th>
+                    <th><?php echo \Extension\Html::fuelStartSortableLink(array('orders' => 'account_status', 'sort' => $next_sort), $except_querystring, null, __('account_status')); ?></th>
                     <th></th>
                 </tr>
             </tfoot>
@@ -150,9 +150,9 @@
                     <td>
                         <?php if ($row->account_id != '0') { ?> 
                         <ul class="actions-inline">
-                            <?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/account/edit/' . $row->account_id, '<span class="glyphicon glyphicon-pencil"></span> ' . \Lang::get('admin_edit'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
-                            <?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_viewlogin_log_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/account/viewlogins/' . $row->account_id, '<span class="glyphicon glyphicon-list"></span> ' . \Lang::get('account_view_login_history'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
-                            <?php if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_user_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/account-permission/index/' . $row->account_id, '<span class="fa fa-key"></span> ' . \Lang::get('account_set_permission'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
+                            <?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/account/edit/' . $row->account_id, '<span class="glyphicon glyphicon-pencil"></span> ' . __('admin_edit'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
+                            <?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_viewlogin_log_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/account/viewlogins/' . $row->account_id, '<span class="glyphicon glyphicon-list"></span> ' . __('account_view_login_history'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
+                            <?php if (\Model_AccountLevelPermission::checkAdminPermission('acperm_perm', 'acperm_manage_user_perm')) { ?> <li><?php echo \Extension\Html::anchor('admin/account-permission/index/' . $row->account_id, '<span class="fa fa-key"></span> ' . __('account_set_permission'), array('class' => 'btn btn-default btn-xs')); ?></li><?php } ?> 
                         </ul>
                         <?php } ?> 
                     </td>
@@ -160,7 +160,7 @@
                 <?php } // endofreach; ?> 
                 <?php } else { ?> 
                 <tr>
-                    <td colspan="9"><?php echo \Lang::get('fslang_no_data'); ?></td>
+                    <td colspan="9"><?php echo __('fslang_no_data'); ?></td>
                 </tr>
                 <?php } // endif; ?> 
             </tbody>
@@ -172,12 +172,12 @@
              
             <select name="act" class="form-control select-inline chosen-select select-action">
                 <option value="" selected="selected"></option>
-                <?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm')) { ?><option value="enable"><?php echo \Lang::get('admin_enable'); ?></option><?php } ?> 
-                <?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm')) { ?><option value="disable"><?php echo \Lang::get('admin_disable'); ?></option><?php } ?> 
-                <?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm')) { ?><option value="del"><?php echo \Lang::get('admin_delete'); ?></option><?php } ?> 
+                <?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm')) { ?><option value="enable"><?php echo __('admin_enable'); ?></option><?php } ?> 
+                <?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_edit_perm')) { ?><option value="disable"><?php echo __('admin_disable'); ?></option><?php } ?> 
+                <?php if (\Model_AccountLevelPermission::checkAdminPermission('account_perm', 'account_delete_perm')) { ?><option value="del"><?php echo __('admin_delete'); ?></option><?php } ?> 
             </select>
-            <button type="submit" class="bb-button btn btn-warning"><?php echo \Lang::get('admin_submit'); ?></button>
-            <?php echo \Extension\Html::anchor('admin', \Lang::get('admin_cancel'), array('class' => 'btn btn-default')); ?> 
+            <button type="submit" class="bb-button btn btn-warning"><?php echo __('admin_submit'); ?></button>
+            <?php echo \Extension\Html::anchor('admin', __('admin_cancel'), array('class' => 'btn btn-default')); ?> 
         </div>
         <div class="col-sm-6">
             <?php if (isset($pagination)) {echo $pagination->render();} ?> 
