@@ -14,6 +14,30 @@ class Date extends \Date
 
 
     /**
+     * get real timezone value (example Asia/Bangkok) from timezone number (example (UTC+07:00) Bangkok)<br>
+     * by match timezone number to timezone configuration.
+     * 
+     * @param string $timezone_num
+     * @return string timezone value for php.
+     */
+    public static function getRealTimezoneValue($timezone_num)
+    {
+        \Config::load('timezone', 'timezone');
+        $timezone_list = \Config::get('timezone.timezone', array());
+                    
+        if (is_array($timezone_list) && array_key_exists($timezone_num, $timezone_list)) {
+            $timezone = $timezone_list[$timezone_num];
+            unset($timezone_list);
+            return $timezone;
+        }
+        
+        unset($timezone, $timezone_list);
+        // in case that it cannot found any value matched. use UTC (+0.00).
+        return 'UTC';
+    }// getRealTimezoneValue
+
+
+    /**
      * gmt date. the timezone up to current user data.
      *
      * @param string $date_format date format can use both date() function or strftime() function
@@ -36,12 +60,17 @@ class Date extends \Date
                 $timestamp = strtotime($timestamp);
             }
         }
+        
+        // make very sure that selected timezone is in the timezone list or converted to real timezone.
+        if ($timezone != null) {
+            $timezone = static::isValidTimezone($timezone);
+        }
 
         // check timezone
         if ($timezone == null) {
             $account_model = new \Model_Accounts();
             $cookie = $account_model->getAccountCookie();
-            $site_timezone = \Model_Config::getval('site_timezone');
+            $site_timezone = static::getRealTimezoneValue(\Model_Config::getval('site_timezone'));
 
             if (!isset($cookie['account_id'])) {
                 // not member or not log in. use default config timezone.
@@ -51,7 +80,7 @@ class Date extends \Date
                 $row = \Model_Accounts::find($cookie['account_id']);
 
                 if (!empty($row)) {
-                    $timezone = $row->account_timezone;
+                    $timezone = static::getRealTimezoneValue($row->account_timezone);
                 } else {
                     $timezone = $site_timezone;
                 }
@@ -87,6 +116,29 @@ class Date extends \Date
             AND ((int) $timestamp <= PHP_INT_MAX)
             AND ((int) $timestamp >= ~PHP_INT_MAX); 
     }// isValidTimeStamp
+
+
+    /**
+     * is valid timezone.<br>
+     * check and return real timezone value.
+     * 
+     * @param string $timezone check timezone
+     * @return string return checked and get timezone value. if found that this is invalid then return null.
+     */
+    public static function isValidTimezone($timezone) {
+        \Config::load('timezone', 'timezone');
+        $timezone_list = \Config::get('timezone.timezone', array());
+        if (array_key_exists($timezone, $timezone_list)) {
+            // found in timezone list key. convert to timezone list value.
+            $timezone = static::getRealTimezoneValue($timezone);
+        } elseif (\Arr::search($timezone_list, $timezone) === null) {
+            // not found in the timezone list value. this is not the timezone key and not even timezone value.!
+            $timezone = null;
+        }
+        unset($timezone_list);
+        
+        return $timezone;
+    }// isValidTimezone
 
 
     /**
