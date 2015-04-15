@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 25, 2014 at 06:20 PM
--- Server version: 5.6.11
--- PHP Version: 5.3.25
+-- Generation Time: Apr 16, 2015 at 02:23 AM
+-- Server version: 1.0.16
+-- PHP Version: 5.6.6
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `ws_accounts` (
   `account_birthdate` date DEFAULT NULL COMMENT 'birthdate store in date format (YYYY-mm-dd)',
   `account_avatar` varchar(255) DEFAULT NULL COMMENT 'avatar file. refer from root web without http or domain',
   `account_signature` text COMMENT 'signature. very useful in forum',
-  `account_timezone` varchar(30) NOT NULL DEFAULT 'Asia/Bangkok' COMMENT 'see timezone list here http://www.php.net/manual/en/timezones.php',
+  `account_timezone` varchar(100) NOT NULL DEFAULT '(UTC+07:00) Bangkok' COMMENT 'see timezone list here http://www.php.net/manual/en/timezones.php',
   `account_language` varchar(10) DEFAULT NULL COMMENT 'framework language shortcode eg: en, th',
   `account_create` bigint(20) DEFAULT NULL COMMENT 'timestamp of account create date',
   `account_create_gmt` bigint(20) DEFAULT NULL COMMENT 'timestamp of account create date in gmt0',
@@ -51,15 +51,15 @@ CREATE TABLE IF NOT EXISTS `ws_accounts` (
   `account_confirm_code` varchar(255) DEFAULT NULL COMMENT 'confirmation code. use for confirm register, change email, reset password',
   `account_confirm_code_since` bigint(20) DEFAULT NULL COMMENT 'confirm code generated since',
   PRIMARY KEY (`account_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='contain user account' AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='contain user account' AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `ws_accounts`
 --
 
 INSERT INTO `ws_accounts` (`account_id`, `account_username`, `account_email`, `account_salt`, `account_password`, `account_display_name`, `account_firstname`, `account_middlename`, `account_lastname`, `account_birthdate`, `account_avatar`, `account_signature`, `account_timezone`, `account_language`, `account_create`, `account_create_gmt`, `account_last_login`, `account_last_login_gmt`, `account_status`, `account_status_text`, `account_new_email`, `account_new_password`, `account_confirm_code`, `account_confirm_code_since`) VALUES
-(0, 'Guest', 'none@localhost', NULL, NULL, 'Guest', NULL, NULL, NULL, NULL, NULL, NULL, 'Asia/Bangkok', NULL, 1387121127, 1387095927, NULL, NULL, 0, 'This account is for guest actions.', NULL, NULL, NULL, NULL),
-(1, 'admin', 'admin@test.dev', NULL, '$2a$12$mPxupqGhPePgQAPvCpVUqekNfh.cAVusmgQyz1ZTfkcVLN0GBT7am', 'admin', NULL, NULL, NULL, NULL, NULL, NULL, 'Asia/Bangkok', NULL, 1387121127, 1387095927, 1390635993, 1390610793, 1, NULL, NULL, NULL, NULL, NULL);
+(0, 'Guest', 'none@localhost', NULL, NULL, 'Guest', NULL, NULL, NULL, NULL, NULL, NULL, '(UTC+07:00) Bangkok', NULL, 1387121127, 1387095927, NULL, NULL, 0, 'This account is for guest actions.', NULL, NULL, NULL, NULL),
+(1, 'admin', 'admin@test.dev', NULL, '$2a$12$mPxupqGhPePgQAPvCpVUqekNfh.cAVusmgQyz1ZTfkcVLN0GBT7am', 'admin', NULL, NULL, NULL, NULL, NULL, NULL, '(UTC+07:00) Bangkok', NULL, 1387121127, 1387095927, 1429120159, 1429094959, 1, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `ws_account_level` (
   PRIMARY KEY (`level_id`),
   KEY `level_group_id` (`level_group_id`),
   KEY `account_id` (`account_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `ws_account_level`
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `ws_account_level_group` (
   `level_description` text,
   `level_priority` int(5) NOT NULL DEFAULT '1' COMMENT 'lower is more higher priority',
   PRIMARY KEY (`level_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='contain user role or level' AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='contain user role or level' AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `ws_account_level_group`
@@ -210,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `ws_account_sites` (
   `account_last_login_gmt` bigint(20) DEFAULT NULL COMMENT 'last login date time in gmt 0',
   `account_online_code` varchar(255) DEFAULT NULL COMMENT 'store session code for check dubplicate log in if enabled.',
   PRIMARY KEY (`account_site_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='contain account online code for each site (if use multisite)' AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='contain account online code for each site (if use multisite)' AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `ws_account_sites`
@@ -218,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `ws_account_sites` (
 
 INSERT INTO `ws_account_sites` (`account_site_id`, `account_id`, `site_id`, `account_last_login`, `account_last_login_gmt`, `account_online_code`) VALUES
 (1, 0, 1, NULL, NULL, NULL),
-(2, 1, 1, 1390635993, 1390610793, '2e94ab61d11b654913d64a4a21149667');
+(2, 1, 1, 1429120160, 1429094960, '03deb8904dbb2b18bd5db1e9bdc9d4b2');
 
 -- --------------------------------------------------------
 
@@ -241,7 +241,7 @@ CREATE TABLE IF NOT EXISTS `ws_config` (
 INSERT INTO `ws_config` (`config_name`, `config_value`, `config_core`, `config_description`) VALUES
 ('site_name', 'Fuel Start', 1, 'website name'),
 ('page_title_separator', ' | ', 1, 'page title separator. eg. site name | page'),
-('site_timezone', 'Asia/Bangkok', 1, 'website default timezone'),
+('site_timezone', '(UTC+07:00) Bangkok', 1, 'website default timezone'),
 ('simultaneous_login', '0', 1, 'allow log in more than 1 place, session? set to 1/0 to allow/disallow.'),
 ('allow_avatar', '1', 1, 'set to 1 if use avatar or set to 0 if not use it.'),
 ('avatar_size', '200', 1, 'set file size in Kilobyte.'),
@@ -319,4 +319,4 @@ CREATE TABLE IF NOT EXISTS `ws_sites` (
 --
 
 INSERT INTO `ws_sites` (`site_id`, `site_name`, `site_domain`, `site_status`, `site_create`, `site_create_gmt`, `site_update`, `site_update_gmt`) VALUES
-(1, 'Fuel Start', 'localhost', 1, 1394102182, 1394076982, 1394102182, 1394076982);
+(1, 'Fuel Start', 'localhost', 1, 1394102182, 1394076982, 1429124555, 1429099355);
