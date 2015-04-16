@@ -63,21 +63,26 @@ class Model_AccountLevelGroup extends \Orm\Model
     public static function addLevel($data = array())
     {
         // get new priority
-        $entry = static::query()->where('level_group_id', 'NOT IN', static::forge()->disallowed_edit_delete)->order_by('level_priority', 'DESC')->get_one();
+        $result = \DB::select()
+            ->as_object()
+            ->from(static::$_table_name)
+            ->where('level_group_id', 'NOT IN', static::forge()->disallowed_edit_delete)
+            ->order_by('level_priority', 'DESC')
+            ->execute();
 
-        if ($entry == null) {
+        if (count($result) <= 0) {
             $data['level_priority'] = 3;
         } else {
-            $data['level_priority'] = ($entry->level_priority+1);
+            $row = $result->current();
+            $data['level_priority'] = ($row->level_priority+1);
         }
 
-        unset($entry);
+        unset($result, $row);
 
         // add to db.
-        $alg = static::forge($data);
-        $alg->save();
-
-        unset($alg);
+        \DB::insert(static::$_table_name)
+            ->set($data)
+            ->execute();
 
         // done
         return true;
@@ -97,9 +102,13 @@ class Model_AccountLevelGroup extends \Orm\Model
         }
 
         // @todo [api] for delete level group or role here.
+        
+        // delete related tables.
+        \DB::delete(\Model_AccountLevel::getTableName())->where('level_group_id', $level_group_id)->execute();
+        \DB::delete(\Model_AccountLevelPermission::getTableName())->where('level_group_id', $level_group_id)->execute();
 
         // delete level group
-        static::find($level_group_id)->delete();
+        \DB::delete(static::$_table_name)->where('level_group_id', $level_group_id)->execute();
 
         return true;
     }// deleteLevel
@@ -117,9 +126,10 @@ class Model_AccountLevelGroup extends \Orm\Model
         $level_group_id = $data['level_group_id'];
         unset($data['level_group_id']);
 
-        $alg = static::find($level_group_id);
-        $alg->set($data);
-        $alg->save();
+        \DB::update(static::$_table_name)
+            ->where('level_group_id', $level_group_id)
+            ->set($data)
+            ->execute();
 
         return true;
     }// editLevel

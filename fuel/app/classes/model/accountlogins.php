@@ -30,6 +30,17 @@ class Model_AccountLogins extends \Orm\Model
 
 
     /**
+     * get table name that already matched site id.
+     * 
+     * @return type
+     */
+    public static function getTableName()
+    {
+        return static::$_table_name;
+    }// getTableName
+
+
+    /**
      * list login history.
      *
      * @param array $data
@@ -95,7 +106,9 @@ class Model_AccountLogins extends \Orm\Model
             $day_old = 90;
         }
 
-        $query = static::query()->where('login_time', '<', DB::expr('unix_timestamp(now() - interval '.$day_old.' day)'))->delete();
+        \DB::delete(static::$_table_name)
+            ->where('login_time', '<', DB::expr('unix_timestamp(now() - interval '.$day_old.' day)'))
+            ->execute();
 
         // done.
         return true;
@@ -137,10 +150,11 @@ class Model_AccountLogins extends \Orm\Model
         $data['login_attempt'] = $attempt;
         $data['login_attempt_text'] = $attempt_text;
 
-        $account_logins = new Model_AccountLogins($data);
-        $account_logins->save();
+        \DB::insert(static::$_table_name)
+            ->set($data)
+            ->execute();
 
-        unset($account_logins, $browser, $data);
+        unset($browser, $data, $site_id);
 
         return true;
     }// recordLogin

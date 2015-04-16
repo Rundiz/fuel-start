@@ -10,7 +10,6 @@
 
 namespace Extension;
 
-session_cache_limiter('private');
 session_start();
 include_once APPPATH . 'vendor' . DS . 'nocsrf' . DS . 'nocsrf.php';
 

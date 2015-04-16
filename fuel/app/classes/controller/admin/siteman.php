@@ -353,9 +353,10 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                             continue;
                         }
 
-                        $entry = \Model_Sites::find($id);
-                        $entry->site_status = 1;
-                        $entry->save();
+                        \DB::update(\Model_Sites::getTableName())
+                            ->where('site_id', $id)
+                            ->set(['site_status' => 1])
+                            ->execute();
                     }
                     
                     // clear cache
@@ -384,9 +385,10 @@ class Controller_Admin_Siteman extends \Controller_AdminController
                             continue;
                         }
 
-                        $entry = \Model_Sites::find($id);
-                        $entry->site_status = 0;
-                        $entry->save();
+                        \DB::update(\Model_Sites::getTableName())
+                            ->where('site_id', $id)
+                            ->set(['site_status' => 0])
+                            ->execute();
                     }
                     
                     // clear cache

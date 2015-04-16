@@ -110,43 +110,45 @@ class Model_AccountLevelPermission extends \Orm\Model
 
         if (false === $cached) {
             // get current user levels from db.
-            $query = \Model_AccountLevel::query()->where('account_id', $account_id);
+            $result = \DB::select()->as_object()->from(\Model_AccountLevel::getTableName())->where('account_id', $account_id)->execute();
 
-            if ($query->count() > 0) {
+            if (count($result) > 0) {
                 // loop each level of this user.
-                foreach ($query->get() as $row) {
+                foreach ($result as $row) {
                     if ($row->level_group_id == '1') {
                         // this user is in super admin group.
-                        unset($query, $row);
+                        unset($result, $row);
 
                         \Cache::set($cache_name, true, 2592000);
                         return true;
                     }
 
                     // check this level group in permission db.
-                    $query2 = static::query()
-                                ->where('level_group_id', $row->level_group_id)
-                                ->where('permission_page', $page_name)
-                                ->where('permission_action', $action);
+                    $result2 = \DB::select()
+                        ->from(static::$_table_name)
+                        ->where('level_group_id', $row->level_group_id)
+                        ->where('permission_page', $page_name)
+                        ->where('permission_action', $action)
+                        ->execute();
 
-                    if ($query2->count() > 0) {
+                    if (count($result2) > 0) {
                         // found.
-                        unset($query2, $row);
+                        unset($result, $result2, $row);
 
                         \Cache::set($cache_name, true, 2592000);
                         return true;
                     }
 
-                    unset($query2);
+                    unset($result2);
                 }// endforeach;
                 // not found in permission db. did not given any permission.
-                unset($query, $row);
+                unset($result, $row);
 
                 \Cache::set($cache_name, 'false', 2592000);
                 return false;
             }
             // not found this user role?
-            unset($query);
+            unset($result);
 
             \Cache::set($cache_name, 'false', 2592000);
             return false;
@@ -227,6 +229,17 @@ class Model_AccountLevelPermission extends \Orm\Model
 
 
     /**
+     * get table name that already matched site id.
+     * 
+     * @return type
+     */
+    public static function getTableName()
+    {
+        return static::$_table_name;
+    }// getTableName
+
+
+    /**
      * list permissions that checked
      *
      * @param integer $core
@@ -271,11 +284,11 @@ class Model_AccountLevelPermission extends \Orm\Model
             return true;
         } elseif ($core === 1) {
             // reset core permissions
-            static::query()->where('permission_core', '1')->delete();
+            \DB::delete(static::$_table_name)->where('permission_core', '1')->execute();
             return true;
         } elseif ($core === 0) {
             // reset modules permissions
-            static::query()->where('permission_core', '0')->delete();
+            \DB::delete(static::$_table_name)->where('permission_core', '0')->execute();
             return true;
         }
         
@@ -298,44 +311,51 @@ class Model_AccountLevelPermission extends \Orm\Model
         foreach ($data['level_group_id'] as $key => $lv_groups) {
             foreach ($lv_groups as $level_group_id) {
                 // check if permission is in db or not.
-                $query = static::query()
-                        ->where('level_group_id', $level_group_id)
-                        ->where('permission_page', $data['permission_page'][$key])
-                        ->where('permission_action', $data['permission_action'][$key]);
+                $result = \DB::select()
+                    ->from(static::$_table_name)
+                    ->where('level_group_id', $level_group_id)
+                    ->where('permission_page', $data['permission_page'][$key])
+                    ->where('permission_action', $data['permission_action'][$key])
+                    ->execute();
 
-                if ($query->count() <= 0) {
+                if (count($result) <= 0) {
                     // not in db. insert it.
-                    $entry = static::forge();
-                    $entry->level_group_id = $level_group_id;
-                    $entry->permission_core = $data['permission_core'];
-                    $entry->module_system_name = $data['module_system_name'];
-                    $entry->permission_page = $data['permission_page'][$key];
-                    $entry->permission_action = $data['permission_action'][$key];
-                    $entry->save();
+                    \DB::insert(static::$_table_name)
+                        ->set([
+                            'level_group_id' => $level_group_id,
+                            'permission_core' => $data['permission_core'],
+                            'module_system_name' => $data['module_system_name'],
+                            'permission_page' => $data['permission_page'][$key],
+                            'permission_action' => $data['permission_action'][$key],
+                        ])
+                        ->execute();
                 }
             }
         }
 
         // clear unused variables
-        unset($entry, $key, $level_group_id, $lv_groups, $query);
+        unset($key, $level_group_id, $lv_groups, $result);
 
         // now remove permission in db that was not checked.
         foreach ($data['permission_action'] as $key => $permission_action) {
             if (isset($data['permission_page'][$key])) {
-                $query = static::query()
-                        ->where('permission_core', $data['permission_core'])
-                        ->where('module_system_name', $data['module_system_name'])
-                        ->where('permission_page', $data['permission_page'][$key])
-                        ->where('permission_action', $permission_action);
+                $result = \DB::select()
+                    ->as_object()
+                    ->from(static::$_table_name)
+                    ->where('permission_core', $data['permission_core'])
+                    ->where('module_system_name', $data['module_system_name'])
+                    ->where('permission_page', $data['permission_page'][$key])
+                    ->where('permission_action', $permission_action)
+                    ->execute();
 
-                if ($query->count() > 0) {
-                    foreach ($query->get() as $row) {
+                if (count($result) > 0) {
+                    foreach ($result as $row) {
                         if (isset($data['level_group_id'][$key])) {
                             if (!in_array($row->level_group_id, $data['level_group_id'][$key])) {
-                                static::find($row->permission_id)->delete();
+                                \DB::delete(static::$_table_name)->where('permission_id', $row->permission_id)->execute();
                             }
                         } else {
-                            static::find($row->permission_id)->delete();
+                            \DB::delete(static::$_table_name)->where('permission_id', $row->permission_id)->execute();
                         }
                     }
                 }
@@ -343,7 +363,7 @@ class Model_AccountLevelPermission extends \Orm\Model
         }
 
         // clear unused variables
-        unset($key, $permission_action, $query, $row);
+        unset($key, $permission_action, $result, $row);
 
         $data = array();
         

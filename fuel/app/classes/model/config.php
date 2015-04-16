@@ -62,14 +62,24 @@ class Model_Config extends \Orm\Model
         $cache_cfg = \Extension\Cache::getSilence($cache_name);
 
         if (false === $cache_cfg) {
-            $query = static::query()->where('config_name', '=', $config_name)->get_one();
+            $result = \DB::select()
+                ->as_object()
+                ->from(static::$_table_name)
+                ->where('config_name', '=', $config_name)
+                ->execute();
+            
+            if (count($result) > 0) {
+                $row = $result->current();
+            } else {
+                return $result;
+            }
 
             if ($return_field == null) {
-                \Cache::set($cache_name, $query, 2592000);
-                return $query;
+                \Cache::set($cache_name, $row, 2592000);
+                return $row;
             } else {
-                \Cache::set($cache_name, $query->$return_field, 2592000);
-                return $query->$return_field;
+                \Cache::set($cache_name, $row->$return_field, 2592000);
+                return $row->$return_field;
             }
         }
         

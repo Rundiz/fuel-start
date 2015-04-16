@@ -44,36 +44,58 @@ class Model_AccountSites extends \Orm\Model
         unset($data['site_id']);
 
         // find exists last login on target site id.
-        $account_sites = \Model_AccountSites::query()->where('account_id', $data['account_id'])->where('site_id', $site_id);
+        $result = \DB::select()
+            ->as_object()
+            ->from(static::$_table_name)
+            ->where('account_id', $data['account_id'])
+            ->where('site_id', $site_id)
+            ->execute();
 
-        if ($account_sites->count() <= 0) {
+        if (count($result) <= 0) {
             // use insert
-            $row = new \Model_AccountSites();
-            $row->account_id = $data['account_id'];
-            $row->site_id = $site_id;
-            $row->account_last_login = time();
-            $row->account_last_login_gmt = \Extension\Date::localToGmt();
+            $insert['account_id'] = $data['account_id'];
+            $insert['site_id'] = $site_id;
+            $insert['account_last_login'] = time();
+            $insert['account_last_login_gmt'] = \Extension\Date::localToGmt();
             if (isset($data['session_id'])) {
-                $row->account_online_code = $data['session_id'];
+                $insert['account_online_code'] = $data['session_id'];
             }
-            $row->save();
+            
+            \DB::insert(static::$_table_name)
+                ->set($insert)
+                ->execute();
 
-            unset($row);
+            unset($insert);
         } else {
             // use update
-            $row = $account_sites->get_one();
-            $row->account_last_login = time();
-            $row->account_last_login_gmt = \Extension\Date::localToGmt();
+            $update['account_last_login'] = time();
+            $update['account_last_login_gmt'] = \Extension\Date::localToGmt();
             if (isset($data['session_id'])) {
-                $row->account_online_code = $data['session_id'];
+                $update['account_online_code'] = $data['session_id'];
             }
-            $row->save();
+            
+            \DB::update(static::$_table_name)
+                ->where('account_id', $data['account_id'])
+                ->where('site_id', $site_id)
+                ->set($update)
+                ->execute();
 
-            unset($row);
+            unset($update);
         }
 
-        unset($account_sites, $site_id);
+        unset($result, $site_id);
     }// addLoginSession
+
+
+    /**
+     * get table name that already matched site id.
+     * 
+     * @return type
+     */
+    public static function getTableName()
+    {
+        return static::$_table_name;
+    }// getTableName
 
 
 }

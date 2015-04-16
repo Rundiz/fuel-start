@@ -62,10 +62,9 @@ class Model_Sites extends \Orm\Model
         $data['site_update_gmt'] = \Extension\Date::localToGmt();
 
         // insert into db.
-        $site = static::forge($data);
-        $site->save();
-        $site_id = $site->site_id;
-        unset($site);
+        list($site_id) = \DB::insert(static::$_table_name)
+            ->set($data)
+            ->execute();
 
         // start copy tables
         static::forge()->copyNewSiteTable($site_id);
@@ -214,9 +213,13 @@ class Model_Sites extends \Orm\Model
         foreach (static::forge()->multisite_tables as $table) {
             \DBUtil::drop_table($site_id . '_' . $table);
         }
+        
+        // delete data in related tables
+        \DB::delete(\Model_AccountLogins::getTableName())->where('site_id', $site_id)->execute();
+        \DB::delete(\Model_AccountSites::getTableName())->where('site_id', $site_id)->execute();
 
         // delete this site from sites table
-        static::find($site_id)->delete();
+        \DB::delete(static::$_table_name)->where('site_id', $site_id)->execute();
         
         // clear cache
         \Extension\Cache::deleteCache('model.accounts-checkAccount-' . $site_id);
@@ -242,8 +245,12 @@ class Model_Sites extends \Orm\Model
     public static function editSite(array $data = array())
     {
         // check site_domain not exists in other site_id
-        $match_sites = static::query()->where('site_id', '!=', $data['site_id'])->where('site_domain', $data['site_domain'])->count();
-        if ($match_sites > 0) {
+        $match_sites = \DB::select()
+            ->from(static::$_table_name)
+            ->where('site_id', '!=', $data['site_id'])
+            ->where('site_domain', $data['site_domain'])
+            ->execute();
+        if (count($match_sites) > 0) {
             unset($match_sites);
             return \Lang::get('siteman_domain_currently_exists');
         }
@@ -263,10 +270,10 @@ class Model_Sites extends \Orm\Model
         unset($data['site_id']);
 
         // update to db
-        $sites = static::find($site_id);
-        $sites->set($data);
-        $sites->save();
-        unset($sites);
+        \DB::update(static::$_table_name)
+            ->where('site_id', $site_id)
+            ->set($data)
+            ->execute();
 
         // set config for new site.
         $cfg_data['site_name'] = $data['site_name'];
@@ -321,23 +328,27 @@ class Model_Sites extends \Orm\Model
         $cached = \Extension\Cache::getSilence($cache_name);
 
         if (false === $cached) {
-            $query = static::query();
-            $query->where('site_domain', $site_domain);
+            $query = \DB::select()
+                ->as_object()
+                ->from(static::$_table_name)
+                ->where('site_domain', $site_domain);
             if ($enabled_only === true) {
                 $query->where('site_status', 1);
             }
+            $result = $query->execute();
+            unset($query);
 
-            if ($query->count() > 0) {
+            if (count($result) > 0) {
                 // found.
-                $row = $query->get_one();
+                $row = $result->current();
 
-                unset($query, $site_domain);
+                unset($result, $site_domain);
 
                 \Cache::set($cache_name, $row->site_id, 2592000);
                 return $row->site_id;
             }
             // not found, always return 1.
-            unset($query, $site_domain);
+            unset($result, $row, $site_domain);
 
             if ($real_id_only == false) {
                 \Cache::set($cache_name, 1, 2592000);
@@ -354,6 +365,17 @@ class Model_Sites extends \Orm\Model
             return $cached;
         }
     }// getSiteId
+    
+    
+    /**
+     * get table name based on current site.
+     * 
+     * @return string
+     */
+    public static function getTableName()
+    {
+        return static::$_table_name;
+    }// getTableName
     
     
     /**
@@ -402,12 +424,14 @@ class Model_Sites extends \Orm\Model
         $cached = \Extension\Cache::getSilence($cache_name);
         
         if (false === $cached) {
-            $query = static::query();
-            $query->where('site_domain', $site_domain);
-            $query->where('site_status', 1);
-            $total = $query->count();
+            $result = \DB::select()
+                ->from(static::$_table_name)
+                ->where('site_domain', $site_domain)
+                ->where('site_status', 1)
+                ->execute();
+            $total = count($result);
 
-            unset($query, $site_domain);
+            unset($result, $site_domain);
 
             if ($total > 0) {
                 \Cache::set($cache_name, true, 2592000);

@@ -44,6 +44,17 @@ class Model_AccountLevel extends \Orm\Model
 
 
     /**
+     * get table name that already matched site id.
+     * 
+     * @return type
+     */
+    public static function getTableName()
+    {
+        return static::$_table_name;
+    }// getTableName
+
+
+    /**
      * update account levels
      *
      * @param integer $account_id
@@ -57,7 +68,10 @@ class Model_AccountLevel extends \Orm\Model
         if ($lvls->count() > 0) {
             foreach ($lvls->get() as $lvl) {
                 if (!in_array($lvl->level_group_id, $data_level)) {
-                    static::query()->where('account_id', $account_id)->where('level_id', $lvl->level_id)->delete();
+                    \DB::delete(static::$_table_name)
+                        ->where('account_id', $account_id)
+                        ->where('level_id', $lvl->level_id)
+                        ->execute();
                 }
             }
         }
@@ -66,17 +80,23 @@ class Model_AccountLevel extends \Orm\Model
         // update or insert fields
         if (is_array($data_level) && !empty($data_level)) {
             foreach ($data_level as $level_group_id) {
-                $entry = static::query()->where('account_id', $account_id)->where('level_group_id', $level_group_id)->get_one();
+                $result = \DB::select()
+                    ->from(static::$_table_name)
+                    ->where('account_id', $account_id)
+                    ->where('level_group_id', $level_group_id)
+                    ->execute();
 
-                if (!is_array($entry) && !is_object($entry)) {
+                if (count($result) <= 0) {
                     // not exists, use insert.
-                    $entry = new self;
-                    $entry->account_id = $account_id;
-                    $entry->level_group_id = $level_group_id;
-                    $entry->save();
+                    \DB::insert(static::$_table_name)
+                        ->set([
+                            'account_id' => $account_id,
+                            'level_group_id' => $level_group_id,
+                        ])
+                        ->execute();
                 }
 
-                unset($entry);
+                unset($result);
             }
         }
         

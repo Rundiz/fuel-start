@@ -659,10 +659,10 @@ class Controller_Admin_Account extends \Controller_AdminController
                 if (is_array($ids)) {
                     foreach ($ids as $id) {
                         // get target level group id
-                        $lvls = \Model_AccountLevel::query()->where('account_id', $id)->get();
+                        $lvls = \DB::select()->as_object()->from(\Model_AccountLevel::getTableName())->where('account_id', $id)->execute();
 
                         // not found
-                        if ($lvls == null) {
+                        if (count($lvls) <= 0) {
                             continue;
                         } else {
                             // format level group for check can i add, edit
@@ -692,10 +692,10 @@ class Controller_Admin_Account extends \Controller_AdminController
                         }
 
                         // get target level group id
-                        $lvls = \Model_AccountLevel::query()->where('account_id', $id)->get();
+                        $lvls = \DB::select()->as_object()->from(\Model_AccountLevel::getTableName())->where('account_id', $id)->execute();
 
                         // not found
-                        if ($lvls == null) {
+                        if (count($lvls) <= 0) {
                             continue;
                         } else {
                             // format level group for check can i add, edit
@@ -706,10 +706,13 @@ class Controller_Admin_Account extends \Controller_AdminController
                         }
 
                         if (\Model_Accounts::forge()->canIAddEditAccount($level_group) == true) {
-                            $entry = \Model_Accounts::find($id);
-                            $entry->account_status = '1';
-                            $entry->account_status_text = null;
-                            $entry->save();
+                            \DB::update(\Model_Accounts::getTableName())
+                                ->where('account_id', $id)
+                                ->set([
+                                    'account_status' => '1',
+                                    'account_status_text' => null,
+                                ])
+                                ->execute();
 
                             unset($entry);
                         }
@@ -729,10 +732,10 @@ class Controller_Admin_Account extends \Controller_AdminController
                         }
 
                         // get target level group id
-                        $lvls = \Model_AccountLevel::query()->where('account_id', $id)->get();
+                        $lvls = \DB::select()->as_object()->from(\Model_AccountLevel::getTableName())->where('account_id', $id)->execute();
 
                         // not found
-                        if ($lvls == null) {
+                        if (count($lvls) <= 0) {
                             continue;
                         } else {
                             // format level group for check can i add, edit
@@ -743,12 +746,13 @@ class Controller_Admin_Account extends \Controller_AdminController
                         }
 
                         if (\Model_Accounts::forge()->canIAddEditAccount($level_group) == true) {
-                            $entry = \Model_Accounts::find($id);
-                            $entry->account_status = '0';
-                            $entry->account_status_text = null;
-                            $entry->save();
-
-                            unset($entry);
+                            \DB::update(\Model_Accounts::getTableName())
+                                ->where('account_id', $id)
+                                ->set([
+                                    'account_status' => '0',
+                                    'account_status_text' => null,
+                                ])
+                                ->execute();
                         }
 
                         // clear cache

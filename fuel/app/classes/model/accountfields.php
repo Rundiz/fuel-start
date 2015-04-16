@@ -84,33 +84,35 @@ class Model_AccountFields extends \Orm\Model
         if ($current_af->count() > 0) {
             foreach ($current_af as $af) {
                 if (!isset($data_fields[$af->field_name])) {
-                    $entry = static::query()->where('account_id', $account_id)->where('field_name', $af->field_name)->delete();
+                    \DB::delete(static::$_table_name)
+                        ->where('account_id', $account_id)
+                        ->where('field_name', $af->field_name)
+                        ->execute();
                 }
             }
         }
-        unset($af, $current_af, $entry);
+        unset($af, $current_af);
 
         // update or insert fields.
         if (is_array($data_fields) && !empty($data_fields)) {
             foreach ($data_fields as $field_name => $field_value) {
-                $entry = static::query()->where('account_id', $account_id)->where('field_name', $field_name)->get_one();
+                $result = \DB::select()
+                    ->from(static::$_table_name)
+                    ->where('account_id', $account_id)
+                    ->where('field_name', $field_name)
+                    ->execute();
 
-                if (!is_array($entry) && !is_object($entry)) {
+                if (count($result) <= 0) {
                     // use insert
-                    $entry = new self;
-                    $entry->account_id = $account_id;
-                    $entry->field_name = $field_name;
-                    $entry->field_value = $field_value;
-                    $entry->save();
+                    \DB::insert(static::$_table_name)
+                        ->set([
+                            'account_id' => $account_id,
+                            'field_name' => $field_name,
+                            'field_value' => $field_value,
+                        ])
+                        ->execute();
                 } else {
                     // use update
-                    // for update multiple rows as ORM style, please see http://www.fuelphp.com/forums/discussion/12798/how-to-update-via-orm-with-multiple-where-conditions
-                    // $objects = Model_AF::query()->where('field_name', $field_name)->get();
-                    // foreach ($objects as $object) {
-                    // $object->field_value = $field_value;
-                    //  $object->save();
-                    // }
-                    // use update by db query. it is faster.
                     \DB::update(static::$_table_name)
                         ->value('field_value', $field_value)
                         ->where('account_id', '=', $account_id)
@@ -118,7 +120,7 @@ class Model_AccountFields extends \Orm\Model
                         ->execute();
                 }
 
-                unset($entry);
+                unset($result);
             }
             unset($field_name, $field_value);
         }

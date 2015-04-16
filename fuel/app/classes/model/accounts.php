@@ -177,13 +177,16 @@ class Model_Accounts extends \Orm\Model
             $data['account_email'] = null;
         }
 
-        $query = static::query()
-                ->where('account_username', $data['account_username'])
-                ->or_where('account_email', $data['account_email']);
+        $result = \DB::select()
+            ->as_object()
+            ->from(static::$_table_name)
+            ->where('account_username', $data['account_username'])
+            ->or_where('account_email', $data['account_email'])
+            ->execute();
 
-        if ($query->count() > 0) {
+        if (count($result) > 0) {
             // found
-            $row = $query->get_one();
+            $row = $result->current();
             // clear cache
             \Extension\Cache::deleteCache('model.accounts-checkAccount-' . \Model_Sites::getSiteId() . '-' . $row->account_id);
 
@@ -234,11 +237,13 @@ class Model_Accounts extends \Orm\Model
                         unset($cookie_account, $expires);
 
                         // update last login in accounts table
-                        $accounts = static::find($row->account_id);
-                        $accounts->account_last_login = time();
-                        $accounts->account_last_login_gmt = \Extension\Date::localToGmt();
-                        $accounts->save();
-                        unset($accounts);
+                        \DB::update(static::$_table_name)
+                            ->where('account_id', $row->account_id)
+                            ->set([
+                                'account_last_login' => time(),
+                                'account_last_login_gmt' => \Extension\Date::localToGmt(),
+                            ])
+                            ->execute();
 
                         // add/update last login session.
                         $account_session['account_id'] = $row->account_id;
@@ -249,12 +254,12 @@ class Model_Accounts extends \Orm\Model
                         unset($account_session);
 
                         // record login
-                        $account_logins = new Model_AccountLogins();
+                        $account_logins = new \Model_AccountLogins();
                         $account_logins->recordLogin($row->account_id, 1, 'account_login_success');
 
                         // @todo [api] any login success (member) api should be here.
 
-                        unset($account_logins, $account_site, $query, $row, $session_id);
+                        unset($account_logins, $account_site, $result, $row, $session_id);
 
                         // login success
                         return true;
@@ -267,26 +272,26 @@ class Model_Accounts extends \Orm\Model
                     }
                 } else {
                     // check password failed, wrong password
-                    $account_logins = new Model_AccountLogins();
+                    $account_logins = new \Model_AccountLogins();
                     $account_logins->recordLogin($row->account_id, 0, 'account_wrong_username_or_password');
 
-                    unset($query, $row);
+                    unset($result, $row);
 
                     return \Lang::get('account_wrong_username_or_password');
                 }
             } else {
                 // account disabled
-                $account_logins = new Model_AccountLogins();
+                $account_logins = new \Model_AccountLogins();
                 $account_logins->recordLogin($row->account_id, 0, 'account_was_disabled');
 
-                unset($query);
+                unset($result);
 
                 return \Lang::get('account_was_disabled') . ' : ' . $row->account_status_text;
             }
         }
 
         // not found account. login failed
-        unset($query);
+        unset($result, $row);
 
         return \Lang::get('account_wrong_username_or_password');
     }// adminLogin
@@ -389,20 +394,20 @@ class Model_Accounts extends \Orm\Model
 
         if (false === $cached) {
             // check for matches id username and email. ---------------------------------------------------------------
-            $query = static::query()
-                    ->where('account_id', $account_id)
-                    ->where('account_username', $account_username)
-                    ->where('account_email', $account_email)
-                    ->where('account_status', 1);
+            $result = \DB::select()
+                ->from(static::$_table_name)
+                ->where('account_id', $account_id)
+                ->where('account_username', $account_username)
+                ->where('account_email', $account_email)
+                ->where('account_status', 1)
+                ->execute();
 
-            if ($query->count() > 0) {
-                $row = $query->get_one();
-                unset($query);
+            if (count($result) > 0) {
+                unset($result);
 
                 // if not allow simultaneous login. (if not allow login from many places)
                 if (\Model_Config::getval('simultaneous_login') == '0') {
                     if ($this->isSimultaneousLogin($account_id, $account_online_code, $site_id) == true) {
-                        unset($row);
 
                         // log out
                         static::logout(array('remove_online_code' => false));
@@ -424,14 +429,12 @@ class Model_Accounts extends \Orm\Model
                 }
 
                 // check account passed! with or without simultaneous login check.
-                unset($row);
-                
                 \Cache::set($cache_name, true, 2592000);
                 return true;
             }
 
             // not found account in db. or found but disabled
-            unset($query);
+            unset($result);
 
             // log out
             static::logout();
@@ -567,10 +570,13 @@ class Model_Accounts extends \Orm\Model
             return false;
         }
 
-        $query = static::query()->where('account_id', $account_id);
+        $result = \DB::select()
+            ->as_object()
+            ->where('account_id', $account_id)
+            ->execute();
 
-        if ($query->count() > 0) {
-            $row = $query->get_one();
+        if (count($result) > 0) {
+            $row = $result->current();
 
             if ($row->account_avatar != null && file_exists($row->account_avatar) && is_file($row->account_avatar)) {
                 \File::delete($row->account_avatar);
@@ -578,12 +584,15 @@ class Model_Accounts extends \Orm\Model
 
             // update db
             if ($update_db === true) {
-                $row->account_avatar = null;
-                $row->save();
+                \DB::update(static::$_table_name)
+                    ->set([
+                        'account_avatar' => null,
+                    ])
+                    ->execute();
             }
         }
 
-        unset($query, $row);
+        unset($result, $row);
 
         return true;
     }// deleteAccountAvatar
@@ -784,6 +793,17 @@ class Model_Accounts extends \Orm\Model
 
 
     /**
+     * get table name that already matched site id.
+     * 
+     * @return type
+     */
+    public static function getTableName()
+    {
+        return static::$_table_name;
+    }// getTableName
+
+
+    /**
      * hash password
      * @param string $password
      * @return string
@@ -863,20 +883,22 @@ class Model_Accounts extends \Orm\Model
         }
 
         // find this account id and their online code on selected site.
-        $query = \Model_AccountSites::query()
-                ->where('account_id', $account_id)
-                ->where('site_id', $site_id)
-                ->where('account_online_code', $account_online_code);
+        $result = \DB::select()
+            ->from(\Model_AccountSites::getTableName())
+            ->where('account_id', $account_id)
+            ->where('site_id', $site_id)
+            ->where('account_online_code', $account_online_code)
+            ->execute();
 
-        if ($query->count() > 0) {
-            unset($query);
+        if (count($result) > 0) {
+            unset($result);
 
             // not found logged in from other place (online code in db matched with this user's cookie online code).
             return false;
         }
 
         // not found account on this site. or found but online code does not match (null online code in db means logged out, so it is not match this user that still logged in).
-        unset($query);
+        unset($result);
 
         return true;
     }// isSimultaneousLogin
@@ -1004,14 +1026,13 @@ class Model_Accounts extends \Orm\Model
 
         if (!isset($data['remove_online_code']) || (isset($data['remove_online_code']) && $data['remove_online_code'] == true)) {
             // delete online code for certain site, so when program check for logged in or simultaneous it will return false.
-            $account_sites = \Model_AccountSites::query()->where('account_id', $data['account_id'])->where('site_id', $data['site_id']);
-            $row = $account_sites->get_one();
-            if ($row != null) {
-                $row->account_online_code = null;
-                $row->save();
-            }
-
-            unset($account_sites, $row);
+            \DB::update(\Model_AccountSites::getTableName())
+                ->where('account_id', $data['account_id'])
+                ->where('site_id', $data['site_id'])
+                ->set([
+                    'account_online_code' => null,
+                ])
+                ->execute();
         }
         
         // clear cache
