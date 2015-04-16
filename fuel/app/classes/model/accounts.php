@@ -257,7 +257,7 @@ class Model_Accounts extends \Orm\Model
                         $account_logins = new \Model_AccountLogins();
                         $account_logins->recordLogin($row->account_id, 1, 'account_login_success');
 
-                        // @todo [api] any login success (member) api should be here.
+                        // @todo [fuelstart][api] any login success (member) api should be here.
 
                         unset($account_logins, $account_site, $result, $row, $session_id);
 
@@ -455,7 +455,7 @@ class Model_Accounts extends \Orm\Model
      */
     public function checkPassword($entered_password = '', $hashed_password = '')
     {
-        // @todo [api] any hash api for check password should be here.
+        // @todo [fuelstart][api] any hash api for check password should be here.
 
         include_once APPPATH . DS . 'vendor' . DS . 'phpass' . DS . 'PasswordHash.php';
         $PasswordHash = new PasswordHash($this->password_hash_level, false);
@@ -513,7 +513,7 @@ class Model_Accounts extends \Orm\Model
         // delete avatar
         static::instance()->deleteAccountAvatar($account_id, false);
 
-        // @todo [api] for deleting account here.
+        // @todo [fuelstart][api] for deleting account here.
 
         // loop sites to delete this account id related in multi-site tables.
         $site_id = \Model_Sites::getSiteId(false);
@@ -539,7 +539,7 @@ class Model_Accounts extends \Orm\Model
                     // delete from account_permission table
                     \DB::delete($table_siteid_prefix . 'account_permission')->where('account_id', $account_id)->execute();
                     
-                    // @todo [multisite] more multi-site tables that has account_id related should be delete here.
+                    // @todo [fuelstart][multisite] more multi-site tables that has account_id related should be delete here.
                 }
             }
         }
@@ -657,7 +657,7 @@ class Model_Accounts extends \Orm\Model
 
                         unset($query, $row);
 
-                        // @todo [api] for changed password here.
+                        // @todo [fuelstart][api] for changed password here.
 
                         // flash message for changed password please login again.
                         \Session::set_flash(
@@ -752,7 +752,7 @@ class Model_Accounts extends \Orm\Model
             unset($af);
         }
 
-        // @todo [api] edit account should be here.
+        // @todo [fuelstart][api] edit account should be here.
 
         // done
         if (isset($password_changed) && $password_changed === true) {
@@ -810,7 +810,7 @@ class Model_Accounts extends \Orm\Model
      */
     public function hashPassword($password = '')
     {
-        // @todo [api] any hash password api should be here with if condition.
+        // @todo [fuelstart][api] any hash password api should be here with if condition.
 
         include_once APPPATH . DS . 'vendor' . DS . 'phpass' . DS . 'PasswordHash.php';
         $PasswordHash = new PasswordHash($this->password_hash_level, false);
@@ -1093,7 +1093,7 @@ class Model_Accounts extends \Orm\Model
 
                         unset($query, $row);
 
-                        // @todo [api] for changed password here.
+                        // @todo [fuelstart][api] for changed password here.
 
                         // flash message for changed password please login again.
                         \Session::set_flash(
@@ -1186,7 +1186,7 @@ class Model_Accounts extends \Orm\Model
             unset($af);
         }
 
-        // @todo [api] edit account should be here.
+        // @todo [fuelstart][api] edit account should be here.
 
         // done
         if (isset($password_changed) && $password_changed === true) {
@@ -1276,7 +1276,7 @@ class Model_Accounts extends \Orm\Model
                     $account_logins = new Model_AccountLogins();
                     $account_logins->recordLogin($row->account_id, 1, 'account_login_success');
 
-                    // @todo [api] any login success (member) api should be here.
+                    // @todo [fuelstart][api] any login success (member) api should be here.
 
                     unset($query, $row, $session_id);
 
@@ -1434,7 +1434,7 @@ class Model_Accounts extends \Orm\Model
             unset($account_fields, $field);
         }
 
-        // @todo [api] register account api should be here.
+        // @todo [fuelstart][api] register account api should be here.
 
         return true;
     }// registerAccount.

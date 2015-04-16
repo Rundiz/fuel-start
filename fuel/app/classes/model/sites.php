@@ -34,7 +34,7 @@ class Model_Sites extends \Orm\Model
      * list tables that *must copy* when create new site.
      *
      * @var array $multisite_tables
-     * @todo [multisite] developers have to add *must copy* tables here when you create table that need to use differently in multi-site.
+     * @todo [fuelstart][multisite] developers have to add *must copy* tables here when you create table that need to use differently in multi-site.
      */
     public $multisite_tables = array(
         'account_fields',
@@ -69,10 +69,10 @@ class Model_Sites extends \Orm\Model
         // start copy tables
         static::forge()->copyNewSiteTable($site_id);
 
-        // @todo [theme][multisite] for any theme management that get config from db from each site. you need to add set default theme for each created site here.
+        // @todo [fuelstart][theme][multisite] for any theme management that get config from db from each site. you need to add set default theme for each created site here.
 
         // set config for new site. this step should reset core config values in new site for security reason.
-        // @todo [core_config] when developers add new core config names and values, you have to add those default values here.
+        // @todo [fuelstart][core_config] when developers add new core config names and values, you have to add those default values here.
         $cfg_data['site_name'] = $data['site_name'];
         $cfg_data['page_title_separator'] = ' | ';
         $cfg_data['site_timezone'] = 'Asia/Bangkok';

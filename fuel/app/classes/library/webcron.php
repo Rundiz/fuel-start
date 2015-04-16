@@ -120,7 +120,7 @@ class WebCron
         $this->checkCron(array('name' => 'purge_login_history'), array('\Model_AccountLogins', 'purgeOldLogins'));
 
         // check tasks from db
-        // @todo [api] add check tasks from db or create your tasks from db here.
+        // @todo [fuelstart][api] add check tasks from db or create your tasks from db here.
 
         return true;
     }// init

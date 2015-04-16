@@ -37,7 +37,7 @@ abstract class Controller_BaseController extends \Controller
         \Library\WebCron::forge()->init();
         
         // set default theme name
-        // @todo [theme] for theme management. you should get default theme setting from db here.
+        // @todo [fuelstart][theme] for theme management. you should get default theme setting from db here.
         \Config::load('theme', true);
         $theme_active = \Config::get('theme.active');
         $this->theme_system_name = $theme_active;
@@ -138,7 +138,7 @@ abstract class Controller_BaseController extends \Controller
         $config = Model_Config::getvalues($cfg_values);
         unset($cfg_values);
 
-        // @todo [api] generate title if condition here.
+        // @todo [fuelstart][api] generate title if condition here.
 
         if ($name_position == 'first') {
             $output = $config['site_name']['value'];

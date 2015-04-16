@@ -59,7 +59,7 @@ class Controller_Account_ConfirmRegister extends \Controller_BaseController
                     $output['form_status'] = 'success';
                     $output['form_status_message'] = \Lang::get('account_confirm_register_completed');
 
-                    // @todo [api] confirm register passed should be here.
+                    // @todo [fuelstart][api] confirm register passed should be here.
                 } else {
                     $output['form_status'] = 'error';
                     $output['form_status_message'] = $result;
