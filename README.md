@@ -13,7 +13,7 @@ This can help those developers build their project very fast.
 
 ##Installation
 System requirement: 
- * PHP 5.3 or above
+ * PHP 5.4 or above
  * Memory 32MB or more
  * Disk space 30MB or more
 
