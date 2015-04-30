@@ -35,6 +35,7 @@ return array(
     'admin_extensions' => 'Extensions',
     'admin_global_configuration' => 'Global configuration',
     'admin_multisite_manager' => 'Multi-site manager',
+    'admin_nav_all_users' => 'All users',
     'admin_nav_cacheman' => 'Cache management',
     'admin_nav_tools' => 'Tools',
     'admin_permissions' => 'Permissions',

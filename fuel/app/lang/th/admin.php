@@ -35,6 +35,7 @@ return array(
     'admin_extensions' => 'ส่วนขยาย',
     'admin_global_configuration' => 'ตั้งค่าทั่วไป',
     'admin_multisite_manager' => 'จัดการเว็บไซต์ย่อย',
+    'admin_nav_all_users' => 'ผู้ใช้ทั้งหมด',
     'admin_nav_cacheman' => 'ระบบจัดการแคช',
     'admin_nav_tools' => 'เครื่องมือ',
     'admin_permissions' => 'สิทธิ',

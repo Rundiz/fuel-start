@@ -12,7 +12,7 @@ if (!defined('THEMEDIR')) {
 }
 
 return array(
-    'active' => 'system',
+    'active' => 'sys2',
     'assets_folder' => 'assets',
     'fallback' => 'system',
     'paths' => array(

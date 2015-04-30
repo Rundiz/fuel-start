@@ -1,0 +1,184 @@
+/**
+SmartMenus css for FuelStart sidebar vertical menu theme.
+
+@author Vee W.
+@version 1
+*/
+
+
+/* smartmenus global effect -------------------------------------------------------------------------------------------*/
+/* sub menu indicators */
+.sm-fssidebar a span.sub-arrow {
+	display: none;
+}
+
+
+/* menu icons */
+.sm-fssidebar a .fa,
+.sm-fssidebar a .glyphicon,
+.sm-fssidebar a .menu-icon {
+	color: #9d9d9d;
+}
+.sm-fssidebar > li > a.active .fa,
+.sm-fssidebar > li > a.active .glyphicon,
+.sm-fssidebar > li > a.active .menu-icon,
+.sm-fssidebar > li > a.current .fa,
+.sm-fssidebar > li > a.current .glyphicon,
+.sm-fssidebar > li > a.current .menu-icon {
+	color: #fff;
+}
+
+
+/* sub menu items */
+.sm-fssidebar a:active,
+.sm-fssidebar a:focus {
+	outline: none;
+}
+.sm-fssidebar > li > a:active,
+.sm-fssidebar > li > a:focus,
+.sm-fssidebar > li > a:hover,
+.sm-fssidebar > li > a.highlighted {
+	background-color: rgba(0,0,0,0.3);
+}
+.sm-fssidebar > li > a.active,
+.sm-fssidebar > li > a.current {
+	background-color: #52A0E5;
+}
+.sm-fssidebar ul a:hover {
+	color: #52A0E5;
+}
+
+
+/* smartmenus responsive -------------------------------------------------------------------------------------------- */
+/* @todo [fuelstart][smartmenus] make it mobile first when smartmenu support not display inline css. (http://www.smartmenus.org/forums/topic/option-for-no-inline-style/) */
+@media screen and (max-width: 767px) {
+	ul.sm-fssidebar {
+		width: auto;
+	}
+	ul.sm-fssidebar iframe {
+		display: none;
+	}
+	ul.sm-fssidebar ul {
+		box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.3);
+		display: none;
+		left: auto !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		max-width: none !important;
+		min-width: 0 !important;
+		position: static;
+		top: auto !important;
+		width: auto !important;
+	}
+}
+@media screen and (min-width: 768px) {
+	ul.sm-fssidebar ul {
+		background-color: #fff;
+		border: 1px solid rgba(0, 0, 0, 0.15);
+		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
+		padding: 0;
+		z-index: 3000;
+	}
+}
+
+
+/* menu and submenu items responsive */
+/* @todo [fuelstart][smartmenus] make it mobile first when smartmenu support not display inline css. (http://www.smartmenus.org/forums/topic/option-for-no-inline-style/) */
+@media screen and (max-width: 767px) {
+	ul.sm-fssidebar > li {
+		float: none;
+	}
+	ul.sm-fssidebar > li > a,
+	ul.sm-fssidebar ul {
+		white-space: normal;
+	}
+	ul.sm-fssidebar > li > a .fs-menu-name {
+		font-size: 12px;
+		line-height: 20px;
+	}
+	
+	.sm-fssidebar li.divider {
+		border-bottom: 1px solid rgba(255,255,255,0.1);
+		margin: 8px 0;
+	}
+	.sm-fssidebar > li > a {
+		font-size: 20px;
+		line-height: 20px;
+		padding: 10px 10px;
+	}
+	.sm-fssidebar a {
+		color: #eee;
+		text-decoration: none;
+	}
+	.sm-fssidebar ul {
+		background-color: rgba(255,255,255,0.03);
+	}
+	.sm-fssidebar ul ul {
+		background-color: inherit;
+	}
+	ul.sm ul.sm-nowrap > li > a {
+		white-space: normal;
+	}
+	.sm-fssidebar ul a {
+		overflow: hidden;
+		padding: 8px 12px;
+		white-space: normal;
+		word-wrap: break-word;
+	}
+	.sm-fssidebar ul li:last-child a {
+		padding-bottom: 16px;
+	}
+	.sm-fssidebar ul a.current {
+		font-weight: bold;
+	}
+	.sm-fssidebar ul a.current:hover {
+		color: #fff;
+	}
+}
+@media screen and (min-width: 768px) {
+	.collapsed-sidebar-menu ul.sm-fssidebar > li > a {
+		text-align: center;
+	}
+	.expanded-sidebar-menu ul.sm-fssidebar > li > a .fs-menu-name {
+		display: inline;
+		opacity: 1;
+	}
+	
+	.sm-fssidebar > li > a {
+		color: #eee;
+		font-size: 20px;
+		line-height: 20px;
+		padding: 10px 10px;
+		text-align: left;
+		text-decoration: none;
+	}
+	ul.sm-fssidebar > li > a .fs-menu-name {
+		display: none;
+		font-size: 12px;
+		line-height: 20px;
+		opacity: 0;
+	}
+	
+	.sm-fssidebar li.divider {
+		border-bottom: 1px solid rgba(0,0,0,0.1);
+		margin: 8px 0;
+	}
+	
+	.sm-fssidebar ul a {
+		color: #333;
+		padding: 10px 20px;
+		text-decoration: none;
+	}
+	/* the style below override mobile view use bootstrap default style */
+	.sm-fssidebar ul a:hover,
+	.sm-fssidebar ul a.highlighted {
+		background-color: #f5f5f5;
+		color: #262626;
+	}
+	.sm-fssidebar ul a.current {
+		font-weight: bold;
+	}
+	.sm-fssidebar ul a.current:hover {
+		color: #333;
+	}
+}
