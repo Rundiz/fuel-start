@@ -572,6 +572,7 @@ class Model_Accounts extends \Orm\Model
 
         $result = \DB::select()
             ->as_object()
+            ->from(static::$_table_name)
             ->where('account_id', $account_id)
             ->execute();
 
