@@ -118,6 +118,15 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
         // <head> output ----------------------------------------------------------------------------------------------
         $output['page_title'] = $this->generateTitle(\Lang::get('accountlv_role'));
         // <head> output ----------------------------------------------------------------------------------------------
+        
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        $page_breadcrumb = [];
+        $page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        $page_breadcrumb[1] = ['name' => \Lang::get('accountlv_role'), 'url' => \Uri::create('admin/account-level')];
+        $page_breadcrumb[2] = ['name' => \Lang::get('accountlv_add_role'), 'url' => \Uri::main()];
+        $output['page_breadcrumb'] = $page_breadcrumb;
+        unset($page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/accountlevel/form_v', $output, false);
     }// action_add
@@ -279,6 +288,15 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
         // <head> output ----------------------------------------------------------------------------------------------
         $output['page_title'] = $this->generateTitle(\Lang::get('accountlv_role'));
         // <head> output ----------------------------------------------------------------------------------------------
+        
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        $page_breadcrumb = [];
+        $page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        $page_breadcrumb[1] = ['name' => \Lang::get('accountlv_role'), 'url' => \Uri::create('admin/account-level')];
+        $page_breadcrumb[2] = ['name' => \Lang::get('accountlv_edit_role'), 'url' => \Uri::main()];
+        $output['page_breadcrumb'] = $page_breadcrumb;
+        unset($page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/accountlevel/form_v', $output, false);
     }// action_edit
@@ -324,6 +342,14 @@ class Controller_Admin_AccountLevel extends \Controller_AdminController
         // <head> output ----------------------------------------------------------------------------------------------
         $output['page_title'] = $this->generateTitle(\Lang::get('accountlv_role'));
         // <head> output ----------------------------------------------------------------------------------------------
+        
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        $page_breadcrumb = [];
+        $page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        $page_breadcrumb[1] = ['name' => \Lang::get('accountlv_role'), 'url' => \Uri::create('admin/account-level')];
+        $output['page_breadcrumb'] = $page_breadcrumb;
+        unset($page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/accountlevel/index_v', $output, false);
     }// action_index

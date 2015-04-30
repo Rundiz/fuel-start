@@ -228,6 +228,14 @@ class Controller_Admin_Config extends \Controller_AdminController
         // <head> output ----------------------------------------------------------------------------------------------
         $output['page_title'] = $this->generateTitle(\Lang::get('config_global_configuration'));
         // <head> output ----------------------------------------------------------------------------------------------
+        
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        $page_breadcrumb = [];
+        $page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        $page_breadcrumb[1] = ['name' => \Lang::get('config_global_configuration'), 'url' => \Uri::create('admin/config')];
+        $output['page_breadcrumb'] = $page_breadcrumb;
+        unset($page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/config/index_v', $output, false);
     }// action_index

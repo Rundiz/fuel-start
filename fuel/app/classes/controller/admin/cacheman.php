@@ -70,6 +70,14 @@ class Controller_Admin_Cacheman extends \Controller_AdminController
         // <head> output ----------------------------------------------------------------------------------------------
         $output['page_title'] = $this->generateTitle(\Lang::get('cacheman'));
         // <head> output ----------------------------------------------------------------------------------------------
+        
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        $page_breadcrumb = [];
+        $page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        $page_breadcrumb[1] = ['name' => \Lang::get('cacheman'), 'url' => \Uri::create('admin/cacheman')];
+        $output['page_breadcrumb'] = $page_breadcrumb;
+        unset($page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/cacheman/index_v', $output, false);
     }// action_index

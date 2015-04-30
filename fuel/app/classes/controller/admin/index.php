@@ -32,6 +32,13 @@ class Controller_Admin_Index extends \Controller_AdminController
         // <head> output ----------------------------------------------------------------------------------------------
         $output['page_title'] = $this->generateTitle(\Lang::get('admin_administrator_dashbord'));
         // <head> output ----------------------------------------------------------------------------------------------
+        
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        $page_breadcrumb = [];
+        $page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        $output['page_breadcrumb'] = $page_breadcrumb;
+        unset($page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
 
         // the admin views or theme should follow this structure. (admin/templates/controller/method) and follow with _v in the end.
         return $this->generatePage('admin/templates/index/index_v', $output, false);

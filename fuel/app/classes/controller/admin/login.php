@@ -202,6 +202,14 @@ class Controller_Admin_Login extends \Controller_BaseController
         $output['page_title'] = $this->generateTitle(\Lang::get('account_login'));
         $output['page_meta'][] = '<meta name="robots" content="noindex, nofollow" />';
         // <head> output ----------------------------------------------------------------------------------------------
+        
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        $page_breadcrumb = [];
+        $page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        $page_breadcrumb[1] = ['name' => \Lang::get('account_login'), 'url' => \Uri::create('admin/login')];
+        $output['page_breadcrumb'] = $page_breadcrumb;
+        unset($page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
 
         if (\Input::is_ajax()) {
             $response = new \Response();

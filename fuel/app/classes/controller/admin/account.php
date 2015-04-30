@@ -193,8 +193,20 @@ class Controller_Admin_Account extends \Controller_AdminController
 
         // <head> output ----------------------------------------------------------------------------------------------
         $output['page_title'] = $this->generateTitle(\Lang::get('account_accounts'));
-        $output['page_link'][] = html_tag('link', array('rel' => 'stylesheet', 'href' => Uri::createNL(\Theme::instance()->asset_path('css/datepicker.css'))));
+        
+        $theme = \Theme::instance();
+        $theme->asset->css('datepicker.css', array(), 'fuelstart');
+        unset($theme);
         // <head> output ----------------------------------------------------------------------------------------------
+        
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        $page_breadcrumb = [];
+        $page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        $page_breadcrumb[1] = ['name' => \Lang::get('account_accounts'), 'url' => \Uri::create('admin/account')];
+        $page_breadcrumb[2] = ['name' => \Lang::get('account_add'), 'url' => \Uri::create('admin/account/add')];
+        $output['page_breadcrumb'] = $page_breadcrumb;
+        unset($page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/account/form_v', $output, false);
     }// action_add
@@ -510,8 +522,20 @@ class Controller_Admin_Account extends \Controller_AdminController
 
         // <head> output ----------------------------------------------------------------------------------------------
         $output['page_title'] = $this->generateTitle(\Lang::get('account_accounts'));
-        $output['page_link'][] = html_tag('link', array('rel' => 'stylesheet', 'href' => Uri::createNL(\Theme::instance()->asset_path('css/datepicker.css'))));
+        
+        $theme = \Theme::instance();
+        $theme->asset->css('datepicker.css', array(), 'fuelstart');
+        unset($theme);
         // <head> output ----------------------------------------------------------------------------------------------
+        
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        $page_breadcrumb = [];
+        $page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        $page_breadcrumb[1] = ['name' => \Lang::get('account_accounts'), 'url' => \Uri::create('admin/account')];
+        $page_breadcrumb[2] = ['name' => \Lang::get('account_edit'), 'url' => \Uri::main()];
+        $output['page_breadcrumb'] = $page_breadcrumb;
+        unset($page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/account/form_v', $output, false);
     }// action_edit
@@ -637,8 +661,19 @@ class Controller_Admin_Account extends \Controller_AdminController
 
         // <head> output ----------------------------------------------------------------------------------------------
         $output['page_title'] = $this->generateTitle(\Lang::get('account_accounts'));
-        $output['page_link'][] = html_tag('link', array('rel' => 'stylesheet', 'href' => Uri::createNL(\Theme::instance()->asset_path('css/datepicker.css'))));
+        
+        $theme = \Theme::instance();
+        $theme->asset->css('datepicker.css', array(), 'fuelstart');
+        unset($theme);
         // <head> output ----------------------------------------------------------------------------------------------
+        
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        $page_breadcrumb = [];
+        $page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        $page_breadcrumb[1] = ['name' => \Lang::get('account_accounts'), 'url' => \Uri::create('admin/account')];
+        $output['page_breadcrumb'] = $page_breadcrumb;
+        unset($page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/account/index_v', $output, false);
     }// action_index
@@ -858,6 +893,15 @@ class Controller_Admin_Account extends \Controller_AdminController
         // <head> output ----------------------------------------------------------------------------------------------
         $output['page_title'] = $this->generateTitle(\Lang::get('account_view_login_history'));
         // <head> output ----------------------------------------------------------------------------------------------
+        
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        $page_breadcrumb = [];
+        $page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        $page_breadcrumb[1] = ['name' => \Lang::get('account_accounts'), 'url' => \Uri::create('admin/account')];
+        $page_breadcrumb[2] = ['name' => \Lang::get('account_view_login_history'), 'url' => \Uri::main()];
+        $output['page_breadcrumb'] = $page_breadcrumb;
+        unset($page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
 
         return $this->generatePage('admin/templates/account/viewlogins_v', $output, false);
     }// action_viewlogins
