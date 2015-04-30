@@ -17,6 +17,7 @@ return array(
     'acperm_reset_completed' => 'ล้างการตั้งค่าเรียบร้อยแล้ว.',
     'acperm_reset_permission' => 'ล้างการตั้งค่า',
     'acperm_user_permission' => 'สิทธิสำหรับผู้ใช้',
+    'acperm_user_permission_of_module' => 'สิทธิสำหรับผู้ใช้ของโมดูล: :module_name',
     
     // permissions
     'acperm_perm' => 'สิทธิ',

@@ -17,6 +17,7 @@ return array(
     'acperm_reset_completed' => 'Reset permission completed.',
     'acperm_reset_permission' => 'Reset permission',
     'acperm_user_permission' => 'User\'s permission',
+    'acperm_user_permission_of_module' => 'User\'s permission of module: :module_name',
     
     // permissions
     'acperm_perm' => 'Permissions',
