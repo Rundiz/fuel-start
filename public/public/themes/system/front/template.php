@@ -32,10 +32,11 @@ $theme = \Theme::instance();
         }
         ?> 
 
-        <?php echo \Asset::css('bootstrap.min.css'); ?>
-        <?php echo $theme->asset->css('font-awesome.min.css'); ?>
-        <?php echo $theme->asset->css('front.css'); ?>
         <?php 
+        echo \Asset::css('bootstrap.min.css');
+        echo \Asset::css('font-awesome.min.css');
+        echo $theme->asset->css('front.css');
+        
         // render <link>
         if (isset($page_link) && is_array($page_link)) {
             foreach ($page_link as $a_page_link) {
@@ -45,10 +46,11 @@ $theme = \Theme::instance();
         }
         ?> 
 
-        <?php echo \Asset::js('modernizr.min.js'); ?>
-        <?php echo \Asset::js('respond/respond.min.js'); ?>
-        <?php echo \Asset::js('jquery.min.js'); ?>
         <?php 
+        echo \Asset::js('modernizr.min.js');
+        echo \Asset::js('respond/respond.min.js'); // for ie 6-8 media query min,max width
+        echo \Asset::js('jquery.min.js');
+        
         // render <script>
         if (isset($page_script) && is_array($page_script)) {
             foreach ($page_script as $a_page_script) {
@@ -110,7 +112,9 @@ $theme = \Theme::instance();
             </div>
         </div>     
         
-        <?php echo \Asset::js('bootstrap.min.js'); ?>
-        <?php echo $theme->asset->js('main.js'); ?>
+        <?php 
+        echo \Asset::js('bootstrap.min.js');
+        echo $theme->asset->js('main.js'); 
+        ?>
     </body>
 </html>

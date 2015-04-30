@@ -50,7 +50,7 @@ include_once __DIR__ . DS . 'functions.php';
         <?php 
         echo \Asset::css('jquery-ui/jquery-ui.min.css'); 
         echo \Asset::css('bootstrap.min.css'); 
-        echo $theme->asset->css('font-awesome.min.css'); 
+        echo \Asset::css('font-awesome.min.css'); 
         echo $theme->asset->css('smartmenu/sm-core-css.css'); 
         echo $theme->asset->css('smartmenu/sm-bsblack/sm-bsblack.css'); 
         echo $theme->asset->css('chosen/chosen.min.css'); 
@@ -68,7 +68,7 @@ include_once __DIR__ . DS . 'functions.php';
 
         <?php 
         echo \Asset::js('modernizr.min.js'); 
-        echo \Asset::js('respond/respond.min.js'); 
+        echo \Asset::js('respond/respond.min.js'); // for ie 6-8 media query min,max width
         echo \Asset::js('jquery.min.js'); 
         
         // render <script>
