@@ -599,7 +599,7 @@ class Model_Accounts extends \Orm\Model
         \Extension\Cache::deleteCache('public.themes.sys2.getAdminAvatar-'.$site_id.'-'.$account_id);
         // @todo [fuelstart][api] delete avatar api here.
 
-        unset($result, $row, site_id);
+        unset($result, $row, $site_id);
         return true;
     }// deleteAccountAvatar
 
