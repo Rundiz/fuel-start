@@ -13,6 +13,7 @@ class Model_AccountLogins extends \Orm\Model
 
     protected static $_table_name = 'account_logins';
     protected static $_primary_key = array('account_login_id');
+    protected static $_properties = array('account_login_id', 'account_id', 'site_id', 'login_ua', 'login_os', 'login_browser', 'login_ip', 'login_time', 'login_time_gmt', 'login_attempt', 'login_attempt_text');
 
     // relations
     protected static $_belongs_to = array(

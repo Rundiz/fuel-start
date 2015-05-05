@@ -13,6 +13,7 @@ class Model_AccountLevelGroup extends \Orm\Model
 
     protected static $_table_name = 'account_level_group';
     protected static $_primary_key = array('level_group_id');
+    protected static $_properties = array('level_group_id', 'level_name', 'level_description', 'level_priority');
 
     // relations
     protected static $_has_many = array(

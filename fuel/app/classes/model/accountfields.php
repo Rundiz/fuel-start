@@ -13,6 +13,7 @@ class Model_AccountFields extends \Orm\Model
 
     protected static $_table_name = 'account_fields';
     protected static $_primary_key = array();
+    protected static $_properties = array('account_id', 'field_name', 'field_value');
 
     // relations
     protected static $_belongs_to = array(

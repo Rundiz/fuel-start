@@ -11,8 +11,8 @@ class Model_Config extends \Orm\Model
 
 
     protected static $_table_name = 'config';
-    //protected static $_properties = array('config_name', 'config_value', 'config_core', 'config_description');
     protected static $_primary_key = array();// no PK, need to set PK to empty array.
+    protected static $_properties = array('config_name', 'config_value', 'config_core', 'config_description');
 
 
     /**

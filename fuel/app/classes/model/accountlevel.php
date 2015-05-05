@@ -12,6 +12,7 @@ class Model_AccountLevel extends \Orm\Model
 
     protected static $_table_name = 'account_level';
     protected static $_primary_key = array('level_id');
+    protected static $_properties = array('level_id', 'level_group_id', 'account_id');
 
     // relations
     protected static $_belongs_to = array(

@@ -13,6 +13,7 @@ class Model_AccountPermission extends \Orm\Model
 	
     protected static $_table_name = 'account_permission';
     protected static $_primary_key = array('permission_id');
+    protected static $_properties = array('permission_id', 'account_id', 'permission_core', 'module_system_name', 'permission_page', 'permission_action');
     
     // relations
     protected static $_belongs_to = array(

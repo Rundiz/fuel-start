@@ -13,6 +13,7 @@ class Model_Accounts extends \Orm\Model
 
     protected static $_table_name = 'accounts';
     protected static $_primary_key = array('account_id');
+    protected static $_properties = array('account_id', 'account_username', 'account_email', 'account_salt', 'account_password', 'account_display_name', 'account_firstname', 'account_middlename', 'account_lastname', 'account_birthdate', 'account_avatar', 'account_signature', 'account_timezone', 'account_language', 'account_create', 'account_create_gmt', 'account_last_login', 'account_last_login_gmt', 'account_status', 'account_status_text', 'account_new_email', 'account_new_password', 'account_confirm_code', 'account_confirm_code_since');
 
     // relations
     protected static $_has_many = array(

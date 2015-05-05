@@ -13,6 +13,7 @@ class Model_AccountSites extends \Orm\Model
 
     protected static $_table_name = 'account_sites';
     protected static $_primary_key = array('account_site_id');
+    protected static $_properties = array('account_site_id', 'account_id', 'site_id', 'account_last_login', 'account_last_login_gmt', 'account_online_code');
 
     // relations
     protected static $_belongs_to = array(

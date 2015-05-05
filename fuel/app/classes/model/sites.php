@@ -12,6 +12,7 @@ class Model_Sites extends \Orm\Model
 
     protected static $_table_name = 'sites';
     protected static $_primary_key = array('site_id');
+    protected static $_properties = array('site_id', 'site_name', 'site_domain', 'site_status', 'site_create', 'site_create_gmt', 'site_update', 'site_update_gmt');
 
     // relations
     protected static $_has_many = array(
