@@ -593,9 +593,13 @@ class Model_Accounts extends \Orm\Model
                     ->execute();
             }
         }
+		
+		// clear cache
+        $site_id = \Model_Sites::getSiteId(false);
+        \Extension\Cache::deleteCache('public.themes.sys2.getAdminAvatar-'.$site_id.'-'.$account_id);
+        // @todo [fuelstart][api] delete avatar api here.
 
-        unset($result, $row);
-
+        unset($result, $row, site_id);
         return true;
     }// deleteAccountAvatar
 
