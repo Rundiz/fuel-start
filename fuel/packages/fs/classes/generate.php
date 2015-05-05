@@ -109,7 +109,7 @@ class {$module_name}Admin
     public function admin_navbar()
     {
         if (\Model_AccountLevelPermission::checkAdminPermission('{$lcase_module_name}_perm', '{$lcase_module_name}_viewall_perm')) {
-            \$output = '<li>' . \Extension\Html::anchor('{$lcase_module_name}/admin', '{$module_name}') . "\\n";
+            \$output = '<li>' . \Html::anchor('{$lcase_module_name}/admin', '{$module_name}') . "\\n";
             \$output .= '</li>';
             
             return \$output;
@@ -262,6 +262,15 @@ class {$prefix}Admin_Index extends \Controller_AdminController
         \$output['page_title'] = \$this->generateTitle('{$module_name}');
         // <head> output -------------------------------------------
 
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        \$page_breadcrumb = [];
+        \$page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        \$page_breadcrumb[1] = ['name' => '{$module_name}', 'url' => \Uri::create('admin/index')];
+        \$page_breadcrumb[2] = ['name' => 'Add', 'url' => \Uri::main()];
+        \$output['page_breadcrumb'] = \$page_breadcrumb;
+        unset(\$page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
+
         return \$this->generatePage('admin/templates/index/form_v', \$output, false);
     }// action_add
 
@@ -302,6 +311,15 @@ class {$prefix}Admin_Index extends \Controller_AdminController
         \$output['page_title'] = \$this->generateTitle('{$module_name}');
         // <head> output -------------------------------------------
 
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        \$page_breadcrumb = [];
+        \$page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        \$page_breadcrumb[1] = ['name' => '{$module_name}', 'url' => \Uri::create('admin/index')];
+        \$page_breadcrumb[2] = ['name' => 'Edit', 'url' => \Uri::main()];
+        \$output['page_breadcrumb'] = \$page_breadcrumb;
+        unset(\$page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
+
         return \$this->generatePage('admin/templates/index/form_v', \$output, false);
     }// action_edit
 
@@ -339,6 +357,14 @@ class {$prefix}Admin_Index extends \Controller_AdminController
         // <head> output -------------------------------------------
         \$output['page_title'] = \$this->generateTitle('{$module_name}');
         // <head> output -------------------------------------------
+
+        // breadcrumb -------------------------------------------------------------------------------------------------
+        \$page_breadcrumb = [];
+        \$page_breadcrumb[0] = ['name' => \Lang::get('admin_admin_home'), 'url' => \Uri::create('admin')];
+        \$page_breadcrumb[1] = ['name' => '{$module_name}', 'url' => \Uri::create('admin/index')];
+        \$output['page_breadcrumb'] = \$page_breadcrumb;
+        unset(\$page_breadcrumb);
+        // breadcrumb -------------------------------------------------------------------------------------------------
 
         return \$this->generatePage('admin/templates/index/index_v', \$output, false);
     }// action_index
