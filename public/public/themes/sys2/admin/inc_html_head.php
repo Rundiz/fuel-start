@@ -27,7 +27,7 @@ if (!isset($cookie_admin) || !isset($cookie_admin['account_display_name'])) {
     }
     
     unset($model_account);
-    if (array_key_exists('account_id', $cookie_admin)) {
+    if (is_array($cookie_admin) && array_key_exists('account_id', $cookie_admin)) {
         $account_id = $cookie_admin['account_id'];
     }
 }
