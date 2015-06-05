@@ -72,9 +72,12 @@ function generateBreadCrumb(array $page_breadcrumb = array())
  */
 function getAdminAvatar($account_id)
 {
+    // set default avatar
     $theme = \Theme::instance();
-    $default_no_avatar = $theme->asset->img('default-avatar.jpg', array('alt' => 'user avatar', 'class' => 'img-user-avatar img-circle'));
-    unset($theme);
+    $doc_root = str_replace('\\', '/', DOCROOT);
+    $default_avatar_getfile = $theme->asset->get_file('default-avatar.jpg', 'img');
+    $default_no_avatar = str_replace([$doc_root, \Uri::base()], '', $default_avatar_getfile);
+    unset($doc_root, $default_avatar_getfile, $theme);
     if (!is_numeric($account_id) || intval($account_id) === intval(0)) {
         return $default_no_avatar;
     }
@@ -95,7 +98,7 @@ function getAdminAvatar($account_id)
         if (count($result) > 0) {
             $row = $result->current();
             if ($row->account_avatar != null) {
-                $return_val = \Html::img($row->account_avatar, array('alt' => 'user avatar', 'class' => 'img-user-avatar img-circle'));
+                $return_val = $row->account_avatar;
                 \Cache::set($cache_name, $return_val, 86400);
                 unset($cache_name);
                 return $return_val;

@@ -1,7 +1,7 @@
 /*!
  * FuelStart theme sys2 sidebar menu
  * 
- * @license
+ * @license MIT
  * @author Vee W.
  * @version 2
  */
@@ -15,6 +15,7 @@ function sidebarMenuSticky(selector) {
 	
 	if ($(window).width() < 768) {
 		// it is not good for mini screen.
+		console.log('Do not active sticky menu on mini screen.');
 		$(window).off('scroll', window);
 		$(selector).css({
 			bottom: '',
@@ -47,12 +48,16 @@ function sidebarMenuStickyActive(selector) {
 	delete window_y_top;
 	$(window).off('scroll', window);
 	
+	// check to make sure that this page has sidebar menu. if not, return false and don't do anything.
+	if (typeof($(selector).height()) == 'undefined') {
+		return false;
+	}
+	
 	// set vars for check.
 	document_height = parseInt($(document).height());
 	scroll_box_height = parseInt($(selector).height());
 	scroll_box_top = parseInt($('.navbar-top-page').height());
 	if (isNaN(scroll_box_top)) {
-		console.log('no');
 		scroll_box_top = parseInt($('.navbar').height());
 	}
 	scroll_box_bottom = (parseInt(scroll_box_height)+parseInt(scroll_box_top));
@@ -69,6 +74,16 @@ function sidebarMenuStickyActive(selector) {
 	//$('.scroll-debug').append('document height: '+document_height+'<br>');
 	// window scrolling event listening.
 	$(window).on('scroll', window, function() {
+		// check too small screen
+		if ($(window).width() < 768) {
+			return false;
+		}
+
+		// check that menu exists.
+		if (typeof($(selector).offset()) == 'undefined') {
+			return false;
+		}
+
 		window_y_top = parseInt($(this).scrollTop());
 		current_scroll_box_offset_top = parseInt($(selector).offset().top);
 		current_scroll_box_top = (parseInt(scroll_box_top)-parseInt(window_y_top));

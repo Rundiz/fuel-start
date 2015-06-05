@@ -3,6 +3,9 @@
 // start Theme class
 $theme = \Theme::instance();
 
+// set page class
+$page_class = 'page_'.str_replace(['\\', '/'], '-', \Uri::string());
+
 // check for mobile, tablet, pc device
 // get browser class for use instead of fuelphp agent which is does not work.
 include_once APPPATH . 'vendor' . DS . 'browser' . DS . 'lib' . DS . 'Browser.php';
@@ -112,4 +115,4 @@ $admin_navbar_avatar = getAdminAvatar($account_id);
             var nocsrf_val = '<?php echo \Extension\NoCsrf::generate('', true); ?>';
         </script>
     </head>
-    <body>
+    <body class="html-body<?php echo $pc_class.' '.$page_class; ?>">

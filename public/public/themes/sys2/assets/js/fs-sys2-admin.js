@@ -7,6 +7,21 @@
  */
 
 
+/**
+ * activate chosen-select on overall page.
+ * 
+ * @returns {undefined}
+ */
+function activateChosen() {
+	// activate the chosen.
+	$('.chosen-select').chosen({
+		allow_single_deselect: true,
+		disable_search: true,
+		display_disabled_options: true
+	});
+}// activateChosen
+
+
 function change_redirect(obj) {
 	window.location = $(obj).val();
 }// change_redirect
@@ -17,6 +32,15 @@ function checkAll(pForm, boxName, parent) {
 		if (pForm.elements[i].name == boxName)
 			pForm.elements[i].checked = parent;
 }// checkAll
+
+
+var delay = (function(){
+	var timer = 0;
+	return function(callback, ms){
+		clearTimeout (timer);
+		timer = setTimeout(callback, ms);
+	};
+})();
 
 
 /**
@@ -68,10 +92,12 @@ function tableWithFloatingheader() {
 
 
 $(function() {
-	// fix bootstrap 3 navbar dropdown use hover. @requires Bootstrap 3.
-	$('.navbar .dropdown.pc_device').hover(function() {
+	// fix bootstrap 3 navbar dropdown on hover. @requires Bootstrap 3.
+	$('.pc_device .navbar .dropdown').hover(function() {
+		$('.dropdown-menu', this).stop(true, true).fadeIn("fast");
 		$(this).addClass('open');
 	}, function() {
+		$('.dropdown-menu', this).stop(true, true).fadeOut("fast");
 		$(this).removeClass('open');
 	});
 	
@@ -85,11 +111,7 @@ $(function() {
 	});
 	
 	// chosen custom styled select box. @requires Chosen
-	$('.chosen-select').chosen({
-		allow_single_deselect: true,
-		disable_search: true,
-		display_disabled_options: true
-	});
+	activateChosen();
 	
 	// custom checkbox. @requires iCheck
 	$('.custom-checkbox, .custom-radio').iCheck({

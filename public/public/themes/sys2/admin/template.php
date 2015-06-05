@@ -30,7 +30,7 @@ include __DIR__ . DS . 'inc_html_head.php';
                     </li>
                     <li class="dropdown">
                         <a href="#" onclick="return false;" class="dropdown-toggle user-link" data-toggle="dropdown" aria-expanded="false">
-                            <?php echo $admin_navbar_avatar; ?> 
+                            <?php echo \Html::img($admin_navbar_avatar, ['alt' => 'user avatar', 'class' => 'img-user-avatar img-circle']); ?> 
                             <span class="user-display-name"><?php echo $cookie_admin['account_display_name']; ?></span>
                             <span class="caret"></span>
                         </a>
