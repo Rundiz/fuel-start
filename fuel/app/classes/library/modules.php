@@ -13,6 +13,10 @@ class Modules
 {
 
 
+    /**
+     * store modules container path.
+     * @var array 
+     */
     public $module_paths;
 
 
@@ -112,6 +116,40 @@ class Modules
 
 
     /**
+     * easily include module files from module paths.
+     * 
+     * @param string|array $files
+     * @return boolean
+     */
+    public static function includeModuleFiles($files = array())
+    {
+        $module_path = \Config::get('module_paths');
+        
+        foreach ($module_path as $a_path) {
+            if (is_array($files)) {
+                foreach ($files as $file) {
+                    if (file_exists($a_path . $file)) {
+                        include_once $a_path . $file;
+                    }
+                }
+            } elseif (is_string($files)) {
+                if (file_exists($a_path . $files)) {
+                    include_once $a_path . $files;
+                }
+            } else {
+                $files = '';
+                unset($a_path, $module_path);
+                return false;
+            }
+        }
+        
+        $files = '';
+        unset($a_path, $file, $module_path);
+        return true;
+    }// includeModuleFiles
+
+
+    /**
      * list admin navbar from module's admin file.
      *
      * @return string|boolean
@@ -170,6 +208,66 @@ class Modules
 
 
     /**
+     * list modules that enabled.
+     * 
+     * @todo [fuelstart][module_plug] this will be change to list modules that enabled from module manager later.
+     * @return array return array of modules folder name.
+     */
+    public function listEnabledModules()
+    {
+        return $this->listModulesFromFileSys();
+    }// listEnabledModules
+
+
+    /**
+     * list all modules from file system.
+     * 
+     * @return array return array of modules folder name.
+     */
+    public function listModulesFromFileSys()
+    {
+        $output = [];
+        $i = 0;
+
+        if (is_array($this->module_paths) && !empty($this->module_paths)) {
+            // loop module paths
+            foreach ($this->module_paths as $module_path) {
+                $config['basedir'] = $module_path;
+                $file_area = \File::forge($config);
+                unset($config);
+                
+                $files = \File::read_dir($module_path, 1,
+                    array(
+                        '!^\.',
+                    ),
+                    $file_area
+                );
+                unset($file_area);
+                
+                foreach ($files as $file => $subs) {
+                    // remove back slash trail.
+                    $file = mb_substr($file, 0, mb_strlen($file)-1);
+                    
+                    if (is_dir($module_path . $file)) {
+                        if (file_exists($module_path . $file . DS . $file . '_module.php') && is_file($module_path . $file . DS . $file . '_module.php')) {
+                            $output[$i]['module_path'] = $module_path;
+                            $output[$i]['module_system_name'] = $file;
+                            
+                            $i++;
+                        }
+                    }
+                }
+                unset($file, $files, $subs);
+            }// endforeach;
+            unset($module_path);
+        }// endif $this->module_paths
+
+        unset($i);
+        return $output;
+    }// listModulesFromFileSys
+
+
+    /**
      * list modules that has permission
      *
      * @return mixed
@@ -195,7 +293,9 @@ class Modules
                 unset($file_area);
 
                 foreach ($files as $file => $subs) {
+                    // remove back slash trail.
                     $file = mb_substr($file, 0, mb_strlen($file)-1);
+                    
                     if (is_dir($module_path . $file)) {
                             if (file_exists($module_path . $file . DS . 'classes' . DS . $file . 'admin.php') && is_file($module_path . $file . DS . 'classes' . DS . $file . 'admin.php')) {
                                 $class_name_with_namespace = '\\' . ucfirst($file) . '\\' . ucfirst($file) . 'Admin' ;
