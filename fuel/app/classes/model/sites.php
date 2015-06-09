@@ -35,7 +35,6 @@ class Model_Sites extends \Orm\Model
      * list tables that *must copy* when create new site.
      *
      * @var array $multisite_tables
-     * @todo [fuelstart][multisite] developers have to add *must copy* tables here when you create table that need to use differently in multi-site.
      */
     public $multisite_tables = array(
         'account_fields',
@@ -46,6 +45,16 @@ class Model_Sites extends \Orm\Model
 
         'config', // this table must copy "core" config data
     );
+
+
+    /**
+     * run before initialize the class
+     * use this method to allow module plug works on the properties up there.
+     */
+    public static function _init()
+    {
+        static::forge()->hookGetMultisiteTables();
+    }// _init
 
 
     /**
@@ -70,10 +79,9 @@ class Model_Sites extends \Orm\Model
         // start copy tables
         static::forge()->copyNewSiteTable($site_id);
 
-        // @todo [fuelstart][theme][multisite] for any theme management that get config from db from each site. you need to add set default theme for each created site here.
+        // @todo [fuelstart][multisite|theme] for any theme management that get config from db from each site. you need to add set default theme for each created site here.
 
         // set config for new site. this step should reset core config values in new site for security reason.
-        // @todo [fuelstart][core_config] when developers add new core config names and values, you have to add those default values here.
         $cfg_data['site_name'] = $data['site_name'];
         $cfg_data['page_title_separator'] = ' | ';
         $cfg_data['site_timezone'] = 'Asia/Bangkok';
@@ -108,6 +116,24 @@ class Model_Sites extends \Orm\Model
         $cfg_data['ftp_port'] = '21';
         $cfg_data['ftp_passive'] = 'true';
         $cfg_data['ftp_basepath'] = '/public_html/';
+
+        // @todo [fuelstart][multisite|config][plug] get default config value for reset after added new site. plug.
+        // these values should be core config in config table (config_core = 1). these will be reset after added new site.
+        $plugin = new \Library\Plugins();
+        if ($plugin->hasFilter('SitesGetDefaultConfigValueForAddSite') !== false) {
+            $plugin->doFilter('SitesGetDefaultConfigValueForAddSite');
+            if (is_array($plugin->original_data) && !empty($plugin->original_data)) {
+                foreach ($plugin->original_data as $each_cfg) {
+                    if (!empty($each_cfg)) {
+                        $cfg_data = array_merge($cfg_data, $each_cfg);
+                    }
+                }
+                unset($each_cfg);
+            }
+        }
+        unset($plugin);
+
+        // loop re-set config values.
         foreach ($cfg_data as $cfg_name => $cfg_value) {
             \DB::update($site_id . '_config')
                     ->where('config_name', $cfg_name)
@@ -137,6 +163,9 @@ class Model_Sites extends \Orm\Model
         if (!is_numeric($site_id)) {
             return false;
         }
+
+        // get module's multisite tables.
+        $this->hookGetMultisiteTables();
 
         // copy tables
         foreach ($this->multisite_tables as $table) {
@@ -206,12 +235,16 @@ class Model_Sites extends \Orm\Model
         if ($site_id == '1') {
             return false;
         }
+        
+        $self = new static();
+        // get module's multisite tables.
+        $self->hookGetMultisiteTables();
 
         // delete related _sites tables
         // this can be done by ORM relation itself. I have nothing to do here except something to remove more than just in db, example file, folder
 
         // drop [site_id]_tables
-        foreach (static::forge()->multisite_tables as $table) {
+        foreach ($self->multisite_tables as $table) {
             \DBUtil::drop_table($site_id . '_' . $table);
         }
         
@@ -221,6 +254,13 @@ class Model_Sites extends \Orm\Model
 
         // delete this site from sites table
         \DB::delete(static::$_table_name)->where('site_id', $site_id)->execute();
+        
+        // @todo [fuelstart][multisite][plug] after delete site plug.
+        $plugin = new \Library\Plugins();
+        if ($plugin->hasAction('SitesAfterDeleteSite') !== false) {
+            $plugin->doAction('SitesAfterDeleteSite', $site_id);
+        }
+        unset($plugin);
         
         // clear cache
         \Extension\Cache::deleteCache('model.accounts-checkAccount-' . $site_id);
@@ -233,6 +273,7 @@ class Model_Sites extends \Orm\Model
         \Extension\Cache::deleteCache('controller.AdminController-generatePage-fs_list_sites');
 
         // done
+        unset($self);
         return true;
     }// deleteSite
 
@@ -395,6 +436,36 @@ class Model_Sites extends \Orm\Model
             return $site_id . '_' . $table_name;
         }
     }// getTableSiteId
+
+
+    /**
+     * hook plugin to get multisite tables names.<br>
+     * this will get module's tables that need to be copy while create new site.<br>
+     * attention! you must call this method everytime when you want to access multisite tables list.
+     * 
+     * @todo [fuelstart][multisite][plug] get module's multisite tables plug.
+     */
+    public function hookGetMultisiteTables()
+    {
+        $plugin = new \Library\Plugins();
+        if ($plugin->hasFilter('SitesGetModulesMultisiteTables') !== false) {
+            $plugin->doFilter('SitesGetModulesMultisiteTables');
+            if (is_array($plugin->original_data) && !empty($plugin->original_data)) {
+                foreach ($plugin->original_data as $table) {
+                    if (!empty($table)) {
+                        if (is_array($table) && !\Arr::is_multi($table)) {
+                            $this->multisite_tables = array_merge($this->multisite_tables, $table);
+                        } elseif (is_string($table)) {
+                            $this->multisite_tables = array_merge($this->multisite_tables, [$table]);
+                        }
+                    }
+                }
+                unset($each_cfg);
+                $this->multisite_tables = \Arr::unique($this->multisite_tables);
+            }
+        }
+        unset($plugin);
+    }// hookGetMultisiteTables
     
     
     /**

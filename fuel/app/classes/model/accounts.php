@@ -195,7 +195,7 @@ class Model_Accounts extends \Orm\Model
             if ($row->account_status == '1') {
                 // enabled
                 // check password
-                if (static::instance()->checkPassword($data['account_password'], $row->account_password) === true) {
+                if (static::instance()->checkPassword($data['account_password'], $row->account_password, $row) === true) {
                     // check password passed
                     if (\Model_AccountLevelPermission::checkAdminPermission('account_admin_login', 'account_admin_login', $row->account_id) === true) {
                         // generate session id for check simultaneous login
@@ -258,9 +258,13 @@ class Model_Accounts extends \Orm\Model
                         $account_logins = new \Model_AccountLogins();
                         $account_logins->recordLogin($row->account_id, 1, 'account_login_success');
 
-                        // @todo [fuelstart][api] any login success (member) api should be here.
+                        // @todo [fuelstart][account][plug] login success plug.
+                        $plugin = new \Library\Plugins();
+                        if ($plugin->hasAction('AccountLoginSuccess') !== false) {
+                            $plugin->doAction('AccountLoginSuccess', $row->account_id, $row);
+                        }
 
-                        unset($account_logins, $account_site, $result, $row, $session_id);
+                        unset($account_logins, $account_site, $plugin, $result, $row, $session_id);
 
                         // login success
                         return true;
@@ -450,13 +454,29 @@ class Model_Accounts extends \Orm\Model
     /**
      * check password
      *
+     * @link https://github.com/rchouinard/phpass phpass document
      * @param string $entered_password
      * @param string $hashed_password
-     * @return boolean
+     * @param object $account_obj
+     * @return boolean return true if passed, return false if not passed.
      */
-    public function checkPassword($entered_password = '', $hashed_password = '')
+    public function checkPassword($entered_password = '', $hashed_password = '', $account_obj = '')
     {
-        // @todo [fuelstart][api] any hash api for check password should be here.
+        // @todo [fuelstart][account][plug] check password plug.
+        $plugin = new \Library\Plugins();
+        if ($plugin->hasAction('AccountCheckPassword') !== false) {
+            $chk_pass_result = $plugin->doAction('AccountCheckPassword', $entered_password, $hashed_password, $account_obj);
+            
+            if (is_array($chk_pass_result) && array_key_exists('AccountCheckPassword', $chk_pass_result)) {
+                $chk_pass_result = array_shift($chk_pass_result['AccountCheckPassword']);
+            }
+            
+            if (is_bool($chk_pass_result)) {
+                unset($plugin);
+                return $chk_pass_result;
+            }
+        }
+        unset($chk_pass_result, $plugin);
 
         include_once APPPATH . DS . 'vendor' . DS . 'phpass' . DS . 'PasswordHash.php';
         $PasswordHash = new PasswordHash($this->password_hash_level, false);
@@ -513,14 +533,20 @@ class Model_Accounts extends \Orm\Model
 
         // delete avatar
         static::instance()->deleteAccountAvatar($account_id, false);
+        
+        $plugin = new \Library\Plugins();
 
-        // @todo [fuelstart][api] for deleting account here.
+        // @todo [fuelstart][account][plug] before delete account plug.
+        if ($plugin->hasAction('AccountBeforeDeleteAccount') !== false) {
+            $plugin->doAction('AccountBeforeDeleteAccount', $account_id);
+        }
 
         // loop sites to delete this account id related in multi-site tables.
         $site_id = \Model_Sites::getSiteId(false);
         $list_site_option['list_for'] = 'admin';
         $list_site_option['unlimit'] = true;
         $sites = \Model_Sites::listSites($list_site_option);
+        
         if (isset($sites['items']) && is_array($sites['items']) && !empty($sites['items'])) {
             foreach ($sites['items'] as $site) {
                 // skip delete from current site id table.
@@ -540,11 +566,14 @@ class Model_Accounts extends \Orm\Model
                     // delete from account_permission table
                     \DB::delete($table_siteid_prefix . 'account_permission')->where('account_id', $account_id)->execute();
                     
-                    // @todo [fuelstart][multisite] more multi-site tables that has account_id related should be delete here.
+                    // @todo [fuelstart][account|multisite][plug] delete data in multisite tables that have account_id related. plug.
+                    if ($plugin->hasAction('AccountDeleteOnMultisiteTables') !== false) {
+                        $plugin->doAction('AccountDeleteOnMultisiteTables', $account_id, $site->site_id);
+                    }
                 }
             }
         }
-        unset($list_site_option, $site, $sites, $table_siteid_prefix);
+        unset($list_site_option, $plugin, $site, $sites, $table_siteid_prefix);
 
         // delete account now.
         static::find($account_id)->delete();// needs to use ::find() to delete in related table
@@ -593,13 +622,18 @@ class Model_Accounts extends \Orm\Model
                     ->execute();
             }
         }
-		
-		// clear cache
+        
+        // clear cache
         $site_id = \Model_Sites::getSiteId(false);
         \Extension\Cache::deleteCache('public.themes.sys2.getAdminAvatar-'.$site_id.'-'.$account_id);
-        // @todo [fuelstart][api] delete avatar api here.
 
-        unset($result, $row, $site_id);
+        // @todo [fuelstart][account][plug] deleted avatar plug.
+        $plugin = new \Library\Plugins();
+        if ($plugin->hasAction('AccountDeleteAvatar') !== false) {
+            $plugin->doAction('AccountDeleteAvatar', $account_id, $row);
+        }
+
+        unset($plugin, $result, $row, $site_id);
         return true;
     }// deleteAccountAvatar
 
@@ -658,7 +692,7 @@ class Model_Accounts extends \Orm\Model
                 if ($query->count() > 0) {
                     $row = $query->get_one();
 
-                    if (static::instance()->checkPassword($data['account_password'], $row->account_password)) {
+                    if (static::instance()->checkPassword($data['account_password'], $row->account_password, $row)) {
                         $data['account_password'] = static::instance()->hashPassword($data['account_new_password']);
 
                         unset($query, $row);
@@ -733,7 +767,7 @@ class Model_Accounts extends \Orm\Model
                 unset($data['confirm_code'], $data['confirm_code_since'], $data['account_email'], $send_email_change_confirmation);
             }
         }
-        unset($email_change, $data['account_old_email']);
+        unset($data['account_old_email']);
 
         // update account to db. ----------------------------------------
         $account_id = $data['account_id'];
@@ -758,14 +792,30 @@ class Model_Accounts extends \Orm\Model
             unset($af);
         }
 
-        // @todo [fuelstart][api] edit account should be here.
+        // @todo [fuelstart][account][plug] admin edit account plug.
+        $plugin = new \Library\Plugins();
+        if ($plugin->hasAction('AccountAdminEditAccount')) {
+            $plugin->doAction(
+                'AccountAdminEditAccount', 
+                $account_id, 
+                [
+                    'input_data' => $data,
+                    'input_data_fields' => $data_fields,
+                    'input_data_level' => $data_level,
+                    'inputs_post' => \Input::post(),// grab all input
+                    'email_change' => (isset($email_change) ? $email_change : false),
+                    'password_changed' => (isset($password_changed) ? $password_changed : false),
+                ]
+            );
+        }
+        unset($plugin);
 
         // done
         if (isset($password_changed) && $password_changed === true) {
             static::logout();
         }
 
-        unset($config);
+        unset($config, $email_change, $password_changed);
         
         // clear cache
         \Extension\Cache::deleteCache('model.accounts-checkAccount-'.\Model_Sites::getSiteId().'-'.$account_id);
@@ -811,12 +861,24 @@ class Model_Accounts extends \Orm\Model
 
     /**
      * hash password
+     * 
+     * @link https://github.com/rchouinard/phpass phpass document
      * @param string $password
      * @return string
      */
     public function hashPassword($password = '')
     {
-        // @todo [fuelstart][api] any hash password api should be here with if condition.
+        // @todo [fuelstart][account][plug] hash password plug.
+        $plugin = new \Library\Plugins();
+        if ($plugin->hasFilter('AccountHashPassword') !== false) {
+            $returned_hash_password = $plugin->doFilter('AccountHashPassword', $password);
+            
+            if ($returned_hash_password != null) {
+                unset($plugin);
+                return $returned_hash_password;
+            }
+        }
+        unset($plugin, $returned_hash_password);
 
         include_once APPPATH . DS . 'vendor' . DS . 'phpass' . DS . 'PasswordHash.php';
         $PasswordHash = new PasswordHash($this->password_hash_level, false);
@@ -1094,7 +1156,7 @@ class Model_Accounts extends \Orm\Model
                 if ($query->count() > 0) {
                     $row = $query->get_one();
 
-                    if (static::instance()->checkPassword($data['account_password'], $row->account_password)) {
+                    if (static::instance()->checkPassword($data['account_password'], $row->account_password, $row)) {
                         $data['account_password'] = static::instance()->hashPassword($data['account_new_password']);
 
                         unset($query, $row);
@@ -1173,7 +1235,7 @@ class Model_Accounts extends \Orm\Model
                 unset($data['account_new_email']);
             }
         }
-        unset($email_change, $data['account_old_email']);
+        unset($data['account_old_email']);
 
         // update to db.
         $datasave = $data;
@@ -1192,14 +1254,29 @@ class Model_Accounts extends \Orm\Model
             unset($af);
         }
 
-        // @todo [fuelstart][api] edit account should be here.
+        // @todo [fuelstart][account][plug] member edit account plug.
+        $plugin = new \Library\Plugins();
+        if ($plugin->hasAction('AccountMemberEditAccount')) {
+            $plugin->doAction(
+                'AccountMemberEditAccount', 
+                $data['account_id'], 
+                [
+                    'input_data' => $data,
+                    'input_data_fields' => $data_field,
+                    'inputs_post' => \Input::post(),// grab all input
+                    'email_change' => (isset($email_change) ? $email_change : false),
+                    'password_changed' => (isset($password_changed) ? $password_changed : false),
+                ]
+            );
+        }
+        unset($plugin);
 
         // done
         if (isset($password_changed) && $password_changed === true) {
             static::logout();
         }
 
-        unset($config);
+        unset($config, $email_change, $password_changed);
         
         // clear cache
         \Extension\Cache::deleteCache('model.accounts-checkAccount-'.\Model_Sites::getSiteId().'-'.$data['account_id']);
@@ -1241,7 +1318,7 @@ class Model_Accounts extends \Orm\Model
             if ($row->account_status == '1') {
                 // enabled
                 // check password
-                if (static::instance()->checkPassword($data['account_password'], $row->account_password) === true) {
+                if (static::instance()->checkPassword($data['account_password'], $row->account_password, $row) === true) {
                     // check password passed
                     // generate session id for check simultaneous login
                     $session_id = \Session::key('session_id');
@@ -1282,9 +1359,13 @@ class Model_Accounts extends \Orm\Model
                     $account_logins = new Model_AccountLogins();
                     $account_logins->recordLogin($row->account_id, 1, 'account_login_success');
 
-                    // @todo [fuelstart][api] any login success (member) api should be here.
+                    // @todo [fuelstart][account][plug] login success plug.
+                    $plugin = new \Library\Plugins();
+                    if ($plugin->hasAction('AccountLoginSuccess') !== false) {
+                        $plugin->doAction('AccountLoginSuccess', $row->account_id, $row);
+                    }
 
-                    unset($query, $row, $session_id);
+                    unset($plugin, $query, $row, $session_id);
 
                     // login success
                     return true;
@@ -1440,7 +1521,20 @@ class Model_Accounts extends \Orm\Model
             unset($account_fields, $field);
         }
 
-        // @todo [fuelstart][api] register account api should be here.
+        // @todo [fuelstart][account][plug] account after register plug.
+        // after saved newly user data but not confirm (if require confirm).
+        $plugin = new \Library\Plugins();
+        if ($plugin->hasAction('AccountAfterRegister') !== false) {
+            $plugin->doAction(
+                'AccountAfterRegister', 
+                [
+                    'input_data' => $data,
+                    'input_data_fields' => $data_fields,
+                    'inputs_post' => \Input::post(),// grab all input
+                ]
+            );
+        }
+        unset($plugin);
 
         return true;
     }// registerAccount.

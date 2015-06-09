@@ -138,7 +138,16 @@ abstract class Controller_BaseController extends \Controller
         $config = Model_Config::getvalues($cfg_values);
         unset($cfg_values);
 
-        // @todo [fuelstart][api] generate title if condition here.
+        // @todo [fuelstart][basecontroller][plug] generate title plug.
+        $plugin = new \Library\Plugins();
+        if ($plugin->hasFilter('BaseControllerGenTitle')) {
+            $generated_title = $plugin->doFilter('BaseControllerGenTitle', $title, $name_position, $config);
+            if (is_string($generated_title) && ($generated_title != null || !empty($generated_title))) {
+                return $generated_title;
+            }
+            unset($generated_title);
+        }
+        unset($plugin);
 
         if ($name_position == 'first') {
             $output = $config['site_name']['value'];
@@ -171,6 +180,39 @@ abstract class Controller_BaseController extends \Controller
 
         return $output;
     }// generateTitle
+
+
+    public function getMyAccountId()
+    {
+        $account_id = 0;
+        $ca = \Model_Accounts::forge()->getAccountCookie('admin');
+        if (isset($ca['account_id'])) {
+            $account_id = $ca['account_id'];
+        }
+        
+        unset($ca);
+        
+        return $account_id;
+    }// getMyAccountId
+
+
+    public function responseJson($output)
+    {
+        $response = new \Response();
+        // no cache
+        $response->set_header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate');
+        $response->set_header('Cache-Control', 'post-check=0, pre-check=0', false);
+        $response->set_header('Expires', 'Sat, 26 Jul 1997 05:00:00 GMT');
+        $response->set_header('Pragma', 'no-cache');
+        // content type
+        $response->set_header('Content-Type', 'application/json');
+        // set body
+        if ($output == null) {
+            $output = [];
+        }
+        $response->body(json_encode($output));
+        return $response;
+    }// responseJson
 
 
 }

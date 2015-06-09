@@ -28,7 +28,6 @@ class Plugins extends \Library\Modules
     /**
      * store modules in the modules folders.
      * 
-     * @todo [fuelstart][module_plug] this will be change to list modules that enabled from module manager later.
      * @var array array list of enabled modules. the key must have module_path and module_system_name of each enabled module
      */
     public $enabled_modules = [];
@@ -71,7 +70,8 @@ class Plugins extends \Library\Modules
 
 
     /**
-     * hook action.
+     * hook action.<br>
+     * make a hook into main code without write it directly. hook action will not expect the return result.
      * 
      * @param string $action action name. must be Studly Caps case.
      * @param mixed $data set data for plugin to work.
@@ -155,7 +155,7 @@ class Plugins extends \Library\Modules
 
     /**
      * hook filter.<br>
-     * make changes or modify the displaying results. this will hook to filter action from filtered data.
+     * make changes or modify the displaying results. this will hook to filter action from filtered data. hook filter is expect the return result.
      * 
      * @param string $filter filter name. must be Studly Caps case.
      * @param mixed $data set data for plugin to work.
@@ -237,24 +237,39 @@ class Plugins extends \Library\Modules
 
 
     /**
-     * check if module's plugins has any action will be hook into exists action.
+     * check if module's plugins has any action will be hook into exists action.<br>
+     * hook action will not expect the return result.
      * 
      * @param string $filter action name. must be Studly Caps case.
      * @return integer|boolean return number of action exists or return false if there is nothing.
      */
     public function hasAction($filter = '')
     {
-        return $this->hasFilter($filter);
+        return $this->hasHook($filter, 'action');
     }// hasAction
 
 
     /**
-     * check if module's plugins has any filter will be hook into exists filter.
+     * check if module's plugins has any filter will be hook into exists filter.<br>
+     * hook filter is expect the return result.
      * 
      * @param string $filter filter name. must be Studly Caps case.
      * @return integer|boolean return number of filter exists or return false if there is nothing.
      */
     public function hasFilter($filter = '')
+    {
+        return $this->hasHook($filter, 'filter');
+    }// hasFilter
+
+
+    /**
+     * check that are there any hook filters/actions from modules.
+     * 
+     * @param string $filter
+     * @param string $hook_type
+     * @return integer|boolean return number of filters/actions exists or return false if there is nothing.
+     */
+    private function hasHook($filter = '', $hook_type = 'action')
     {
         if (is_array($filter) || is_object($filter) || is_bool($filter)) {
             return false;
@@ -279,7 +294,7 @@ class Plugins extends \Library\Modules
                         // if class exists
                         $mplug_obj = new $mplug_class_name;
                         
-                        if (method_exists($mplug_obj, 'action'.$filter) || method_exists($mplug_obj, 'filter'.$filter)) {
+                        if (method_exists($mplug_obj, $hook_type.$filter)) {
                             // if method in this class exists. count that has filter.
                             $i++;
                         }// endif; method_exists
@@ -296,7 +311,7 @@ class Plugins extends \Library\Modules
         } else {
             return false;
         }
-    }// hasFilter
+    }// hasHook
 
 
 }

@@ -1,0 +1,16 @@
+filter AccountHashPassword
+action AccountCheckPassword
+action AccountLoginSuccess
+action AccountDeleteAvatar
+action AccountAdminEditAccount
+action AccountMemberEditAccount
+action AccountDeleteOnMultisiteTables
+action AccountBeforeDeleteAccount
+action AccountAfterRegister
+
+action SitesAfterDeleteSite
+filter SitesGetDefaultConfigValueForAddSite
+filter SitesGetModulesMultisiteTables
+
+filter BaseControllerGenTitle
+

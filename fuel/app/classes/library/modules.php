@@ -210,7 +210,7 @@ class Modules
     /**
      * list modules that enabled.
      * 
-     * @todo [fuelstart][module_plug] this will be change to list modules that enabled from module manager later.
+     * @todo [fuelstart][module] this will be change to list modules that enabled from module manager later.
      * @return array return array of modules folder name.
      */
     public function listEnabledModules()
