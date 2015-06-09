@@ -7,6 +7,21 @@
  */
 
 
+/**
+ * activate chosen-select on overall page.
+ * 
+ * @returns {undefined}
+ */
+function activateChosen() {
+	// activate the chosen.
+	$('.chosen-select').chosen({
+		allow_single_deselect: true,
+		disable_search: true,
+		display_disabled_options: true
+	});
+}// activateChosen
+
+
 function change_redirect(obj) {
 	window.location = $(obj).val();
 }// change_redirect
@@ -77,11 +92,7 @@ $(function() {
 	});
 	
 	// chosen custom styled select box
-	$('.chosen-select').chosen({
-		allow_single_deselect: true,
-		disable_search: true,
-		display_disabled_options: true
-	});
+	activateChosen();
 	
 	// custom checkbox
 	$('.custom-checkbox, .custom-radio').iCheck({
