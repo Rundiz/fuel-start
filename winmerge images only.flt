@@ -1,0 +1,23 @@
+## This is a directory/file filter for WinMerge
+## This filter lets through only image files
+name: Images only
+desc: Only image file extension .jpg, .jpeg, .png, .gif, .bmp, .psd, .tiff, .ai
+
+## This is an exclusive filter
+## (it lets through only matching files)
+def: exclude
+
+## Filters for filenames begin with f:
+## Filters for directories begin with d:
+## (Inline comments begin with " ##" and extend to the end of the line)
+
+f: \.jpg$
+f: \.jpeg$
+f: \.png$
+f: \.gif$
+f: \.bmp$
+f: \.psd$
+f: \.tiff$
+f: \.ai$
+
+d: \\*$ ## Subdirectories

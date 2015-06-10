@@ -1,0 +1,24 @@
+## This is a directory/file filter for WinMerge
+## This filter lets through only client files such as .js, .css, .json
+name: Client files
+desc: Only client accessible file extension such as .js, .css, .json, .txt
+
+## This is an exclusive filter
+## (it lets through only matching files)
+def: exclude
+
+## Filters for filenames begin with f:
+## Filters for directories begin with d:
+## (Inline comments begin with " ##" and extend to the end of the line)
+
+f: \.js$
+f: \.json$
+f: \.css$
+f: \.txt$
+f: \.htm$
+f: \.html$
+f: \.shtml$
+f: \.xml$
+f: \.xslt$
+
+d: \\*$ ## Subdirectories
