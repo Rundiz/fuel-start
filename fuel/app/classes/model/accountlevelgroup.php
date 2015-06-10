@@ -101,8 +101,6 @@ class Model_AccountLevelGroup extends \Orm\Model
         if (in_array($level_group_id, static::forge()->disallowed_edit_delete)) {
             return false;
         }
-
-        // @todo [fuelstart][api] for delete level group or role here.
         
         // delete related tables.
         \DB::delete(\Model_AccountLevel::getTableName())->where('level_group_id', $level_group_id)->execute();
@@ -110,6 +108,13 @@ class Model_AccountLevelGroup extends \Orm\Model
 
         // delete level group
         \DB::delete(static::$_table_name)->where('level_group_id', $level_group_id)->execute();
+        
+        // @todo [fuelstart][levelgroup][plug] after deleted level group plug.
+        $plugin = new \Library\Plugins();
+        if ($plugin->hasAction('LevelGroupAfterDeleted') !== false) {
+            $plugin->doAction('LevelGroupAfterDeleted', $level_group_id);
+        }
+        unset($plugin);
 
         return true;
     }// deleteLevel

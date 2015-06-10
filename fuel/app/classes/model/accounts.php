@@ -492,6 +492,26 @@ class Model_Accounts extends \Orm\Model
      */
     public static function confirmRegister(array $data = array())
     {
+        // @todo [fuelstart][account][plug] confirm register process plug.
+        // this will be override the system confirm register process. the hook result should be: true (boolean), error message (string).
+        $plugin = new \Library\Plugins();
+        if ($plugin->hasAction('AccountConfirmRegisterProcess') !== false) {
+            $hook_result = $plugin->doAction('AccountConfirmRegisterProcess', $data);
+            if (is_array($hook_result) && array_key_exists('AccountConfirmRegisterProcess', $hook_result)) {
+                // if there is a result. shift to the result.
+                $hook_result = array_shift($hook_result['AccountConfirmRegisterProcess']);
+                if (
+                    (is_bool($hook_result) && $hook_result === true) ||
+                    (is_string($hook_result) && $hook_result != null)
+                ) {
+                    // expect the hook result to be true (boolean) or error message (string).
+                    unset($hook_result, $plugin);
+                    return $hook_result;
+                }
+            }
+        }
+        unset($hook_result, $plugin);
+        
         // check username and confirm code.
         // confirm register has no time limitation.
         $query = static::query()
@@ -697,7 +717,23 @@ class Model_Accounts extends \Orm\Model
 
                         unset($query, $row);
 
-                        // @todo [fuelstart][api] for changed password here.
+                        // @todo [fuelstart][account][plug] after changed password plug.
+                        $plugin = new \Library\Plugins();
+                        if ($plugin->hasAction('AccountAfterChangedPassword') !== false) {
+                            $plugin->doAction(
+                                'AccountAfterChangedPassword', 
+                                $data['account_id'],
+                                [
+                                    'input_data' => $data,
+                                    'input_data_fields' => $data_fields,
+                                    'input_data_level' => $data_level,
+                                    'inputs_post' => \Input::post(),// grab all input
+                                    'email_change' => (isset($email_change) ? $email_change : false),
+                                    'password_changed' => true,
+                                ]
+                            );
+                        }
+                        unset($plugin);
 
                         // flash message for changed password please login again.
                         \Session::set_flash(
@@ -1161,7 +1197,22 @@ class Model_Accounts extends \Orm\Model
 
                         unset($query, $row);
 
-                        // @todo [fuelstart][api] for changed password here.
+                        // @todo [fuelstart][account][plug] after changed password plug.
+                        $plugin = new \Library\Plugins();
+                        if ($plugin->hasAction('AccountAfterChangedPassword') !== false) {
+                            $plugin->doAction(
+                                'AccountAfterChangedPassword', 
+                                $data['account_id'],
+                                [
+                                    'input_data' => $data,
+                                    'input_data_fields' => $data_field,
+                                    'inputs_post' => \Input::post(),// grab all input
+                                    'email_change' => (isset($email_change) ? $email_change : false),
+                                    'password_changed' => true,
+                                ]
+                            );
+                        }
+                        unset($plugin);
 
                         // flash message for changed password please login again.
                         \Session::set_flash(

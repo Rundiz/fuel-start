@@ -7,6 +7,10 @@ action AccountMemberEditAccount
 action AccountDeleteOnMultisiteTables
 action AccountBeforeDeleteAccount
 action AccountAfterRegister
+action AccountControllerAfterConfirmedRegister
+action AccountConfirmRegisterProcess
+
+action LevelGroupAfterDeleted
 
 action SitesAfterDeleteSite
 filter SitesGetDefaultConfigValueForAddSite

@@ -59,7 +59,18 @@ class Controller_Account_ConfirmRegister extends \Controller_BaseController
                     $output['form_status'] = 'success';
                     $output['form_status_message'] = \Lang::get('account_confirm_register_completed');
 
-                    // @todo [fuelstart][api] confirm register passed should be here.
+                    // @todo [fuelstart][account][plug] confirm register passed plug.
+                    $plugin = new \Library\Plugins();
+                    if ($plugin->hasAction('AccountControllerAfterConfirmedRegister') !== false) {
+                        $plugin->doAction(
+                            'AccountControllerAfterConfirmedRegister', 
+                            [
+                                'input_username' => $account_username,
+                                'inputs_post' => \Input::post(),
+                            ]
+                        );
+                    }
+                    unset($plugin);
                 } else {
                     $output['form_status'] = 'error';
                     $output['form_status_message'] = $result;
