@@ -1,5 +1,8 @@
 # Auto detect text files and perform LF normalization
+
+# default is auto
 * text=auto
+* text eol=lf # this causing binary files detected as changed. binary extensions below can help.
 
 # Custom for Visual Studio
 *.cs     diff=csharp
@@ -20,3 +23,22 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
+# binary extensions were added after text eol because text eol cause same binary files detect as changed.
+# binary images
+*.gif binary
+*.ico binary
+*.jpeg binary
+*.JPG binary
+*.jpg binary
+*.png binary
+# binary fonts
+*.eot binary
+*.otf binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+
+# binary others
+*.WAV binary
+*.wav binary
