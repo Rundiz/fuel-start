@@ -8,7 +8,7 @@
  * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2014 Fuel Development Team
+ * @copyright  2010 - 2015 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
@@ -279,38 +279,93 @@ class Query
 			return $out;
 		}
 
+		// get the current select count
 		$i = count($this->select);
-		if (in_array('*', $fields))
-		{
-			$fields = array_merge($fields, array_keys(call_user_func($this->model.'::properties')));
-			$kr = array_keys($fields,'*');
-			foreach($kr as $k) {
-				unset($fields[$k]);
-			}
-		}
-		foreach ($fields as $val)
-		{
-			is_array($val) or $val = array($val => true);
 
-			foreach ($val as $field => $include)
-			{
-				if ($include instanceOf \Fuel\Core\Database_Expression)
-				{
-					$this->select[$this->alias.'_c'.$i++] = $val;
-					break;
-				}
-				elseif ($include)
-				{
-					$this->select[$this->alias.'_c'.$i++] = (strpos($field, '.') === false ? $this->alias.'.' : '').$field;
-				}
-				else
-				{
-					$this->select_filter[] = $field;
-				}
-			}
-		}
+		// parse the passed fields list
+		$this->select = array_merge($this->select, $this->_normalize($fields, $i));
 
 		return $this;
+	}
+
+	/**
+	/* normalize the select fields passed
+	 *
+	 * @param  array  list of columns to select
+	 * @param  int    counter of the number of selected columnss
+	 */
+	protected function _normalize($fields, &$i)
+	{
+		$select = array();
+
+		// for BC reasons, deal with the odd array(DB::expr, 'name') syntax first
+		if (($value = reset($fields)) instanceOf \Fuel\Core\Database_Expression and is_string($index = next($fields)))
+		{
+			$select[$this->alias.'_c'.$i++] = $fields;
+		}
+
+		// otherwise iterate
+		else
+		{
+			foreach ($fields as $index => $value)
+			{
+				// an array of field definitions is passed
+				if (is_array($value))
+				{
+					// recurse and add them individually
+					$select = array_merge($select, $this->_normalize($value, $i));
+				}
+
+				// a "field -> include" value pair is passed
+				elseif (is_bool($value))
+				{
+					if ($value)
+					{
+						// if include is true, add the field
+						$select[$this->alias.'_c'.$i++] = (strpos($index, '.') === false ? $this->alias.'.' : '').$index;
+					}
+					else
+					{
+						// if not, add it to the filter list
+						if ( ! in_array($index, $this->select_filter))
+						{
+							$this->select_filter[] = $index;
+						}
+					}
+				}
+
+				// attempted a "SELECT *"?
+				elseif ($value === '*')
+				{
+					// recurse and add all model properties
+					$select = array_merge($select, $this->_normalize(array_keys(call_user_func($this->model.'::properties')), $i));
+				}
+
+				// DB::expr() passed?
+				elseif ($value instanceOf \Fuel\Core\Database_Expression)
+				{
+					// no column name given for the result?
+					if (is_numeric($index))
+					{
+						$select[$this->alias.'_c'.$i++] = array($value);
+					}
+
+					// add the index as the column name
+					else
+					{
+						$select[$this->alias.'_c'.$i++] = array($value, $index);
+					}
+				}
+
+				// must be a regular field
+				else
+				{
+					$select[$this->alias.'_c'.$i++] = (strpos($value, '.') === false ? $this->alias.'.' : '').$value;
+				}
+			}
+		}
+
+		return $select;
 	}
 
 	/**
@@ -472,7 +527,7 @@ class Query
 		{
 			$this->where[] = array($type, array($condition[0], '=', $condition[1]));
 		}
-		elseif (count($condition) == 3)
+		elseif (count($condition) == 3 or $condition[0] instanceof \Fuel\Core\Database_Expression)
 		{
 			$this->where[] = array($type, $condition);
 		}
@@ -728,7 +783,7 @@ class Query
 	 *
 	 * @param   \Fuel\Core\Database_Query_Builder_Where  DB where() query object
 	 * @param   array $columns  Optionally
-	 * @param   string $type    Type of query to build (select/update/delete/insert)
+	 * @param   string $type    Type of query to build (count/select/update/delete/insert)
 	 *
 	 * @throws \FuelException            Models cannot be related between different database connections
 	 * @throws \UnexpectedValueException Trying to get the relation of an unloaded relation
@@ -737,6 +792,8 @@ class Query
 	 */
 	public function build_query(\Fuel\Core\Database_Query_Builder_Where $query, $columns = array(), $type = 'select')
 	{
+		$read_query = in_array($type, array('select', 'count'));
+
 		// Get the limit
 		if ( ! is_null($this->limit))
 		{
@@ -762,7 +819,7 @@ class Query
 			{
 				list($method, $conditional) = $w;
 
-				if ($type == 'select' and (empty($conditional) or $open_nests > 0))
+				if ($read_query and (empty($conditional) or $open_nests > 0))
 				{
 					$include_nested and $where_nested[$key] = $w;
 					if ( ! empty($conditional) and strpos($conditional[0], $this->alias.'.') !== 0)
@@ -776,9 +833,9 @@ class Query
 
 				if (empty($conditional)
 					or strpos($conditional[0], $this->alias.'.') === 0
-					or ($type != 'select' and $conditional[0] instanceof \Fuel\Core\Database_Expression))
+					or (!$read_query and $conditional[0] instanceof \Fuel\Core\Database_Expression))
 				{
-					if ($type != 'select' and ! empty($conditional)
+					if (!$read_query and ! empty($conditional)
 						and ! $conditional[0] instanceof \Fuel\Core\Database_Expression)
 					{
 						$conditional[0] = substr($conditional[0], strlen($this->alias.'.'));
@@ -796,9 +853,9 @@ class Query
 
 					if (empty($conditional)
 						or strpos($conditional[0], $this->alias.'.') === 0
-						or ($type != 'select' and $conditional[0] instanceof \Fuel\Core\Database_Expression))
+						or (!$read_query and $conditional[0] instanceof \Fuel\Core\Database_Expression))
 					{
-						if ($type != 'select' and ! empty($conditional)
+						if (!$read_query and ! empty($conditional)
 							and ! $conditional[0] instanceof \Fuel\Core\Database_Expression)
 						{
 							$conditional[0] = substr($conditional[0], strlen($this->alias.'.'));
@@ -810,8 +867,8 @@ class Query
 			}
 		}
 
-		// If it's not a select we're done
-		if ($type != 'select')
+		// If it's not a select or count, we're done
+		if (!$read_query)
 		{
 			return array('query' => $query, 'models' => array());
 		}
@@ -844,12 +901,16 @@ class Query
 
 		if ($this->use_subquery())
 		{
-			// Get the columns for final select
-			foreach ($models as $m)
+			// Count queries should not select on anything besides the count
+			if ($type != 'count')
 			{
-				foreach ($m['columns'] as $c)
+				// Get the columns for final select
+				foreach ($models as $m)
 				{
-					$columns[] = $c;
+					foreach ($m['columns'] as $c)
+					{
+						$columns[] = $c;
+					}
 				}
 			}
 
@@ -861,7 +922,7 @@ class Query
 					if (strpos($ob[0], $this->alias.'.') === 0)
 					{
 						// order by on the current model
-						$type == 'select' or $ob[0] = substr($ob[0], strlen($this->alias.'.'));
+						$read_query or $ob[0] = substr($ob[0], strlen($this->alias.'.'));
 						$query->order_by($ob[0], $ob[1]);
 					}
 				}
@@ -873,12 +934,16 @@ class Query
 		}
 		else
 		{
-			// add additional selected columns
-			foreach ($models as $m)
+			// Count queries should not select on anything besides the count
+			if ($type != 'count')
 			{
-				foreach ($m['columns'] as $c)
+				// add additional selected columns
+				foreach ($models as $m)
 				{
-					$query->select($c);
+					foreach ($m['columns'] as $c)
+					{
+						$query->select($c);
+					}
 				}
 			}
 		}
@@ -894,8 +959,8 @@ class Query
 		}
 		foreach ($models as $m)
 		{
-			if (($type == 'select' and $m['connection'] != $this->connection) or
-				($type != 'select' and $m['connection'] != $this->write_connection))
+			if (($read_query and $m['connection'] != $this->connection) or
+				(!$read_query and $m['connection'] != $this->write_connection))
 			{
 				throw new \FuelException('Models cannot be related between different database connections.');
 			}
@@ -951,7 +1016,7 @@ class Query
 					if (strpos($ob[0], $this->alias.'.') === 0)
 					{
 						// order by on the current model
-						$type == 'select' or $ob[0] = substr($ob[0], strlen($this->alias.'.'));
+						$read_query or $ob[0] = substr($ob[0], strlen($this->alias.'.'));
 					}
 					else
 					{
@@ -1330,7 +1395,7 @@ class Query
 		// Set from view or table
 		$query->from(array($this->_table(), $this->alias));
 
-		$tmp   = $this->build_query($query, $columns, 'select');
+		$tmp   = $this->build_query($query, $columns, 'count');
 		$query = $tmp['query'];
 		$count = $query->execute($this->connection)->get('count_result');
 
@@ -1485,5 +1550,16 @@ class Query
 	protected function _table()
 	{
 		return $this->view ? $this->view['view'] : call_user_func($this->model.'::table');
+	}
+
+	/**
+	 * Sets the name of the connection to use for this query. Set to null to use the default DB connection
+	 *
+	 * @param string $name
+	 */
+	public function connection($name)
+	{
+		$this->connection = $name;
+		return $this;
 	}
 }

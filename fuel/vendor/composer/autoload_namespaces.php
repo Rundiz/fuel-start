@@ -8,6 +8,6 @@ $baseDir = dirname(dirname($vendorDir));
 return array(
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'Monolog' => array($vendorDir . '/monolog/monolog/src'),
-    'Fuel\\Upload' => array($vendorDir . '/fuelphp/upload/src'),
+    'Michelf' => array($vendorDir . '/michelf/php-markdown'),
     'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src'),
 );

@@ -1,41 +1,39 @@
-#Fuel Start
-Fuel Start is the FuelPHP framework backend for developers to start their project with this framework.<br>
-This can help those developers build their project very fast.
+#FuelPHP
 
-##Features
-* Account management with ACL.
-* Account level/role management.
-* Administrator page permission.
-* Multilingual ready.
-* Admin configuration page.
-* Easy template layout system.
-* Multi-site management.
+* Version: 1.7.2
+* [Website](http://fuelphp.com/)
+* [Release Documentation](http://docs.fuelphp.com)
+* [Release API browser](http://api.fuelphp.com)
+* [Development branch Documentation](http://dev-docs.fuelphp.com)
+* [Development branch API browser](http://dev-api.fuelphp.com)
+* [Support Forum](http://fuelphp.com/forums) for comments, discussion and community support
 
-##Installation
-System requirement: 
- * PHP 5.4 or above
- * Memory 32MB or more
- * Disk space 30MB or more
+## Description
 
-Installation instruction please go to [wiki][3]
+FuelPHP is a fast, lightweight PHP 5.3 framework. In an age where frameworks are a dime a dozen, We believe that FuelPHP will stand out in the crowd.  It will do this by combining all the things you love about the great frameworks out there, while getting rid of the bad.
 
-###Please note
-Before you clone or download this repository from **Download ZIP** button on the right.<br>
-This repository is running daily/nightly (or almost daily/nightly) build without set the release version.<br>
-To make sure that you are using the most completed set from each version, please go to [releases menu][4] and download from there.<br>
-You can download from both green button or Source code buttons with no problem.
+## More information
 
----
+For more detailed information, see the [development wiki](https://github.com/fuelphp/fuelphp/wiki).
 
-##License
-Fuel Start is released under [MIT license][2]
+##Development Team
 
----
+* Harro Verton - Project Manager, Developer ([http://wanwizard.eu/](http://wanwizard.eu/))
+* Frank de Jonge - Developer ([http://frenky.net/](http://frenky.net/))
+* Steve West - Developer
 
-**Credits**
-[FuelPHP][1]
+### Want to join?
 
-[1]: http://fuelphp.com/
-[2]: http://opensource.org/licenses/MIT
-[3]: https://github.com/OkveeNet/fuel-start/wiki
-[4]: https://github.com/OkveeNet/fuel-start/releases
+The FuelPHP development team is always looking for new team members, who are willing
+to help lift the framework to the next level, and have the commitment to not only
+produce awesome code, but also great documentation, and support to our users.
+
+You can not apply for membership. Start by sending in pull-requests, work on outstanding
+feature requests or bugs, and become active in the #fuelphp IRC channel. If your skills
+are up to scratch, we will notice you, and will ask you to become a team member.
+
+### Alumni
+
+* Jelmer Schreuder - Developer ([http://jelmerschreuder.nl/](http://jelmerschreuder.nl/))
+* Phil Sturgeon - Developer ([http://philsturgeon.co.uk](http://philsturgeon.co.uk))
+* Dan Horrigan - Founder, Developer ([http://dhorrigan.com](http://dhorrigan.com))
