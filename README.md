@@ -2,6 +2,9 @@
 Fuel Start is the FuelPHP framework backend for developers to start their project with this framework.<br>
 This can help those developers build their project very fast.
 
+[![Latest Stable Version](https://poser.pugx.org/okvee/fuel-start/v/stable)](https://packagist.org/packages/okvee/fuel-start)
+[![License](https://poser.pugx.org/okvee/fuel-start/license)](https://packagist.org/packages/okvee/fuel-start)
+
 ##Features
 * Account management with ACL.
 * Account level/role management.
@@ -10,6 +13,7 @@ This can help those developers build their project very fast.
 * Admin configuration page.
 * Easy template layout system.
 * Multi-site management.
+* Plugin hooks.
 
 ##Installation
 System requirement: 
