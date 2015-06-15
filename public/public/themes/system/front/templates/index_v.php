@@ -22,12 +22,12 @@ $theme = \Theme::instance();
             }
             unset($a_page_meta);
         }
-        ?> 
-
-        <?php echo \Asset::css('bootstrap.min.css'); ?>
-        <?php /*<link rel="stylesheet" href="<?php echo Uri::createNL($theme->asset_path('css/bootstrap-theme.min.css')); ?>">*/ ?> 
-        <?php echo $theme->asset->css('front.css'); ?>
-        <?php 
+        
+        // fuelphp asset css
+        echo \Asset::css('bootstrap.min.css');
+        echo \Asset::css('font-awesome.min.css');
+        echo $theme->asset->css('front.css'); 
+        
         // render <link>
         if (isset($page_link) && is_array($page_link)) {
             foreach ($page_link as $a_page_link) {
@@ -35,13 +35,12 @@ $theme = \Theme::instance();
             }
             unset($a_page_link);
         }
-        ?> 
-
-        <?php echo \Asset::js('modernizr.min.js'); ?>
-        <?php echo \Asset::js('respond/respond.min.js'); ?>
-        <?php echo \Asset::js('jquery.min.js'); ?>
         
-        <?php 
+        // fuelphp asset js
+        echo \Asset::js('modernizr.min.js'); 
+        echo \Asset::js('respond/respond.min.js');
+        echo \Asset::js('jquery.min.js');
+        
         // render assets
         echo \Asset::render('fuelstart');
         // render *theme* assets. (required for render theme's assets)
@@ -66,14 +65,26 @@ $theme = \Theme::instance();
                             <p><strong>Fuel Start</strong> is not framework. It is not CMS or CMF. It is just backend or back office system that help you start your project with FuelPHP framework very fast.</p>
                             <h2>Features</h2>
                             <ul>
+                                <li>Administrator base controller - To automatically verify logged in access and send to login page if not login.</li>
                                 <li>Account management.</li>
                                 <li>Account's level management.</li>
                                 <li>Account's level permission - Control what page/action or controller/method that account level can access.</li>
-                                <li>Administrator base controller - To automatically verify logged in access and send to login page if not login.</li>
-                                <li>Configuration page - Config site name, account registration and more.</li>
                                 <li>Multilingual.</li>
+                                <li>Configuration page - Config site name, account registration and more.</li>
                                 <li>Multi-site support.</li>
+                                <li>Plugin hooks</li>
                             </ul>
+                            <p>
+                                <span class="fa fa-book"></span> <a href="https://github.com/OkveeNet/fuel-start/wiki" target="document">Document</a>
+                                &nbsp;
+                                <span class="fa fa-github"></span> <a href="https://github.com/OkveeNet/fuel-start" target="fuelstart_github">FuelStart on Github</a>
+                                &nbsp;
+                                <span class="fa fa-exclamation-circle"></span> <a href="https://github.com/OkveeNet/fuel-start/issues" target="fuelstart_issue">Report a bug</a>
+                                &nbsp;
+                                <a href="https://packagist.org/packages/okvee/fuel-start" target="packagist_composer"><img src="https://poser.pugx.org/okvee/fuel-start/v/stable" alt=""></a>
+                                &nbsp;
+                                <img src="https://poser.pugx.org/okvee/fuel-start/license" alt="">
+                            </p>
                         </div>
                         <aside class="col-sm-3 sidebar">
                             <div class="sidebar-block">
@@ -104,7 +115,9 @@ $theme = \Theme::instance();
                     </div>
                 </article>
             </div>
-        </div>     
+        </div>
+
+        <a href="https://github.com/OkveeNet/fuel-start" target="fuelstart_github"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
         
         <?php echo \Asset::js('bootstrap.min.js'); ?>
         <?php echo $theme->asset->js('main.js'); ?>
