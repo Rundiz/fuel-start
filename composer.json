@@ -1,8 +1,9 @@
 {
-    "name": "fuel/fuel",
-    "type": "project",
-    "description" : "FuelPHP is a simple, flexible, community driven PHP 5.3+ framework, based on the best ideas of other frameworks, with a fresh start!",
-    "keywords": ["application", "website", "development", "framework", "PHP"],
+    "name": "okvee/fuel-start",
+    "type": "metapackage",
+    "description" : "The backoffice system built on FuelPHP framework for developers.",
+    "keywords": ["back office", "backoffice", "backend", "FuelPHP ACL", "FuelPHP account permission system"],
+    "homepage": "http://okvee.net/th/web-resources/download/fuel-start",
     "license": "MIT",
     "repositories": [
         { "type": "vcs", "url": "https://github.com/fuel/docs" },
