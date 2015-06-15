@@ -175,8 +175,8 @@ $(function() {
 	$('#sidebar-menu').smartmenus({
 		markCurrentItem: true,
 		markCurrentTree: true,
-		mainMenuSubOffsetY: -1,
-		subMenusSubOffsetY: -1
+		mainMenuSubOffsetY: -6,
+		subMenusSubOffsetY: -6
 	});
 	
 	
