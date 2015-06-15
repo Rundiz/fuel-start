@@ -2,17 +2,11 @@
 SmartMenus css for FuelStart sidebar vertical menu theme.
 
 @author Vee W.
-@version 1
+@version 1.0.1
 */
 
 
 /* smartmenus global effect -------------------------------------------------------------------------------------------*/
-/* sub menu indicators */
-.sm-fssidebar a span.sub-arrow {
-	display: none;
-}
-
-
 /* menu icons */
 .sm-fssidebar a .fa,
 .sm-fssidebar a .glyphicon,
@@ -50,90 +44,107 @@ SmartMenus css for FuelStart sidebar vertical menu theme.
 
 
 /* smartmenus responsive -------------------------------------------------------------------------------------------- */
-/* @todo [fuelstart][smartmenus] make it mobile first when smartmenu support not display inline css. (http://www.smartmenus.org/forums/topic/option-for-no-inline-style/) */
-@media screen and (max-width: 767px) {
-	ul.sm-fssidebar {
-		width: auto;
-	}
-	ul.sm-fssidebar iframe {
-		display: none;
-	}
-	ul.sm-fssidebar ul {
-		box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.3);
-		display: none;
-		left: auto !important;
-		margin-left: 0 !important;
-		margin-top: 0 !important;
-		max-width: none !important;
-		min-width: 0 !important;
-		position: static;
-		top: auto !important;
-		width: auto !important;
-	}
+ul.sm-fssidebar {
+	width: auto;
+}
+ul.sm-fssidebar iframe {
+	display: none;
+}
+ul.sm-fssidebar ul {
+	box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.3);
+	display: none;
+	left: auto;
+	margin-left: 0;
+	margin-top: 0;
+	max-width: none;
+	min-width: 0;
+	position: static;
+	top: auto;
+	width: auto;
 }
 @media screen and (min-width: 768px) {
 	ul.sm-fssidebar ul {
 		background-color: #fff;
 		border: 1px solid rgba(0, 0, 0, 0.15);
 		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
-		padding: 0;
+		padding: 5px 0;
+		position: absolute;
+		/*width: 180px !important;*/
 		z-index: 3000;
 	}
 }
 
 
 /* menu and submenu items responsive */
-/* @todo [fuelstart][smartmenus] make it mobile first when smartmenu support not display inline css. (http://www.smartmenus.org/forums/topic/option-for-no-inline-style/) */
-@media screen and (max-width: 767px) {
-	ul.sm-fssidebar > li {
-		float: none;
-	}
-	ul.sm-fssidebar > li > a,
-	ul.sm-fssidebar ul {
-		white-space: normal;
-	}
-	ul.sm-fssidebar > li > a .fs-menu-name {
-		font-size: 12px;
-		line-height: 20px;
-	}
-	
-	.sm-fssidebar li.divider {
-		border-bottom: 1px solid rgba(255,255,255,0.1);
-		margin: 8px 0;
-	}
-	.sm-fssidebar > li > a {
-		font-size: 20px;
-		line-height: 20px;
-		padding: 10px 10px;
-	}
-	.sm-fssidebar a {
-		color: #eee;
-		text-decoration: none;
-	}
-	.sm-fssidebar ul {
-		background-color: rgba(255,255,255,0.03);
-	}
-	.sm-fssidebar ul ul {
-		background-color: inherit;
-	}
-	ul.sm ul.sm-nowrap > li > a {
-		white-space: normal;
-	}
-	.sm-fssidebar ul a {
-		overflow: hidden;
-		padding: 8px 12px;
-		white-space: normal;
-		word-wrap: break-word;
-	}
-	.sm-fssidebar ul li:last-child a {
-		padding-bottom: 16px;
-	}
-	.sm-fssidebar ul a.current {
-		font-weight: bold;
-	}
-	.sm-fssidebar ul a.current:hover {
-		color: #fff;
-	}
+ul.sm-fssidebar > li {
+	float: none;
+}
+ul.sm-fssidebar > li > a,
+ul.sm-fssidebar ul {
+	white-space: normal;
+}
+ul.sm-fssidebar > li > a .fs-menu-name {
+	font-size: 12px;
+	line-height: 20px;
+}
+
+.sm-fssidebar li.divider {
+	border-bottom: 1px solid rgba(255,255,255,0.1);
+	margin: 8px 0;
+}
+.sm-fssidebar > li > a {
+	font-size: 20px;
+	line-height: 20px;
+}
+.sm-fssidebar a {
+	color: #eee;
+	padding: 10px 40px 10px 10px;
+	text-decoration: none;
+}
+.sm-fssidebar a span.sub-arrow {
+	background: rgba(0, 0, 0, 0.08);
+	font-size: 14px;
+	font-style: normal;
+	height: 30px;
+	left: auto;
+	line-height: 30px;
+	margin-top: -15px;
+	overflow: hidden;
+	position: absolute;
+	right: 4px;
+	text-align: center;
+	text-shadow: none;
+	top: 50%;
+	width: 30px;
+}
+.sm-fssidebar a.highlighted span.sub-arrow:before {
+	content: '-';
+	display: block;
+}
+.sm-fssidebar ul {
+	background-color: rgba(255,255,255,0.03);
+}
+.sm-fssidebar ul ul {
+	background-color: inherit;
+}
+.sm-fssidebar ul a {
+	overflow: hidden;
+	padding-bottom: 8px;
+	padding-top: 8px;
+	white-space: normal;
+	word-wrap: break-word;
+}
+.sm-fssidebar ul li:last-child a {
+	padding-bottom: 16px;
+}
+.sm-fssidebar ul a.current {
+	font-weight: bold;
+}
+.sm-fssidebar ul a.current:hover {
+	color: #fff;
+}
+.sm-fssidebar .sm-nowrap > li > a {
+	white-space: normal;
 }
 @media screen and (min-width: 768px) {
 	.collapsed-sidebar-menu ul.sm-fssidebar > li > a {
@@ -142,6 +153,10 @@ SmartMenus css for FuelStart sidebar vertical menu theme.
 	.expanded-sidebar-menu ul.sm-fssidebar > li > a .fs-menu-name {
 		display: inline;
 		opacity: 1;
+	}
+	
+	.sm-fssidebar a span.sub-arrow {
+		display: none;
 	}
 	
 	.sm-fssidebar > li > a {
@@ -159,6 +174,11 @@ SmartMenus css for FuelStart sidebar vertical menu theme.
 		opacity: 0;
 	}
 	
+	.sm-fssidebar .sm-nowrap > li > a, 
+	.sm-fssidebar .sm-nowrap > li > *:not(ul) a {
+		white-space: nowrap;
+	}
+	
 	.sm-fssidebar li.divider {
 		border-bottom: 1px solid rgba(0,0,0,0.1);
 		margin: 8px 0;
@@ -168,6 +188,10 @@ SmartMenus css for FuelStart sidebar vertical menu theme.
 		color: #333;
 		padding: 10px 20px;
 		text-decoration: none;
+	}
+	
+	.sm-fssidebar ul ul {
+		background-color: #fff;
 	}
 	/* the style below override mobile view use bootstrap default style */
 	.sm-fssidebar ul a:hover,
