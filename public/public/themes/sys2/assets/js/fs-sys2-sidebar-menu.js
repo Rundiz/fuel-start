@@ -95,7 +95,8 @@ function sidebarMenuStickyActive(selector) {
 			$(selector).css({
 				bottom: 'auto',
 				position: 'fixed',
-				top: scroll_box_top
+				top: scroll_box_top,
+				'z-index': '1'
 			});
 		} else if (window_y_top > last_scroll_top && box_at_bottom === false) {
 			// scroll down.
@@ -105,7 +106,8 @@ function sidebarMenuStickyActive(selector) {
 				$(selector).css({
 					bottom: '0',
 					position: 'fixed',
-					top: 'auto'
+					top: 'auto',
+					'z-index': '1'
 				});
 			} else {
 				$(selector).css({
@@ -126,6 +128,7 @@ function sidebarMenuStickyActive(selector) {
 					bottom: 'auto',
 					position: 'fixed',
 					top: 'auto',
+					'z-index': '1'
 				});
 			} else {
 				up_top_value = (parseInt($(selector).offset().top)-parseInt(scroll_box_top));
