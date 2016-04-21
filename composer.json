@@ -3,7 +3,7 @@
     "type": "metapackage",
     "description" : "The backoffice system built on FuelPHP framework for developers.",
     "keywords": ["back office", "backoffice", "backend", "FuelPHP ACL", "FuelPHP account permission system"],
-    "homepage": "http://okvee.net/th/web-resources/download/fuel-start",
+    "homepage": "http://rundiz.com/web-resources/downloads/fuel-start-%E0%B8%A3%E0%B8%B0%E0%B8%9A%E0%B8%9A-back-office-%E0%B8%AA%E0%B8%B3%E0%B8%AB%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%A3%E0%B8%B4%E0%B9%88%E0%B8%A1%E0%B9%82%E0%B8%9B%E0%B8%A3%E0%B9%80",
     "license": "MIT",
     "repositories": [
         { "type": "vcs", "url": "https://github.com/fuel/docs" },

@@ -226,7 +226,7 @@ class Uri extends \Fuel\Core\Uri
      *
      * @author Vee Winch.
      * @license MIT
-     * @link http://okvee.net The author's website.
+     * @link http://rundiz.com The author's website.
      * @package Fuel Start
      */
     public function redirectLanguageUri()

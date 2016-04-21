@@ -4,6 +4,7 @@ This can help those developers build their project very fast.
 
 [![Latest Stable Version](https://poser.pugx.org/okvee/fuel-start/v/stable)](https://packagist.org/packages/okvee/fuel-start)
 [![License](https://poser.pugx.org/okvee/fuel-start/license)](https://packagist.org/packages/okvee/fuel-start)
+[![Total Downloads](https://poser.pugx.org/okvee/fuel-start/downloads)](https://packagist.org/packages/okvee/fuel-start)
 
 ##Features
 * Account management with ACL.
@@ -28,6 +29,11 @@ Before you clone or download this repository from **Download ZIP** button on the
 This repository is running daily/nightly (or almost daily/nightly) build without set the release version.<br>
 To make sure that you are using the most completed set from each version, please go to [releases menu][4] and download from there.<br>
 You can download from both green button or Source code buttons with no problem.
+
+###Clone this repository
+If you clone this repository from Github for Windows, you may get the error message.<br>
+Please try to clone via git shell with this command. `git clone https://github.com/OkveeNet/fuel-start`<br>
+And then you can add the cloned folder into Github for Windows later.
 
 ---
 

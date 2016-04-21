@@ -3,10 +3,9 @@
  * Base Controller of Fuel Start
  *
  * @package FuelStart
- * @version 1.6.1
+ * @version 1.6.2
  * @author Vee W.
  * @license http://opensource.org/licenses/MIT
- * @link http://okvee.net/th/web-resources/download/fuel-start
  *
  */
 

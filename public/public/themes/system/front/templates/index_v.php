@@ -110,7 +110,7 @@ $theme = \Theme::instance();
                     
                     <div class="row row-with-vspace page-footer">
                         <footer class="col-md-12">
-                            &copy; Fuel Start 2013 - by <a href="http://okvee.net">Okvee.net</a>.
+                            &copy; Fuel Start 2013 - by <a href="http://rundiz.com">rundiz.com</a>.
                         </footer>
                     </div>
                 </article>
