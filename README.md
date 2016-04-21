@@ -2,9 +2,9 @@
 Fuel Start is the FuelPHP framework backend for developers to start their project with this framework.<br>
 This can help those developers build their project very fast.
 
-[![Latest Stable Version](https://poser.pugx.org/okvee/fuel-start/v/stable)](https://packagist.org/packages/okvee/fuel-start)
-[![License](https://poser.pugx.org/okvee/fuel-start/license)](https://packagist.org/packages/okvee/fuel-start)
-[![Total Downloads](https://poser.pugx.org/okvee/fuel-start/downloads)](https://packagist.org/packages/okvee/fuel-start)
+[![Latest Stable Version](https://poser.pugx.org/rundiz/fuel-start/v/stable)](https://packagist.org/packages/rundiz/fuel-start)
+[![License](https://poser.pugx.org/rundiz/fuel-start/license)](https://packagist.org/packages/rundiz/fuel-start)
+[![Total Downloads](https://poser.pugx.org/rundiz/fuel-start/downloads)](https://packagist.org/packages/rundiz/fuel-start)
 
 ##Features
 * Account management with ACL.
@@ -32,7 +32,7 @@ You can download from both green button or Source code buttons with no problem.
 
 ###Clone this repository
 If you clone this repository from Github for Windows, you may get the error message.<br>
-Please try to clone via git shell with this command. `git clone https://github.com/OkveeNet/fuel-start`<br>
+Please try to clone via git shell with this command. `git clone https://github.com/Rundiz/fuel-start`<br>
 And then you can add the cloned folder into Github for Windows later.
 
 ---
@@ -47,5 +47,5 @@ Fuel Start is released under [MIT license][2]
 
 [1]: http://fuelphp.com/
 [2]: http://opensource.org/licenses/MIT
-[3]: https://github.com/OkveeNet/fuel-start/wiki
-[4]: https://github.com/OkveeNet/fuel-start/releases
+[3]: https://github.com/Rundiz/fuel-start/wiki
+[4]: https://github.com/Rundiz/fuel-start/releases
