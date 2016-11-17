@@ -1,6 +1,6 @@
 #Fuel Start
 Fuel Start is the FuelPHP framework backend for developers to start their project with this framework.<br>
-This can help those developers build their project very fast.
+This can help those developers build their project very fast. This project is no longer maintained.
 
 [![Latest Stable Version](https://poser.pugx.org/rundiz/fuel-start/v/stable)](https://packagist.org/packages/rundiz/fuel-start)
 [![License](https://poser.pugx.org/rundiz/fuel-start/license)](https://packagist.org/packages/rundiz/fuel-start)
